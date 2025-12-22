@@ -16,11 +16,12 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
   const placeholder = PlaceHolderImages.find(p => p.id === service.image);
   const imageUrl = placeholder?.imageUrl || "https://picsum.photos/seed/default/600/400";
   const imageHint = placeholder?.imageHint || "tour landscape";
+  const serviceUrl = `/${service.type}s/${service.slug}`;
 
   return (
     <Card className="flex flex-col overflow-hidden h-full transition-transform transform hover:-translate-y-2 hover:shadow-xl">
       <CardHeader className="p-0 relative">
-        <Link href={`/${service.type}s/${service.slug}`} className="block">
+        <Link href={serviceUrl} className="block">
           <Image
             src={imageUrl}
             alt={service.title}
@@ -33,7 +34,7 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
         <Badge variant="secondary" className="absolute top-2 right-2 capitalize">{service.type}</Badge>
       </CardHeader>
       <CardContent className="p-4 flex-grow">
-        <Link href={`/${service.type}s/${service.slug}`} className="block">
+        <Link href={serviceUrl} className="block">
             <CardTitle className="font-headline text-xl leading-tight hover:text-primary transition-colors">
             {service.title}
             </CardTitle>
@@ -52,7 +53,7 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
           <span className="text-sm font-normal text-muted-foreground">/person</span>
         </div>
         <Button asChild>
-          <Link href={`/${service.type}s/${service.slug}`}>View Details</Link>
+          <Link href={serviceUrl}>View Details</Link>
         </Button>
       </CardFooter>
     </Card>
