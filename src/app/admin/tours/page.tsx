@@ -1,19 +1,32 @@
+'use client';
+
 import CrudShell from '@/components/admin/crud-shell';
-import { getServicesByType } from '@/lib/data';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { createTour, updateTour, deleteTour } from '@/lib/firebase-actions';
+import type { Service } from '@/lib/types';
+import { collection } from 'firebase/firestore';
 
 export default function AdminToursPage() {
-    const tours = getServicesByType('tour');
-    // In a real app, you would fetch this from Supabase.
+    const firestore = useFirestore();
+    
+    const toursCollection = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return collection(firestore, 'tours');
+    }, [firestore]);
+    
+    const { data: tours, isLoading } = useCollection<Service>(toursCollection);
+
+    if (isLoading) {
+        return <div>Loading tours...</div>;
+    }
 
     return (
         <CrudShell
             itemType="Tour"
-            items={tours}
-            // In a real app, these actions would call Supabase.
-            // For now, they will just log to the console.
-            onCreate={async (item) => { console.log("Create tour:", item); return true; }}
-            onUpdate={async (id, item) => { console.log("Update tour:", id, item); return true; }}
-            onDelete={async (id) => { console.log("Delete tour:", id); return true; }}
+            items={tours || []}
+            onCreate={createTour}
+            onUpdate={updateTour}
+            onDelete={deleteTour}
         />
     );
 }

@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import WhatsAppButton from '@/components/whatsapp-button';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: {
@@ -27,13 +28,15 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body bg-background text-foreground antialiased">
-        <div className="relative flex min-h-screen flex-col">
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-        <WhatsAppButton />
-        <Toaster />
+        <FirebaseClientProvider>
+          <div className="relative flex min-h-screen flex-col">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <WhatsAppButton />
+          <Toaster />
+        </FirebaseClientProvider>
       </body>
     </html>
   );

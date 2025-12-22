@@ -1,14 +1,14 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   Home,
-  Users,
-  Package,
   LogOut,
   Mountain,
   Car,
   Ship,
   Newspaper,
-  Settings,
 } from 'lucide-react';
 
 import {
@@ -26,14 +26,42 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Logo from '@/components/logo';
+import { useAuth, useUser } from '@/firebase';
+import { useEffect } from 'react';
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // In a real app, this would be a server-side check for an authenticated user.
-  // For this example, we'll assume the user is authenticated.
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    if (!isUserLoading && !user && pathname !== '/admin/login') {
+      router.push('/admin/login');
+    }
+  }, [user, isUserLoading, router, pathname]);
+
+  const handleSignOut = async () => {
+    await auth.signOut();
+    router.push('/admin/login');
+  };
+
+  if (isUserLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+  
+  if (!user && pathname !== '/admin/login') {
+    return null; // Don't render layout if redirecting
+  }
+
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
 
   return (
     <SidebarProvider>
@@ -82,17 +110,15 @@ export default function AdminLayout({
           <SidebarFooter>
             <div className="flex items-center gap-2">
                 <Avatar className="h-8 w-8">
-                    <AvatarImage src="https://picsum.photos/seed/admin-avatar/100/100" />
-                    <AvatarFallback>AD</AvatarFallback>
+                    <AvatarImage src={user?.photoURL || `https://picsum.photos/seed/admin-avatar/100/100`} />
+                    <AvatarFallback>{user?.email?.charAt(0).toUpperCase() || 'A'}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col text-sm group-data-[collapsible=icon]:hidden">
-                    <span className="font-semibold">Admin User</span>
-                    <span className="text-muted-foreground">admin@babdodo.com</span>
+                    <span className="font-semibold">Admin</span>
+                    <span className="text-muted-foreground">{user?.email}</span>
                 </div>
-                <Button variant="ghost" size="icon" className="ml-auto group-data-[collapsible=icon]:mx-auto" asChild>
-                    <Link href="/">
-                        <LogOut />
-                    </Link>
+                <Button variant="ghost" size="icon" className="ml-auto group-data-[collapsible=icon]:mx-auto" onClick={handleSignOut}>
+                    <LogOut />
                 </Button>
             </div>
           </SidebarFooter>

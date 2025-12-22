@@ -1,16 +1,32 @@
+'use client';
+
 import CrudShell from '@/components/admin/crud-shell';
-import { getServicesByType } from '@/lib/data';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { createSafari, updateSafari, deleteSafari } from '@/lib/firebase-actions';
+import type { Service } from '@/lib/types';
+import { collection } from 'firebase/firestore';
 
 export default function AdminSafarisPage() {
-    const safaris = getServicesByType('safari');
+    const firestore = useFirestore();
+    
+    const safarisCollection = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return collection(firestore, 'safaris');
+    }, [firestore]);
+
+    const { data: safaris, isLoading } = useCollection<Service>(safarisCollection);
+    
+    if (isLoading) {
+        return <div>Loading safaris...</div>;
+    }
 
     return (
         <CrudShell
             itemType="Safari"
-            items={safaris}
-            onCreate={async (item) => { console.log("Create safari:", item); return true; }}
-            onUpdate={async (id, item) => { console.log("Update safari:", id, item); return true; }}
-            onDelete={async (id) => { console.log("Delete safari:", id); return true; }}
+            items={safaris || []}
+            onCreate={createSafari}
+            onUpdate={updateSafari}
+            onDelete={deleteSafari}
         />
     );
 }

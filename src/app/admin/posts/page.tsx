@@ -1,17 +1,35 @@
+'use client';
+
 import CrudShell from '@/components/admin/crud-shell';
-import { getAllPosts } from '@/lib/data';
+import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { createPost, updatePost, deletePost } from '@/lib/firebase-actions';
+import type { Post } from '@/lib/types';
+import { collection } from 'firebase/firestore';
 
 export default function AdminPostsPage() {
-    const posts = getAllPosts();
+    const firestore = useFirestore();
+
+    const postsCollection = useMemoFirebase(() => {
+        if (!firestore) return null;
+        return collection(firestore, 'news_updates');
+    }, [firestore]);
+
+    const { data: posts, isLoading } = useCollection<Post>(postsCollection);
+    
+    if (isLoading) {
+        return <div>Loading posts...</div>;
+    }
+    
+    const adaptedPosts = posts ? posts.map(p => ({...p, description: p.excerpt, type: 'post' })) : [];
 
     return (
         <CrudShell
             itemType="Post"
-            items={posts.map(p => ({...p, description: p.excerpt, type: 'post' }))} // Adapt Post to fit CrudShell item type
+            items={adaptedPosts} 
             isPostType={true}
-            onCreate={async (item) => { console.log("Create post:", item); return true; }}
-            onUpdate={async (id, item) => { console.log("Update post:", id, item); return true; }}
-            onDelete={async (id) => { console.log("Delete post:", id); return true; }}
+            onCreate={createPost}
+            onUpdate={updatePost}
+            onDelete={deletePost}
         />
     );
 }

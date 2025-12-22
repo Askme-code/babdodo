@@ -37,6 +37,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import type { Service, Post } from '@/lib/types';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
+import { Card } from '../ui/card';
 
 type Item = Partial<Service> & Partial<Post>;
 
@@ -137,12 +138,11 @@ export default function CrudShell({ itemType, items, isPostType = false, onCreat
         toast({ title: `${itemType} ${editingItem ? 'updated' : 'created'} successfully!` });
         setIsFormOpen(false);
         setEditingItem(undefined);
-        // Here you would typically re-fetch or re-validate your data.
       } else {
         throw new Error('Operation failed');
       }
     } catch (error) {
-      toast({ title: `Error`, description: `Failed to save ${itemType}.`, variant: 'destructive' });
+      toast({ title: `Error`, description: `Failed to save ${itemType.toLowerCase()}.`, variant: 'destructive' });
     }
   };
   
@@ -151,12 +151,11 @@ export default function CrudShell({ itemType, items, isPostType = false, onCreat
       const success = await onDelete(id);
       if (success) {
         toast({ title: `${itemType} deleted successfully!` });
-        // Re-fetch/re-validate data
       } else {
         throw new Error('Deletion failed');
       }
     } catch(error) {
-        toast({ title: 'Error', description: `Failed to delete ${itemType}.`, variant: 'destructive' });
+        toast({ title: 'Error', description: `Failed to delete ${itemType.toLowerCase()}.`, variant: 'destructive' });
     }
   };
 
@@ -241,6 +240,13 @@ export default function CrudShell({ itemType, items, isPostType = false, onCreat
                 </TableCell>
               </TableRow>
             ))}
+             {items.length === 0 && (
+                <TableRow>
+                    <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
+                        No {itemType.toLowerCase()}s found.
+                    </TableCell>
+                </TableRow>
+             )}
           </TableBody>
         </Table>
       </Card>
