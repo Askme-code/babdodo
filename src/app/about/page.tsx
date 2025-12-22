@@ -7,7 +7,7 @@ import { DhowBoatIcon, SafariJeepIcon } from '@/components/icons';
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Learn about the team and passion behind Babdodo Explorer.',
+  description: 'Learn about the team and passion behind Babdodo Tours & Safaris.',
 };
 
 const AboutPage = () => {
@@ -17,7 +17,7 @@ const AboutPage = () => {
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
         <div className="container h-full flex flex-col items-center justify-center text-center">
-          <h1 className="text-4xl md:text-5xl font-headline font-bold">About Babdodo Explorer</h1>
+          <h1 className="text-4xl md:text-5xl font-headline font-bold">About Babdodo Tours & Safaris</h1>
           <p className="mt-4 text-lg md:text-xl max-w-2xl text-secondary-foreground">
             Your trusted partner for authentic adventures in Tanzania and Zanzibar.
           </p>
@@ -29,7 +29,7 @@ const AboutPage = () => {
           <div>
             <h2 className="text-3xl font-headline text-primary">Our Story</h2>
             <p className="mt-4 text-foreground/80">
-              Founded by a team of native Tanzanians with a shared passion for nature and hospitality, Babdodo Explorer was born from a desire to share the authentic beauty of our homeland with the world. We grew up surrounded by the stunning landscapes of the Serengeti and the rich culture of Zanzibar, and our mission is to create journeys that are as enriching and memorable for you as they are for us.
+              Founded by a team of native Tanzanians with a shared passion for nature and hospitality, Babdodo Tours & Safaris was born from a desire to share the authentic beauty of our homeland with the world. We grew up surrounded by the stunning landscapes of the Serengeti and the rich culture of Zanzibar, and our mission is to create journeys that are as enriching and memorable for you as they are for us.
             </p>
             <p className="mt-4 text-foreground/80">
               We believe in responsible tourism that supports local communities and preserves our pristine environments for generations to come. When you travel with us, you're not just a tourist; you're part of our extended family, contributing to a sustainable future for Tanzania.

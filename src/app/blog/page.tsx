@@ -5,7 +5,7 @@ import { Rss } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'News, travel tips, and stories from Babdodo Explorer.',
+  description: 'News, travel tips, and stories from Babdodo Tours & Safaris.',
 };
 
 const BlogPage = () => {

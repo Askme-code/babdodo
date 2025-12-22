@@ -4,7 +4,7 @@ import ContactForm from '@/components/contact-form';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: 'Get in touch with Babdodo Explorer to plan your next adventure.',
+  description: 'Get in touch with Babdodo Tours & Safaris to plan your next adventure.',
 };
 
 const ContactPage = () => {

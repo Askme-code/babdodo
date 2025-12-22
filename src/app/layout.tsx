@@ -8,8 +8,8 @@ import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Babdodo Explorer - Tours & Safaris',
-    template: '%s | Babdodo Explorer',
+    default: 'Babdodo Tours & Safaris',
+    template: '%s | Babdodo Tours & Safaris',
   },
   description: 'Explore the wonders of Zanzibar and Tanzania. We offer unforgettable tours, safaris, and transfers.',
   keywords: ['Tanzania Safari', 'Zanzibar Tours', 'Airport Transfer', 'Babdodo'],

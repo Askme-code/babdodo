@@ -48,7 +48,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-8 border-t border-border pt-8 text-center text-sm">
-          <p>&copy; {currentYear} Babdodo Explorer. All rights reserved.</p>
+          <p>&copy; {currentYear} Babdodo Tours & Safaris. All rights reserved.</p>
         </div>
       </div>
     </footer>

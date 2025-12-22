@@ -63,7 +63,7 @@ export default function AdminLoginPage() {
             </div>
           </div>
           <CardTitle className="text-2xl font-headline">Admin Login</CardTitle>
-          <CardDescription>Welcome to the Babdodo Explorer dashboard.</CardDescription>
+          <CardDescription>Welcome to the Babdodo Tours & Safaris dashboard.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSignIn}>

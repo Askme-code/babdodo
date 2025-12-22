@@ -8,7 +8,7 @@ const Logo = () => {
         <MountainSnow className="w-6 h-6" />
       </div>
       <span className="text-xl font-semibold font-headline text-primary-dark group-hover:text-primary-dark/90 transition-colors">
-        Babdodo Explorer
+        Babdodo Tours & Safaris
       </span>
     </Link>
   );

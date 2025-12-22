@@ -26,7 +26,7 @@ const Hero = () => {
           Your Adventure Awaits
         </h1>
         <p className="mt-4 text-lg md:text-xl max-w-2xl drop-shadow-md">
-          Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Explorer.
+          Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Tours & Safaris.
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4">
           <Button size="lg" asChild>
@@ -112,8 +112,7 @@ export default function Home() {
                         </div>
                         <div>
                             <h3 className="font-bold text-lg">Tailor-Made Itineraries</h3>
-                            <p className="text-secondary-foreground/80 text-sm">We customize every trip to match your dreams and your budget.</p>
-                        </div>
+                            <p className="text-secondary-foreground/80 text-sm">We customize every trip to match your dreams and your budget.</p>                        </div>
                     </div>
                 </div>
                 <Button asChild className="mt-8">
