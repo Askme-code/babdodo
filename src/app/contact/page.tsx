@@ -62,6 +62,17 @@ const ContactPage = () => {
                 <p className="text-sm text-muted-foreground">Meetings by appointment only</p>
               </div>
             </div>
+             <div className="mt-4 overflow-hidden rounded-lg shadow-lg">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7933.525226773835!2d39.18785396386008!3d-6.162538558324625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185cd059242fbd01%3A0x9a18e54b0e5a94d8!2sStone%20Town%2C%20Zanzibar!5e0!3m2!1sen!2stz!4v1766400798440!5m2!1sen!2stz"
+                    width="100%"
+                    height="350"
+                    style={{ border: 0 }}
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+            </div>
           </div>
         </div>
       </section>
