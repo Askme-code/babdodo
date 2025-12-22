@@ -8,6 +8,8 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
+import { JsonLd } from '@/components/JsonLd';
+
 
 type TourPageProps = {
   params: {
@@ -22,9 +24,25 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       title: 'Tour Not Found',
     };
   }
+
+  const mainImage = PlaceHolderImages.find(p => p.id === tour.image);
+
   return {
-    title: tour.title,
+    title: `${tour.title} - Zanzibar Tour`,
     description: tour.description,
+    openGraph: {
+        title: tour.title,
+        description: tour.description,
+        type: 'article',
+        images: [
+            {
+                url: mainImage?.imageUrl || '',
+                width: 1200,
+                height: 630,
+                alt: tour.title,
+            }
+        ]
+    }
   };
 }
 
@@ -44,7 +62,30 @@ export default function TourPage({ params }: TourPageProps) {
 
   const mainImage = PlaceHolderImages.find(p => p.id === tour.image);
 
+  const jsonLdData = {
+      "@context": "https://schema.org",
+      "@type": "TouristTrip",
+      "name": tour.title,
+      "description": tour.longDescription,
+      "image": mainImage?.imageUrl || '',
+      "provider": {
+        "@type": "TravelAgency",
+        "name": "Babdodo Tours & Safaris",
+        "priceRange": "$$"
+      },
+      "itinerary": {
+          "@type": "ItemList",
+          "itemListElement": tour.included.map((item, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "name": item
+          }))
+      }
+  };
+
   return (
+    <>
+    <JsonLd data={jsonLdData} />
     <div className="bg-background">
       <section className="relative h-[50vh] w-full">
         <Image
@@ -55,16 +96,16 @@ export default function TourPage({ params }: TourPageProps) {
           priority
           data-ai-hint={mainImage?.imageHint}
         />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative container h-full flex flex-col items-start justify-end pb-12 text-white">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+        <div className="relative container h-full flex flex-col items-start justify-end pb-12 text-white px-4">
           <Badge variant="secondary" className="mb-2">Zanzibar Tour</Badge>
-          <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold drop-shadow-lg">
             {tour.title}
           </h1>
         </div>
       </section>
 
-      <div className="container py-12 md:py-16">
+      <div className="container py-8 md:py-16 px-4">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="lg:col-span-2">
             <div className="prose prose-lg max-w-none text-foreground/90">
@@ -146,5 +187,6 @@ export default function TourPage({ params }: TourPageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }

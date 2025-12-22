@@ -8,6 +8,8 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
+import { JsonLd } from '@/components/JsonLd';
+
 
 type SafariPageProps = {
   params: {
@@ -22,9 +24,25 @@ export async function generateMetadata({ params }: SafariPageProps): Promise<Met
       title: 'Safari Not Found',
     };
   }
+
+   const mainImage = PlaceHolderImages.find(p => p.id === safari.image);
+
   return {
-    title: safari.title,
+    title: `${safari.title} - Tanzania Safari`,
     description: safari.description,
+     openGraph: {
+        title: safari.title,
+        description: safari.description,
+        type: 'article',
+        images: [
+            {
+                url: mainImage?.imageUrl || '',
+                width: 1200,
+                height: 630,
+                alt: safari.title,
+            }
+        ]
+    }
   };
 }
 
@@ -44,7 +62,30 @@ export default function SafariPage({ params }: SafariPageProps) {
 
   const mainImage = PlaceHolderImages.find(p => p.id === safari.image);
 
+  const jsonLdData = {
+      "@context": "https://schema.org",
+      "@type": "TouristTrip",
+      "name": safari.title,
+      "description": safari.longDescription,
+      "image": mainImage?.imageUrl || '',
+      "provider": {
+        "@type": "TravelAgency",
+        "name": "Babdodo Tours & Safaris",
+        "priceRange": "$$$"
+      },
+      "itinerary": {
+          "@type": "ItemList",
+          "itemListElement": safari.included.map((item, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "name": item
+          }))
+      }
+  };
+
   return (
+    <>
+    <JsonLd data={jsonLdData} />
     <div className="bg-background">
       <section className="relative h-[50vh] w-full">
         <Image
@@ -55,16 +96,16 @@ export default function SafariPage({ params }: SafariPageProps) {
           priority
           data-ai-hint={mainImage?.imageHint}
         />
-        <div className="absolute inset-0 bg-black/50" />
-        <div className="relative container h-full flex flex-col items-start justify-end pb-12 text-white">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+        <div className="relative container h-full flex flex-col items-start justify-end pb-12 text-white px-4">
           <Badge variant="secondary" className="mb-2">Tanzania Safari</Badge>
-          <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-headline font-bold drop-shadow-lg">
             {safari.title}
           </h1>
         </div>
       </section>
 
-      <div className="container py-12 md:py-16">
+      <div className="container py-8 md:py-16 px-4">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="lg:col-span-2">
             <div className="prose prose-lg max-w-none text-foreground/90">
@@ -146,5 +187,6 @@ export default function SafariPage({ params }: SafariPageProps) {
         </div>
       </div>
     </div>
+    </>
   );
 }
