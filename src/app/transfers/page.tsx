@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getServicesByType } from '@/lib/data';
 import ServiceCard from '@/components/service-card';
 import { TransferVanIcon } from '@/components/icons';
+import { DollarSign, Smile, Clock } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Airport Transfers',
@@ -37,6 +38,46 @@ const TransfersPage = () => {
               <p className="text-muted-foreground text-lg">No transfers available at the moment. Please check back later.</p>
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24 bg-card">
+        <div className="container">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold">Why Book A Taxi With Us In Zanzibar?</h2>
+            <p className="mt-4 text-muted-foreground">
+              We provide a reliable, friendly, and hassle-free transfer experience from start to finish.
+            </p>
+          </div>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="flex flex-col items-center p-6">
+              <div className="p-4 bg-primary text-primary-foreground rounded-full">
+                <DollarSign className="w-8 h-8" />
+              </div>
+              <h3 className="mt-4 text-xl font-headline font-semibold">No Additional Fees</h3>
+              <p className="mt-2 text-muted-foreground">
+                We do not charge any additional fees. The price you see is the price you pay.
+              </p>
+            </div>
+            <div className="flex flex-col items-center p-6">
+              <div className="p-4 bg-primary text-primary-foreground rounded-full">
+                <Smile className="w-8 h-8" />
+              </div>
+              <h3 className="mt-4 text-xl font-headline font-semibold">Friendly Drivers</h3>
+              <p className="mt-2 text-muted-foreground">
+                Our drivers are professional, informative, and dedicated to your satisfaction.
+              </p>
+            </div>
+            <div className="flex flex-col items-center p-6">
+              <div className="p-4 bg-primary text-primary-foreground rounded-full">
+                <Clock className="w-8 h-8" />
+              </div>
+              <h3 className="mt-4 text-xl font-headline font-semibold">Free Waiting & Cancellation</h3>
+              <p className="mt-2 text-muted-foreground">
+                We offer free waiting time for flight delays and free cancellation for your peace of mind.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </div>

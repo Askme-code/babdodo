@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Check, Clock, MapPin, DollarSign, UserCheck } from 'lucide-react';
+import Link from 'next/link';
 
 import { getServiceBySlug, getAllServices } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -35,6 +36,23 @@ export async function generateStaticParams() {
   }));
 }
 
+const WhatsAppIcon = () => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="mr-2 h-5 w-5"
+    >
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+    </svg>
+  );
+
 export default function TransferPage({ params }: TransferPageProps) {
   const transfer = getServiceBySlug(params.slug);
 
@@ -43,6 +61,8 @@ export default function TransferPage({ params }: TransferPageProps) {
   }
 
   const mainImage = PlaceHolderImages.find(p => p.id === transfer.image);
+  const phoneNumber = "255678575092";
+  const message = `Hello! I'm interested in booking the ${transfer.title} transfer.`;
 
   return (
     <div className="bg-background">
@@ -108,7 +128,17 @@ export default function TransferPage({ params }: TransferPageProps) {
                         <span>{transfer.location}</span>
                     </div>
                 </div>
-                <Button size="lg" className="w-full mt-6">Book This Transfer</Button>
+                <div className="mt-6 flex flex-col gap-2">
+                    <Button size="lg" asChild className="bg-[#25D366] hover:bg-[#128C7E] text-white">
+                        <Link href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer">
+                            <WhatsAppIcon />
+                            Book on WhatsApp
+                        </Link>
+                    </Button>
+                    <Button size="lg" asChild variant="outline">
+                         <Link href="/contact">Book Online!</Link>
+                    </Button>
+                </div>
             </div>
           </div>
 
