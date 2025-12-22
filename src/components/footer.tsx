@@ -41,8 +41,8 @@ const Footer = () => {
           <div>
             <h3 className="font-headline text-lg font-semibold">Contact Us</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              <li>Email: info@babdodo.com</li>
-              <li>Phone: +255 123 456 789</li>
+              <li>Email: babdodotourssafaris@gmail.com</li>
+              <li>Phone: +255 678 575 092</li>
               <li>Zanzibar, Tanzania</li>
             </ul>
           </div>

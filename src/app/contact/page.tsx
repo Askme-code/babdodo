@@ -38,7 +38,7 @@ const ContactPage = () => {
               </div>
               <div>
                 <h4 className="font-semibold">Email</h4>
-                <a href="mailto:info@babdodo.com" className="text-primary hover:underline">info@babdodo.com</a>
+                <a href="mailto:babdodotourssafaris@gmail.com" className="text-primary hover:underline">babdodotourssafaris@gmail.com</a>
                 <p className="text-sm text-muted-foreground">We reply within 24 hours</p>
               </div>
             </div>
@@ -48,7 +48,7 @@ const ContactPage = () => {
               </div>
               <div>
                 <h4 className="font-semibold">Phone / WhatsApp</h4>
-                <a href="tel:+255123456789" className="text-primary hover:underline">+255 123 456 789</a>
+                <a href="tel:+255678575092" className="text-primary hover:underline">+255 678 575 092</a>
                 <p className="text-sm text-muted-foreground">Mon - Sat, 9am - 6pm (EAT)</p>
               </div>
             </div>
