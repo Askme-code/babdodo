@@ -3,11 +3,25 @@ import { getServicesByType } from '@/lib/data';
 import ServiceCard from '@/components/service-card';
 import { TransferVanIcon } from '@/components/icons';
 import { DollarSign, Smile, Clock } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 export const metadata: Metadata = {
   title: 'Airport Transfers',
   description: 'Reliable and comfortable airport transfers in Zanzibar and mainland Tanzania.',
 };
+
+const popularRoutes = [
+    { to: 'Jambiani' },
+    { to: 'Paje' },
+    { to: 'Michamvi' },
+    { to: 'Kiwengwa' },
+    { to: 'Matemwe' },
+    { to: 'Stone Town' },
+    { to: 'Kendwa' },
+    { to: 'Nungwi' },
+];
 
 const TransfersPage = () => {
   const transfers = getServicesByType('transfer');
@@ -38,6 +52,26 @@ const TransfersPage = () => {
               <p className="text-muted-foreground text-lg">No transfers available at the moment. Please check back later.</p>
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24 bg-background">
+        <div className="container">
+           <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold">Most Popular Booked Taxi Routes</h2>
+          </div>
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {popularRoutes.map((route) => (
+              <Card key={route.to} className="bg-primary text-primary-foreground flex flex-col justify-between p-4">
+                <CardContent className="p-2 text-center">
+                  <p className="font-semibold">Taxi From Zanzibar Airport To {route.to}</p>
+                </CardContent>
+                <Button asChild variant="secondary" className="w-full mt-4">
+                  <Link href="/contact">Book Now</Link>
+                </Button>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
