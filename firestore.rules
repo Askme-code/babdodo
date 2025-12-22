@@ -1,0 +1,171 @@
+/**
+ * Core Philosophy:
+ * This ruleset implements a strict Role-Based Access Control (RBAC) model tailored for an
+ * administrative dashboard. All data collections, including tours, safaris, transfers,
+ * and news updates, are accessible exclusively to authenticated users with an 'admin' role.
+ * Public or anonymous access is completely denied.
+ *
+ * Data Structure:
+ * The data is organized into a flat hierarchy of top-level collections. There are no nested
+ * subcollections. A dedicated `/roles_admin` collection is used to manage admin privileges,
+ * decoupling authorization from the application data itself.
+ *
+ * Key Security Decisions:
+ * - Admin-Only Access: The entire database is locked down. A user must have a corresponding
+ *   document in the `/roles_admin/{userId}` collection to gain any read or write access.
+ * - Existence-Based Roles: A user's admin status is determined by the existence of a
+ *   document with their UID in the `/roles_admin` collection. This is a simple and
+ *   performant way to manage roles.
+ * - No Public Listing: All `list` operations are restricted to admins, preventing any
+ *   unauthorized enumeration of data.
+ * - Managing Admins: Only existing admins can add or remove other admins, securing the roles
+ *   collection itself. The initial admin user must be created via the Firebase Console
+ *   or a trusted server-side script.
+ *
+ * Denormalization for Authorization:
+ * This ruleset uses a dedicated `/roles_admin` collection to manage permissions. This avoids
+ * embedding roles directly into a user's profile, making role management a centralized and
+ * explicit task. Every rule protecting a data collection performs a fast `exists()` check
+ * against this roles collection, which is a standard and efficient pattern for RBAC.
+ *
+ * Structural Segregation:
+ * Each data type (tours, safaris, news, etc.) is stored in its own top-level collection. This
+ * clean separation ensures that a single, clear security policy (`isAdmin()`) can be applied
+ * consistently across all data, simplifying the ruleset and reducing the risk of misconfiguration.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------------------
+    // Helper Functions
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns true if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the requesting user has an admin role.
+     * Admin status is granted by the existence of a document in the /roles_admin
+     * collection where the document ID matches the user's UID.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /**
+     * On create, validates that the document's internal 'id' field matches its
+     * actual document ID from the path. This enforces relational integrity.
+     */
+    function isConsistentWithDocId(docId) {
+      return request.resource.data.id == docId;
+    }
+
+    /**
+     * On update, ensures that the document's internal 'id' field is immutable
+     * and cannot be changed after creation.
+     */
+    function isIdImmutable() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    // ------------------------------------------------------------------------
+    // Collection: tours
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Secures the 'tours' collection, allowing full CRUD access only to admin users.
+     * @path /tours/{tourId}
+     * @allow (create) An authenticated admin user creates a new tour document.
+     * @deny (get) An anonymous or non-admin user attempts to read a tour document.
+     * @principle Enforces strict role-based access control for all operations.
+     */
+    match /tours/{tourId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isConsistentWithDocId(tourId);
+      allow update: if isAdmin() && resource != null && isIdImmutable();
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    // ------------------------------------------------------------------------
+    // Collection: safaris
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Secures the 'safaris' collection, allowing full CRUD access only to admin users.
+     * @path /safaris/{safariId}
+     * @allow (update) An authenticated admin user updates an existing safari document.
+     * @deny (create) A non-admin user attempts to create a new safari.
+     * @principle Enforces strict role-based access control for all operations.
+     */
+    match /safaris/{safariId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isConsistentWithDocId(safariId);
+      allow update: if isAdmin() && resource != null && isIdImmutable();
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    // ------------------------------------------------------------------------
+    // Collection: transfers
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Secures the 'transfers' collection, allowing full CRUD access only to admin users.
+     * @path /transfers/{transferId}
+     * @allow (delete) An authenticated admin user deletes a transfer document.
+     * @deny (list) An anonymous user attempts to list all transfers.
+     * @principle Enforces strict role-based access control for all operations.
+     */
+    match /transfers/{transferId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isConsistentWithDocId(transferId);
+      allow update: if isAdmin() && resource != null && isIdImmutable();
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    // ------------------------------------------------------------------------
+    // Collection: news_updates
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Secures the 'news_updates' collection, allowing full CRUD access only to admin users.
+     * @path /news_updates/{newsUpdateId}
+     * @allow (get) An authenticated admin user reads a specific news update.
+     * @deny (update) A non-admin user attempts to modify a news update.
+     * @principle Enforces strict role-based access control for all operations.
+     */
+    match /news_updates/{newsUpdateId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isConsistentWithDocId(newsUpdateId);
+      allow update: if isAdmin() && resource != null && isIdImmutable();
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    // ------------------------------------------------------------------------
+    // Collection: roles_admin
+    // ------------------------------------------------------------------------
+
+    /**
+     * @description Secures the 'roles_admin' collection itself. Only existing admins can read or modify this collection.
+     * @path /roles_admin/{adminUserId}
+     * @allow (create) An existing admin user grants admin rights to another user ('adminUserId').
+     * @deny (create) A non-admin user attempts to grant themselves admin rights.
+     * @principle Protects the integrity of the role management system.
+     */
+    match /roles_admin/{adminUserId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isConsistentWithDocId(adminUserId);
+      allow update: if isAdmin() && resource != null && isIdImmutable();
+      allow delete: if isAdmin() && resource != null;
+    }
+  }
+}
