@@ -6,6 +6,8 @@ import { DollarSign, Smile, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export const metadata: Metadata = {
   title: 'Airport Transfers',
@@ -22,6 +24,24 @@ const popularRoutes = [
     { to: 'Kendwa' },
     { to: 'Nungwi' },
 ];
+
+const transportTypes = [
+  {
+    id: "transport-alphard",
+    name: "Toyota Alphard",
+    capacity: "1 - 6 Travelers",
+  },
+  {
+    id: "transport-hiace",
+    name: "Toyota Hiace",
+    capacity: "7 - 14 Travelers",
+  },
+  {
+    id: "transport-coaster",
+    name: "Coaster Bus",
+    capacity: "15 - 28 Travelers",
+  },
+]
 
 const TransfersPage = () => {
   const transfers = getServicesByType('transfer');
@@ -52,6 +72,36 @@ const TransfersPage = () => {
               <p className="text-muted-foreground text-lg">No transfers available at the moment. Please check back later.</p>
             </div>
           )}
+        </div>
+      </section>
+
+       <section className="py-16 md:py-24 bg-card">
+        <div className="container">
+          <div className="text-center max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold">Our Transport Types</h2>
+            <p className="mt-4 text-muted-foreground">
+              We use the best cars to satisfy our clients. Our cars fit for any type of travelers, Sole travelers, Couples, Families, and Groups.
+            </p>
+          </div>
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+            {transportTypes.map((vehicle) => {
+              const image = PlaceHolderImages.find(img => img.id === vehicle.id);
+              return (
+                <div key={vehicle.id} className="text-center">
+                  <Image 
+                    src={image?.imageUrl || ''} 
+                    alt={vehicle.name} 
+                    width={400} 
+                    height={300} 
+                    className="rounded-lg object-contain aspect-[4/3]"
+                    data-ai-hint={image?.imageHint}
+                  />
+                  <h3 className="mt-4 text-xl font-headline font-semibold">{vehicle.name}</h3>
+                  <p className="text-muted-foreground">{vehicle.capacity}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 

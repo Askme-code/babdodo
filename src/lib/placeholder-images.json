@@ -95,6 +95,24 @@
       "description": "A diver exploring a coral reef in the Indian Ocean.",
       "imageUrl": "https://images.unsplash.com/photo-1682687981907-170c006e3744?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y29yYWwlMjByZWVmfGVufDB8fHx8MTc2NjI5OTIyMHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "coral reef"
+    },
+    {
+      "id": "transport-hiace",
+      "description": "A white Toyota Hiace van.",
+      "imageUrl": "https://images.unsplash.com/photo-1521014710171-f44dfe788ece?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0b3lvdGElMjBoaWFjZXxlbnwwfHx8fDE3NjY0MDA3MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "toyota hiace"
+    },
+    {
+      "id": "transport-coaster",
+      "description": "A white and gold coaster bus.",
+      "imageUrl": "https://images.unsplash.com/photo-1622390573893-d61510131108?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb2FzdGVyJTIwYnVzfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "coaster bus"
+    },
+    {
+      "id": "transport-alphard",
+      "description": "A white Toyota Alphard minivan.",
+      "imageUrl": "https://images.unsplash.com/photo-1558101847-e017d5e414a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0b3lvdGElMjBhbHBoYXJkfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "toyota alphard"
     }
   ]
 }
