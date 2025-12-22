@@ -1,0 +1,108 @@
+import Link from 'next/link';
+import {
+  Home,
+  Users,
+  Package,
+  LogOut,
+  Mountain,
+  Car,
+  Ship,
+  Newspaper,
+  Settings,
+} from 'lucide-react';
+
+import {
+  SidebarProvider,
+  Sidebar,
+  SidebarHeader,
+  SidebarContent,
+  SidebarFooter,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarInset,
+  SidebarTrigger,
+} from '@/components/ui/sidebar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import Logo from '@/components/logo';
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // In a real app, this would be a server-side check for an authenticated user.
+  // For this example, we'll assume the user is authenticated.
+
+  return (
+    <SidebarProvider>
+      <div className="flex min-h-screen">
+        <Sidebar>
+          <SidebarHeader>
+             <div className="flex items-center gap-2">
+                <Logo />
+                <SidebarTrigger className="ml-auto" />
+             </div>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="/admin" tooltip={{children: 'Dashboard'}}>
+                  <Home />
+                  <span>Dashboard</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="/admin/safaris" tooltip={{children: 'Safaris'}}>
+                  <Mountain />
+                  <span>Safaris</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="/admin/tours" tooltip={{children: 'Tours'}}>
+                  <Ship />
+                  <span>Tours</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="/admin/transfers" tooltip={{children: 'Transfers'}}>
+                  <Car />
+                  <span>Transfers</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton href="/admin/posts" tooltip={{children: 'Blog Posts'}}>
+                  <Newspaper />
+                  <span>Blog Posts</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter>
+            <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                    <AvatarImage src="https://picsum.photos/seed/admin-avatar/100/100" />
+                    <AvatarFallback>AD</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col text-sm group-data-[collapsible=icon]:hidden">
+                    <span className="font-semibold">Admin User</span>
+                    <span className="text-muted-foreground">admin@babdodo.com</span>
+                </div>
+                <Button variant="ghost" size="icon" className="ml-auto group-data-[collapsible=icon]:mx-auto" asChild>
+                    <Link href="/">
+                        <LogOut />
+                    </Link>
+                </Button>
+            </div>
+          </SidebarFooter>
+        </Sidebar>
+        <SidebarInset>
+            <main className="p-4 sm:p-6 lg:p-8 flex-1 bg-muted/40">
+                {children}
+            </main>
+        </SidebarInset>
+      </div>
+    </SidebarProvider>
+  );
+}
