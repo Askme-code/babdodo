@@ -1,178 +1,107 @@
-'use client';
+'use server';
 
-import {
-  addDocumentNonBlocking,
-  updateDocumentNonBlocking,
-  deleteDocumentNonBlocking,
-  initializeFirebase,
-} from '@/firebase';
-import { collection, doc, serverTimestamp } from 'firebase/firestore';
+import { revalidatePath } from 'next/cache';
+import { firestore } from '@/firebase/server-init';
+import { FieldValue } from 'firebase-admin/firestore';
 import type { Service, Post } from './types';
 
-// Do not initialize here, as it can be called before the provider is ready
-// const { firestore } = initializeFirebase();
-
-const getFirestoreInstance = () => {
-    return initializeFirebase().firestore;
-}
-
 const generateSlug = (title: string) => {
-  return title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+  if (!title) return '';
+  return title
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^\w-]+/g, '');
+};
+
+const getCollectionPathForType = (itemType: 'tour' | 'safari' | 'transfer' | 'post') => {
+    switch (itemType) {
+        case 'tour': return 'tours';
+        case 'safari': return 'safaris';
+        case 'transfer': return 'transfers';
+        case 'post': return 'news_updates';
+    }
 }
 
-const commonCreateData = {
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
+// Generic Create
+const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', item: Partial<Service> | Partial<Post>) => {
+  try {
+    const collectionPath = getCollectionPathForType(itemType);
+    const collectionRef = firestore.collection(collectionPath);
+    const slug = generateSlug(item.title!);
+    
+    const docData: any = {
+      ...item,
+      slug,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    };
+    if (itemType !== 'post') {
+      docData.type = itemType;
+    }
+
+    await collectionRef.add(docData);
+    revalidatePath(`/admin/${collectionPath}`);
+    return true;
+  } catch (e) {
+    console.error(`Failed to create ${itemType}:`, e);
+    return false;
+  }
 };
 
-const commonUpdateData = {
-    updatedAt: serverTimestamp(),
+// Generic Update
+const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string, item: Partial<Service> | Partial<Post>) => {
+  try {
+    const collectionPath = getCollectionPathForType(itemType);
+    const docRef = firestore.collection(collectionPath).doc(id);
+    const slug = generateSlug(item.title!);
+
+    const docData: any = {
+      ...item,
+      slug,
+      updatedAt: FieldValue.serverTimestamp(),
+    };
+
+    await docRef.update(docData);
+    revalidatePath(`/admin/${collectionPath}`);
+    revalidatePath(`/${collectionPath}/${slug}`);
+    return true;
+  } catch (e) {
+    console.error(`Failed to update ${itemType}:`, e);
+    return false;
+  }
 };
+
+// Generic Delete
+const deleteItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string) => {
+  try {
+    const collectionPath = getCollectionPathForType(itemType);
+    const docRef = firestore.collection(collectionPath).doc(id);
+    await docRef.delete();
+    revalidatePath(`/admin/${collectionPath}`);
+    return true;
+  } catch (e) {
+    console.error(`Failed to delete ${itemType}:`, e);
+    return false;
+  }
+};
+
 
 // Safaris
-export const createSafari = async (item: Partial<Service>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const safarisCollection = collection(firestore, 'safaris');
-    const slug = generateSlug(item.title!);
-    await addDocumentNonBlocking(safarisCollection, { ...item, slug, type: 'safari', ...commonCreateData });
-    return true;
-  } catch (e) {
-    console.error("Failed to create safari:", e);
-    return false;
-  }
-};
-export const updateSafari = async (id: string, item: Partial<Service>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'safaris', id);
-    const slug = generateSlug(item.title!);
-    updateDocumentNonBlocking(docRef, {...item, slug, ...commonUpdateData});
-    return true;
-  } catch (e) {
-    console.error("Failed to update safari:", e);
-    return false;
-  }
-};
-export const deleteSafari = async (id: string) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'safaris', id);
-    deleteDocumentNonBlocking(docRef);
-    return true;
-  } catch (e) {
-    console.error("Failed to delete safari:", e);
-    return false;
-  }
-};
+export const createSafari = (item: Partial<Service>) => createItem('safari', item);
+export const updateSafari = (id: string, item: Partial<Service>) => updateItem('safari', id, item);
+export const deleteSafari = (id: string) => deleteItem('safari', id);
 
 // Tours
-export const createTour = async (item: Partial<Service>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const toursCollection = collection(firestore, 'tours');
-    const slug = generateSlug(item.title!);
-    await addDocumentNonBlocking(toursCollection, { ...item, slug, type: 'tour', ...commonCreateData });
-    return true;
-  } catch (e) {
-    console.error("Failed to create tour:", e);
-    return false;
-  }
-};
-export const updateTour = async (id: string, item: Partial<Service>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'tours', id);
-    const slug = generateSlug(item.title!);
-    updateDocumentNonBlocking(docRef, {...item, slug, ...commonUpdateData});
-    return true;
-  } catch (e) {
-    console.error("Failed to update tour:", e);
-    return false;
-  }
-};
-export const deleteTour = async (id: string) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'tours', id);
-    deleteDocumentNonBlocking(docRef);
-    return true;
-  } catch (e) {
-    console.error("Failed to delete tour:", e);
-    return false;
-  }
-};
+export const createTour = (item: Partial<Service>) => createItem('tour', item);
+export const updateTour = (id: string, item: Partial<Service>) => updateItem('tour', id, item);
+export const deleteTour = (id: string) => deleteItem('tour', id);
 
 // Transfers
-export const createTransfer = async (item: Partial<Service>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const transfersCollection = collection(firestore, 'transfers');
-    const slug = generateSlug(item.title!);
-    await addDocumentNonBlocking(transfersCollection, { ...item, slug, type: 'transfer', ...commonCreateData });
-    return true;
-  } catch (e) {
-    console.error("Failed to create transfer:", e);
-    return false;
-  }
-};
-export const updateTransfer = async (id: string, item: Partial<Service>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'transfers', id);
-    const slug = generateSlug(item.title!);
-    updateDocumentNonBlocking(docRef, {...item, slug, ...commonUpdateData});
-    return true;
-  } catch (e) {
-    console.error("Failed to update transfer:", e);
-    return false;
-  }
-};
-export const deleteTransfer = async (id: string) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'transfers', id);
-    deleteDocumentNonBlocking(docRef);
-    return true;
-  } catch (e) {
-    console.error("Failed to delete transfer:", e);
-    return false;
-  }
-};
+export const createTransfer = (item: Partial<Service>) => createItem('transfer', item);
+export const updateTransfer = (id: string, item: Partial<Service>) => updateItem('transfer', id, item);
+export const deleteTransfer = (id: string) => deleteItem('transfer', id);
 
 // Posts
-export const createPost = async (item: Partial<Post>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const postsCollection = collection(firestore, 'news_updates');
-    const slug = generateSlug(item.title!);
-    await addDocumentNonBlocking(postsCollection, { ...item, slug, ...commonCreateData });
-    return true;
-  } catch (e) {
-    console.error("Failed to create post:", e);
-    return false;
-  }
-};
-export const updatePost = async (id: string, item: Partial<Post>) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'news_updates', id);
-    const slug = generateSlug(item.title!);
-    updateDocumentNonBlocking(docRef, {...item, slug, ...commonUpdateData});
-    return true;
-  } catch (e) {
-    console.error("Failed to update post:", e);
-    return false;
-  }
-};
-export const deletePost = async (id: string) => {
-  try {
-    const firestore = getFirestoreInstance();
-    const docRef = doc(firestore, 'news_updates', id);
-    deleteDocumentNonBlocking(docRef);
-    return true;
-  } catch (e) {
-    console.error("Failed to delete post:", e);
-    return false;
-  }
-};
+export const createPost = (item: Partial<Post>) => createItem('post', item);
+export const updatePost = (id: string, item: Partial<Post>) => updateItem('post', id, item);
+export const deletePost = (id: string) => deleteItem('post', id);
