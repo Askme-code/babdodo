@@ -10,31 +10,25 @@ let adminApp: App | null = null;
 let firestore: Firestore | null = null;
 
 function getFirebaseAdminApp() {
-    if (adminApp) {
-        return adminApp;
-    }
-
-    if (getApps().some(app => app.name === 'admin')) {
-        adminApp = getApp('admin');
-        return adminApp;
+    if (getApps().length) {
+        return getApp();
     }
 
     // In a production App Hosting environment, the GOOGLE_APPLICATION_CREDENTIALS
     // environment variable is automatically set. In a local environment, you may
     // need to set this yourself.
-    adminApp = initializeApp({
+    return initializeApp({
         projectId: firebaseConfig.projectId,
-    }, 'admin');
-
-    return adminApp;
+    });
 }
 
 
 export function initializeServerFirebase() {
-    if (firestore) {
-        return { firestore };
+    if (!adminApp) {
+        adminApp = getFirebaseAdminApp();
     }
-    const app = getFirebaseAdminApp();
-    firestore = getFirestore(app);
+    if (!firestore) {
+         firestore = getFirestore(adminApp);
+    }
     return { firestore };
 }
