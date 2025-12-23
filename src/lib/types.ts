@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 export interface Service {
   id: string;
   slug: string;
@@ -10,9 +12,11 @@ export interface Service {
   image?: string;
   gallery?: string[];
   included?: string[];
-  excluded?: string[];
+  excluded?:string[];
   type: 'tour' | 'safari' | 'transfer';
   featured?: boolean;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface Post {
@@ -24,4 +28,6 @@ export interface Post {
   author: string;
   date: string;
   featuredImage?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
