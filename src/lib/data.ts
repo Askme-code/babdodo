@@ -1,18 +1,17 @@
 import type { Service, Post } from './types';
-import { initializeServerFirebase } from '@/firebase/server-init';
+import { firestore } from '@/firebase/server-init';
 import { collection, getDocs } from 'firebase/firestore';
 
 // This function is now responsible for fetching live data from Firestore
 async function fetchCollection<T>(collectionName: string): Promise<T[]> {
-  // We use a server-side specific Firebase connection here.
-  const { firestore } = initializeServerFirebase();
-  const colRef = collection(firestore, collectionName);
+  // The firestore instance is now imported directly from the robust server-init file.
+  const colRef = firestore.collection(collectionName);
   try {
-    const snapshot = await getDocs(colRef);
+    const snapshot = await colRef.get();
     return snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as T[];
   } catch (error) {
     console.error(`Failed to fetch collection ${collectionName}:`, error);
-    // In case of error (e.g. permissions), return an empty array
+    // In case of error (e.g. permissions or missing credentials), return an empty array
     // to prevent the page from crashing.
     return [];
   }
