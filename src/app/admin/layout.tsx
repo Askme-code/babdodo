@@ -46,7 +46,9 @@ export default function AdminLayout({
   }, [user, isUserLoading, router, pathname]);
 
   const handleSignOut = async () => {
-    await auth.signOut();
+    if (auth) {
+        await auth.signOut();
+    }
     router.push('/admin/login');
   };
 
@@ -76,40 +78,40 @@ export default function AdminLayout({
           <SidebarContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <Link href="/admin" legacyBehavior passHref>
-                  <SidebarMenuButton as="a" isActive={pathname === '/admin'} tooltip={{children: 'Dashboard'}}>
+                <Link href="/admin">
+                  <SidebarMenuButton isActive={pathname === '/admin'} tooltip={{children: 'Dashboard'}}>
                     <Home />
                     <span>Dashboard</span>
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Link href="/admin/safaris" legacyBehavior passHref>
-                  <SidebarMenuButton as="a" isActive={pathname === '/admin/safaris'} tooltip={{children: 'Safaris'}}>
+                <Link href="/admin/safaris">
+                  <SidebarMenuButton isActive={pathname === '/admin/safaris'} tooltip={{children: 'Safaris'}}>
                     <Mountain />
                     <span>Safaris</span>
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Link href="/admin/tours" legacyBehavior passHref>
-                  <SidebarMenuButton as="a" isActive={pathname === '/admin/tours'} tooltip={{children: 'Tours'}}>
+                <Link href="/admin/tours">
+                  <SidebarMenuButton isActive={pathname === '/admin/tours'} tooltip={{children: 'Tours'}}>
                     <Ship />
                     <span>Tours</span>
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Link href="/admin/transfers" legacyBehavior passHref>
-                  <SidebarMenuButton as="a" isActive={pathname === '/admin/transfers'} tooltip={{children: 'Transfers'}}>
+                <Link href="/admin/transfers">
+                  <SidebarMenuButton isActive={pathname === '/admin/transfers'} tooltip={{children: 'Transfers'}}>
                     <Car />
                     <span>Transfers</span>
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <Link href="/admin/posts" legacyBehavior passHref>
-                  <SidebarMenuButton as="a" isActive={pathname === '/admin/posts'} tooltip={{children: 'Blog Posts'}}>
+                <Link href="/admin/posts">
+                  <SidebarMenuButton isActive={pathname === '/admin/posts'} tooltip={{children: 'Blog Posts'}}>
                     <Newspaper />
                     <span>Blog Posts</span>
                   </SidebarMenuButton>
