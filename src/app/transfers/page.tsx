@@ -43,8 +43,8 @@ const transportTypes = [
   },
 ]
 
-const TransfersPage = () => {
-  const transfers = getServicesByType('transfer');
+const TransfersPage = async () => {
+  const transfers = await getServicesByType('transfer');
 
   return (
     <div className="bg-background">

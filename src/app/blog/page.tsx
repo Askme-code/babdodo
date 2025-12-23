@@ -8,8 +8,8 @@ export const metadata: Metadata = {
   description: 'News, travel tips, and stories from Babdodo Tours & Safaris.',
 };
 
-const BlogPage = () => {
-  const posts = getAllPosts();
+const BlogPage = async () => {
+  const posts = await getAllPosts();
 
   return (
     <div className="bg-background">

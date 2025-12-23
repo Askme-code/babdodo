@@ -17,7 +17,7 @@ type TransferPageProps = {
 };
 
 export async function generateMetadata({ params }: TransferPageProps): Promise<Metadata> {
-  const transfer = getServiceBySlug(params.slug);
+  const transfer = await getServiceBySlug(params.slug);
   if (!transfer) {
     return {
       title: 'Transfer Not Found',
@@ -30,8 +30,9 @@ export async function generateMetadata({ params }: TransferPageProps): Promise<M
 }
 
 export async function generateStaticParams() {
-  const services = getAllServices().filter(s => s.type === 'transfer');
-  return services.map(service => ({
+  const services = await getAllServices();
+  const transfers = services.filter(s => s.type === 'transfer');
+  return transfers.map(service => ({
     slug: service.slug,
   }));
 }
@@ -53,8 +54,8 @@ const WhatsAppIcon = () => (
     </svg>
   );
 
-export default function TransferPage({ params }: TransferPageProps) {
-  const transfer = getServiceBySlug(params.slug);
+export default async function TransferPage({ params }: TransferPageProps) {
+  const transfer = await getServiceBySlug(params.slug);
 
   if (!transfer || transfer.type !== 'transfer') {
     notFound();

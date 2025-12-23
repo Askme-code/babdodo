@@ -8,8 +8,8 @@ export const metadata: Metadata = {
   description: 'Embark on a wild adventure through Tanzania\'s most famous national parks.',
 };
 
-const SafarisPage = () => {
-  const safaris = getServicesByType('safari');
+const SafarisPage = async () => {
+  const safaris = await getServicesByType('safari');
 
   return (
     <div className="bg-background">

@@ -3,16 +3,16 @@ export interface Service {
   slug: string;
   title: string;
   description: string;
-  longDescription: string;
+  longDescription?: string;
   price: number;
-  duration: string;
-  location: string;
-  image: string;
-  gallery: string[];
-  included: string[];
-  excluded: string[];
+  duration?: string;
+  location?: string;
+  image?: string;
+  gallery?: string[];
+  included?: string[];
+  excluded?: string[];
   type: 'tour' | 'safari' | 'transfer';
-  featured: boolean;
+  featured?: boolean;
 }
 
 export interface Post {
@@ -23,5 +23,5 @@ export interface Post {
   content: string;
   author: string;
   date: string;
-  featuredImage: string;
+  featuredImage?: string;
 }

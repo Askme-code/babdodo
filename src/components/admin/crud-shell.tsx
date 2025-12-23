@@ -44,6 +44,7 @@ type Item = Partial<Service> & Partial<Post>;
 const serviceSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
+  longDescription: z.string().optional(),
   price: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().optional()),
   duration: z.string().optional(),
   location: z.string().optional(),
@@ -52,6 +53,9 @@ const serviceSchema = z.object({
 const postSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   excerpt: z.string().min(10, 'Excerpt is required'),
+  content: z.string().min(20, 'Content is required'),
+  author: z.string().optional(),
+  date: z.string().optional(),
 });
 
 interface CrudShellProps {
@@ -77,42 +81,76 @@ const CrudForm = ({
   const schema = isPostType ? postSchema : serviceSchema;
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: item || {},
+    defaultValues: item ? {
+      ...item,
+      // Ensure date is in YYYY-MM-DD format for the input
+      date: item.date ? new Date(item.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+    } : {
+      date: new Date().toISOString().split('T')[0]
+    },
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 max-h-[80vh] overflow-y-auto p-1">
       <div>
         <Label htmlFor="title">Title</Label>
         <Input id="title" {...register('title')} />
         {errors.title && <p className="text-destructive text-sm mt-1">{`${errors.title.message}`}</p>}
       </div>
-      <div>
-        <Label htmlFor={isPostType ? "excerpt" : "description"}>{isPostType ? "Excerpt" : "Description"}</Label>
-        <Textarea id={isPostType ? "excerpt" : "description"} {...register(isPostType ? 'excerpt' : 'description')} />
-        {errors.description && <p className="text-destructive text-sm mt-1">{`${errors.description.message}`}</p>}
-        {errors.excerpt && <p className="text-destructive text-sm mt-1">{`${errors.excerpt.message}`}</p>}
-      </div>
-      {!isPostType && (
-        <div className="grid grid-cols-2 gap-4">
+
+      {isPostType ? (
+        <>
           <div>
-            <Label htmlFor="price">Price</Label>
-            <Input id="price" type="number" {...register('price')} />
-            {errors.price && <p className="text-destructive text-sm mt-1">{`${errors.price.message}`}</p>}
+            <Label htmlFor="excerpt">Excerpt</Label>
+            <Textarea id="excerpt" {...register('excerpt')} />
+            {errors.excerpt && <p className="text-destructive text-sm mt-1">{`${errors.excerpt.message}`}</p>}
           </div>
           <div>
-            <Label htmlFor="duration">Duration</Label>
-            <Input id="duration" {...register('duration')} />
+            <Label htmlFor="content">Content (Markdown/HTML supported)</Label>
+            <Textarea id="content" {...register('content')} className="min-h-[200px]" />
+            {errors.content && <p className="text-destructive text-sm mt-1">{`${errors.content.message}`}</p>}
           </div>
-        </div>
-      )}
-      {!isPostType && (
+           <div className="grid grid-cols-2 gap-4">
+             <div>
+                <Label htmlFor="author">Author</Label>
+                <Input id="author" {...register('author')} />
+              </div>
+              <div>
+                <Label htmlFor="date">Date</Label>
+                <Input id="date" type="date" {...register('date')} />
+              </div>
+           </div>
+        </>
+      ) : (
+        <>
+           <div>
+            <Label htmlFor="description">Short Description</Label>
+            <Textarea id="description" {...register('description')} />
+            {errors.description && <p className="text-destructive text-sm mt-1">{`${errors.description.message}`}</p>}
+          </div>
+          <div>
+            <Label htmlFor="longDescription">Long Description (Overview)</Label>
+            <Textarea id="longDescription" {...register('longDescription')} className="min-h-[150px]" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="price">Price</Label>
+              <Input id="price" type="number" {...register('price')} />
+              {errors.price && <p className="text-destructive text-sm mt-1">{`${errors.price.message}`}</p>}
+            </div>
+            <div>
+              <Label htmlFor="duration">Duration</Label>
+              <Input id="duration" {...register('duration')} />
+            </div>
+          </div>
           <div>
             <Label htmlFor="location">Location</Label>
             <Input id="location" {...register('location')} />
           </div>
+        </>
       )}
-      <div className="flex justify-end gap-2">
+
+      <div className="flex justify-end gap-2 pt-4">
         <Button type="button" variant="outline" onClick={closeDialog}>Cancel</Button>
         <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Saving..." : "Save"}</Button>
       </div>
@@ -171,11 +209,11 @@ export default function CrudShell({ itemType, items, isPostType = false, onCreat
             if (!open) setEditingItem(undefined);
         }}>
           <DialogTrigger asChild>
-            <Button>
+             <Button onClick={() => setEditingItem(undefined)}>
               <PlusCircle className="mr-2 h-4 w-4" /> Add {itemType}
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle>{editingItem ? 'Edit' : 'Add'} {itemType}</DialogTitle>
             </DialogHeader>

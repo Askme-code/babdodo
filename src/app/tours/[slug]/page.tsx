@@ -18,7 +18,7 @@ type TourPageProps = {
 };
 
 export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
-  const tour = getServiceBySlug(params.slug);
+  const tour = await getServiceBySlug(params.slug);
   if (!tour) {
     return {
       title: 'Tour Not Found',
@@ -47,20 +47,23 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
 }
 
 export async function generateStaticParams() {
-  const services = getAllServices().filter(s => s.type === 'tour');
-  return services.map(service => ({
+  const services = await getAllServices();
+  const tours = services.filter(s => s.type === 'tour');
+  return tours.map(service => ({
     slug: service.slug,
   }));
 }
 
-export default function TourPage({ params }: TourPageProps) {
-  const tour = getServiceBySlug(params.slug);
+export default async function TourPage({ params }: TourPageProps) {
+  const tour = await getServiceBySlug(params.slug);
 
   if (!tour || tour.type !== 'tour') {
     notFound();
   }
 
   const mainImage = PlaceHolderImages.find(p => p.id === tour.image);
+  const galleryImages = tour.gallery ? tour.gallery.map(id => PlaceHolderImages.find(p => p.id === id)).filter(Boolean) : [];
+
 
   const jsonLdData = {
       "@context": "https://schema.org",
@@ -75,7 +78,7 @@ export default function TourPage({ params }: TourPageProps) {
       },
       "itinerary": {
           "@type": "ItemList",
-          "itemListElement": tour.included.map((item, index) => ({
+          "itemListElement": tour.included?.map((item, index) => ({
               "@type": "ListItem",
               "position": index + 1,
               "name": item
@@ -117,7 +120,7 @@ export default function TourPage({ params }: TourPageProps) {
               <div>
                 <h3 className="font-headline text-2xl text-primary mb-4">What's Included</h3>
                 <ul className="space-y-2">
-                  {tour.included.map((item, index) => (
+                  {tour.included?.map((item, index) => (
                     <li key={index} className="flex items-start">
                       <Check className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                       <span>{item}</span>
@@ -128,7 +131,7 @@ export default function TourPage({ params }: TourPageProps) {
               <div>
                 <h3 className="font-headline text-2xl text-primary mb-4">What's Excluded</h3>
                  <ul className="space-y-2">
-                  {tour.excluded.map((item, index) => (
+                  {tour.excluded?.map((item, index) => (
                     <li key={index} className="flex items-start">
                       <X className="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
                        <span>{item}</span>
@@ -140,21 +143,18 @@ export default function TourPage({ params }: TourPageProps) {
 
              <div className="mt-12">
               <h3 className="font-headline text-2xl text-primary mb-4">Photo Gallery</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {tour.gallery.map((imgId, index) => {
-                  const img = PlaceHolderImages.find(p => p.id === imgId);
-                  return (
-                    <Image
+               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {galleryImages.map((img, index) => (
+                    img && <Image
                       key={index}
-                      src={img?.imageUrl || ''}
+                      src={img.imageUrl}
                       alt={`${tour.title} gallery image ${index + 1}`}
                       width={400}
                       height={300}
                       className="rounded-lg object-cover aspect-square"
-                      data-ai-hint={img?.imageHint}
+                      data-ai-hint={img.imageHint}
                     />
-                  );
-                })}
+                  ))}
               </div>
             </div>
              <div className="mt-12">

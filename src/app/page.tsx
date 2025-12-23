@@ -41,10 +41,10 @@ const Hero = () => {
   );
 };
 
-export default function Home() {
-  const featuredTours = getFeaturedServices('tour');
-  const featuredSafaris = getFeaturedServices('safari');
-  const latestPosts = getFeaturedPosts(3);
+export default async function Home() {
+  const featuredTours = await getFeaturedServices('tour');
+  const featuredSafaris = await getFeaturedServices('safari');
+  const latestPosts = await getFeaturedPosts(3);
   const aboutImage = PlaceHolderImages.find(p => p.id === 'dhow-sunset');
 
   return (

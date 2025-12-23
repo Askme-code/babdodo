@@ -18,7 +18,7 @@ type SafariPageProps = {
 };
 
 export async function generateMetadata({ params }: SafariPageProps): Promise<Metadata> {
-  const safari = getServiceBySlug(params.slug);
+  const safari = await getServiceBySlug(params.slug);
   if (!safari) {
     return {
       title: 'Safari Not Found',
@@ -47,20 +47,23 @@ export async function generateMetadata({ params }: SafariPageProps): Promise<Met
 }
 
 export async function generateStaticParams() {
-  const services = getAllServices().filter(s => s.type === 'safari');
-  return services.map(service => ({
+  const services = await getAllServices();
+  const safaris = services.filter(s => s.type === 'safari');
+  return safaris.map(service => ({
     slug: service.slug,
   }));
 }
 
-export default function SafariPage({ params }: SafariPageProps) {
-  const safari = getServiceBySlug(params.slug);
+export default async function SafariPage({ params }: SafariPageProps) {
+  const safari = await getServiceBySlug(params.slug);
 
   if (!safari || safari.type !== 'safari') {
     notFound();
   }
 
   const mainImage = PlaceHolderImages.find(p => p.id === safari.image);
+  const galleryImages = safari.gallery ? safari.gallery.map(id => PlaceHolderImages.find(p => p.id === id)).filter(Boolean) : [];
+
 
   const jsonLdData = {
       "@context": "https://schema.org",
@@ -75,7 +78,7 @@ export default function SafariPage({ params }: SafariPageProps) {
       },
       "itinerary": {
           "@type": "ItemList",
-          "itemListElement": safari.included.map((item, index) => ({
+          "itemListElement": safari.included?.map((item, index) => ({
               "@type": "ListItem",
               "position": index + 1,
               "name": item
@@ -117,7 +120,7 @@ export default function SafariPage({ params }: SafariPageProps) {
               <div>
                 <h3 className="font-headline text-2xl text-primary mb-4">What's Included</h3>
                 <ul className="space-y-2">
-                  {safari.included.map((item, index) => (
+                  {safari.included?.map((item, index) => (
                     <li key={index} className="flex items-start">
                       <Check className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
                       <span>{item}</span>
@@ -128,7 +131,7 @@ export default function SafariPage({ params }: SafariPageProps) {
               <div>
                 <h3 className="font-headline text-2xl text-primary mb-4">What's Excluded</h3>
                  <ul className="space-y-2">
-                  {safari.excluded.map((item, index) => (
+                  {safari.excluded?.map((item, index) => (
                     <li key={index} className="flex items-start">
                       <X className="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
                        <span>{item}</span>
@@ -141,20 +144,17 @@ export default function SafariPage({ params }: SafariPageProps) {
              <div className="mt-12">
               <h3 className="font-headline text-2xl text-primary mb-4">Photo Gallery</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {safari.gallery.map((imgId, index) => {
-                  const img = PlaceHolderImages.find(p => p.id === imgId);
-                  return (
-                    <Image
+                {galleryImages.map((img, index) => (
+                    img && <Image
                       key={index}
-                      src={img?.imageUrl || ''}
+                      src={img.imageUrl}
                       alt={`${safari.title} gallery image ${index + 1}`}
                       width={400}
                       height={300}
                       className="rounded-lg object-cover aspect-square"
-                      data-ai-hint={img?.imageHint}
+                      data-ai-hint={img.imageHint}
                     />
-                  );
-                })}
+                  ))}
               </div>
             </div>
              <div className="mt-12">
