@@ -39,7 +39,9 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
       docData.type = itemType;
     }
 
-    await collectionRef.add(docData);
+    const docRef = await collectionRef.add(docData);
+    await docRef.update({ id: docRef.id });
+
     revalidatePath(`/admin/${collectionPath}`);
     return true;
   } catch (e) {
@@ -87,21 +89,21 @@ const deleteItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
 
 
 // Safaris
-export const createSafari = (item: Partial<Service>) => createItem('safari', item);
-export const updateSafari = (id: string, item: Partial<Service>) => updateItem('safari', id, item);
-export const deleteSafari = (id: string) => deleteItem('safari', id);
+export const createSafari = async (item: Partial<Service>) => createItem('safari', item);
+export const updateSafari = async (id: string, item: Partial<Service>) => updateItem('safari', id, item);
+export const deleteSafari = async (id: string) => deleteItem('safari', id);
 
 // Tours
-export const createTour = (item: Partial<Service>) => createItem('tour', item);
-export const updateTour = (id: string, item: Partial<Service>) => updateItem('tour', id, item);
-export const deleteTour = (id: string) => deleteItem('tour', id);
+export const createTour = async (item: Partial<Service>) => createItem('tour', item);
+export const updateTour = async (id: string, item: Partial<Service>) => updateItem('tour', id, item);
+export const deleteTour = async (id: string) => deleteItem('tour', id);
 
 // Transfers
-export const createTransfer = (item: Partial<Service>) => createItem('transfer', item);
-export const updateTransfer = (id: string, item: Partial<Service>) => updateItem('transfer', id, item);
-export const deleteTransfer = (id: string) => deleteItem('transfer', id);
+export const createTransfer = async (item: Partial<Service>) => createItem('transfer', item);
+export const updateTransfer = async (id: string, item: Partial<Service>) => updateItem('transfer', id, item);
+export const deleteTransfer = async (id: string) => deleteItem('transfer', id);
 
 // Posts
-export const createPost = (item: Partial<Post>) => createItem('post', item);
-export const updatePost = (id: string, item: Partial<Post>) => updateItem('post', id, item);
-export const deletePost = (id: string) => deleteItem('post', id);
+export const createPost = async (item: Partial<Post>) => createItem('post', item);
+export const updatePost = async (id: string, item: Partial<Post>) => updateItem('post', id, item);
+export const deletePost = async (id: string) => deleteItem('post', id);
