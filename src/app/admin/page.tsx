@@ -1,19 +1,16 @@
-'use client';
+'use server';
 
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Mountain, Ship, Car, Newspaper, DollarSign, Users, List, Plus, Edit, Trash, ShieldCheck } from 'lucide-react';
-import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
-import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
-import type { Service, Post } from '@/lib/types';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
-import { useToast } from '@/hooks/use-toast';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { firestore } from '@/firebase/server-init';
+import type { Service, Post } from '@/lib/types';
+import { getServicesByType, getFeaturedPosts } from '@/lib/data';
 
 
 type CombinedItem = (Partial<Service> & { itemType: 'safari' | 'tour' | 'transfer' }) | (Partial<Post> & { itemType: 'post' });
-
 
 const getIconForItemType = (itemType: string) => {
     switch (itemType) {
@@ -25,113 +22,56 @@ const getIconForItemType = (itemType: string) => {
     }
 };
 
-const getActionIcon = (action: 'create' | 'update' | 'delete') => {
-    switch (action) {
-        case 'create': return <Plus className="h-4 w-4 text-green-500" />;
-        case 'update': return <Edit className="h-4 w-4 text-blue-500" />;
-        case 'delete': return <Trash className="h-4 w-4 text-red-500" />;
-        default: return null;
-    }
-}
+async function getStats() {
+    const safaris = await firestore.collection('safaris').get();
+    const tours = await firestore.collection('tours').get();
+    const transfers = await firestore.collection('transfers').get();
+    const posts = await firestore.collection('news_updates').get();
 
-
-export default function AdminDashboardPage() {
-    const firestore = useFirestore();
-    const { user } = useUser();
-    const { toast } = useToast();
-
-    const safarisCollection = useMemoFirebase(() => firestore ? collection(firestore, 'safaris') : null, [firestore]);
-    const toursCollection = useMemoFirebase(() => firestore ? collection(firestore, 'tours') : null, [firestore]);
-    const transfersCollection = useMemoFirebase(() => firestore ? collection(firestore, 'transfers') : null, [firestore]);
-    const postsCollection = useMemoFirebase(() => firestore ? collection(firestore, 'news_updates') : null, [firestore]);
-
-    const { data: safaris, isLoading: loadingSafaris, error: safarisError } = useCollection<Service>(safarisCollection);
-    const { data: tours, isLoading: loadingTours } = useCollection<Service>(toursCollection);
-    const { data: transfers, isLoading: loadingTransfers } = useCollection<Service>(transfersCollection);
-    const { data: posts, isLoading: loadingPosts } = useCollection<Post>(postsCollection);
-    
-    const recentSafarisQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'safaris'), orderBy('updatedAt', 'desc'), limit(5)) : null, [firestore]);
-    const recentToursQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'tours'), orderBy('updatedAt', 'desc'), limit(5)) : null, [firestore]);
-    const recentTransfersQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'transfers'), orderBy('updatedAt', 'desc'), limit(5)) : null, [firestore]);
-    const recentPostsQuery = useMemoFirebase(() => firestore ? query(collection(firestore, 'news_updates'), orderBy('updatedAt', 'desc'), limit(5)) : null, [firestore]);
-
-    const { data: recentSafaris } = useCollection<Service>(recentSafarisQuery);
-    const { data: recentTours } = useCollection<Service>(recentToursQuery);
-    const { data: recentTransfers } = useCollection<Service>(recentTransfersQuery);
-    const { data: recentPosts } = useCollection<Post>(recentPostsQuery);
-
-
-    const stats = {
-        safaris: safaris?.length ?? 0,
-        tours: tours?.length ?? 0,
-        transfers: transfers?.length ?? 0,
-        posts: posts?.length ?? 0,
+    return {
+        safaris: safaris.size,
+        tours: tours.size,
+        transfers: transfers.size,
+        posts: posts.size,
         // Static data for now
         revenue: 12530,
         bookings: 42,
     };
-    
+}
+
+
+async function getRecentActivity() {
+    const recentSafarisQuery = firestore.collection('safaris').orderBy('updatedAt', 'desc').limit(5);
+    const recentToursQuery = firestore.collection('tours').orderBy('updatedAt', 'desc').limit(5);
+    const recentTransfersQuery = firestore.collection('transfers').orderBy('updatedAt', 'desc').limit(5);
+    const recentPostsQuery = firestore.collection('news_updates').orderBy('updatedAt', 'desc').limit(5);
+
+    const [safarisSnap, toursSnap, transfersSnap, postsSnap] = await Promise.all([
+        recentSafarisQuery.get(),
+        recentToursQuery.get(),
+        recentTransfersQuery.get(),
+        recentPostsQuery.get(),
+    ]);
+
+    const recentSafaris = safarisSnap.docs.map(doc => ({ ...doc.data(), id: doc.id })) as Service[];
+    const recentTours = toursSnap.docs.map(doc => ({ ...doc.data(), id: doc.id })) as Service[];
+    const recentTransfers = transfersSnap.docs.map(doc => ({ ...doc.data(), id: doc.id })) as Service[];
+    const recentPosts = postsSnap.docs.map(doc => ({ ...doc.data(), id: doc.id })) as Post[];
+
     const allRecentItems: CombinedItem[] = [
-        ...(recentSafaris || []).map(item => ({ ...item, itemType: 'safari' as const })),
-        ...(recentTours || []).map(item => ({ ...item, itemType: 'tour' as const })),
-        ...(recentTransfers || []).map(item => ({ ...item, itemType: 'transfer' as const })),
-        ...(recentPosts || []).map(item => ({ ...item, itemType: 'post' as const })),
-    ].sort((a, b) => (b.updatedAt as any) - (a.updatedAt as any)).slice(0, 5);
-    
-    const handleMakeAdmin = () => {
-        if (!user || !firestore) {
-            toast({
-                title: 'Error',
-                description: 'User not logged in or Firestore not available.',
-                variant: 'destructive',
-            });
-            return;
-        }
+        ...recentSafaris.map(item => ({ ...item, itemType: 'safari' as const })),
+        ...recentTours.map(item => ({ ...item, itemType: 'tour' as const })),
+        ...recentTransfers.map(item => ({ ...item, itemType: 'transfer' as const })),
+        ...recentPosts.map(item => ({ ...item, itemType: 'post' as const })),
+    ].sort((a, b) => (b.updatedAt as any)._seconds - (a.updatedAt as any)._seconds).slice(0, 5);
 
-        const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
-        const adminData = {
-            id: user.uid,
-            username: user.email,
-            role: 'admin',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        };
+    return allRecentItems;
+}
 
-        setDocumentNonBlocking(adminRoleRef, adminData, { merge: true });
 
-        toast({
-            title: 'Success!',
-            description: `Admin role granted to ${user.email}. Please refresh the page.`,
-        });
-    };
-    
-    if (safarisError) {
-        return (
-            <div className="container mx-auto p-8 text-center">
-                <Card className="max-w-md mx-auto">
-                    <CardHeader>
-                        <CardTitle className="text-destructive">Permission Denied</CardTitle>
-                        <CardDescription>
-                            You do not have sufficient permissions to view this content.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="mb-4">
-                            To access the admin dashboard, you need to be an administrator. Click the button below to grant admin privileges to your current account ({user?.email}).
-                        </p>
-                        <Button onClick={handleMakeAdmin}>
-                            <ShieldCheck className="mr-2 h-4 w-4" />
-                            Make Me Admin
-                        </Button>
-                         <p className="text-xs text-muted-foreground mt-4">
-                            Note: After clicking, you may need to refresh the page for the changes to take effect.
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
+export default async function AdminDashboardPage() {
+    const stats = await getStats();
+    const allRecentItems = await getRecentActivity();
 
   return (
     <div className="space-y-8">
@@ -221,7 +161,7 @@ export default function AdminDashboardPage() {
                                     <span className="capitalize">{item.itemType}</span>: <Link href={`/admin/${item.itemType}s`} className="hover:underline">{item.title}</Link>
                                 </p>
                                 <p className="text-sm text-muted-foreground">
-                                    Last updated {item.updatedAt ? new Date((item.updatedAt as any).seconds * 1000).toLocaleString() : 'recently'}
+                                    Last updated {item.updatedAt ? new Date((item.updatedAt as any)._seconds * 1000).toLocaleString() : 'recently'}
                                 </p>
                             </div>
                         </div>

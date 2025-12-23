@@ -1,26 +1,15 @@
-'use client';
+'use server';
 
 import CrudShell from '@/components/admin/crud-shell';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
 import { createPost, updatePost, deletePost } from '@/lib/firebase-actions';
 import type { Post } from '@/lib/types';
-import { collection } from 'firebase/firestore';
+import { firestore } from '@/firebase/server-init';
 
-export default function AdminPostsPage() {
-    const firestore = useFirestore();
-
-    const postsCollection = useMemoFirebase(() => {
-        if (!firestore) return null;
-        return collection(firestore, 'news_updates');
-    }, [firestore]);
-
-    const { data: posts, isLoading } = useCollection<Post>(postsCollection);
+export default async function AdminPostsPage() {
+    const postsSnapshot = await firestore.collection('news_updates').get();
+    const posts = postsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as Post[];
     
-    if (isLoading) {
-        return <div>Loading posts...</div>;
-    }
-    
-    const adaptedPosts = posts ? posts.map(p => ({...p, description: p.excerpt, type: 'post' })) : [];
+    const adaptedPosts = posts.map(p => ({...p, description: p.excerpt, type: 'post' }));
 
     return (
         <CrudShell
