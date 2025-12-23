@@ -1,12 +1,16 @@
 'use client';
 
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
-import { Mountain, Ship, Car, Newspaper, DollarSign, Users, List, Plus, Edit, Trash } from 'lucide-react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, orderBy, limit } from 'firebase/firestore';
+import { Mountain, Ship, Car, Newspaper, DollarSign, Users, List, Plus, Edit, Trash, ShieldCheck } from 'lucide-react';
+import { useCollection, useFirestore, useMemoFirebase, useUser } from '@/firebase';
+import { collection, query, orderBy, limit, doc } from 'firebase/firestore';
 import type { Service, Post } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { setDocumentNonBlocking } from '@/firebase/non-blocking-updates';
+import { useToast } from '@/hooks/use-toast';
+
 
 type CombinedItem = (Partial<Service> & { itemType: 'safari' | 'tour' | 'transfer' }) | (Partial<Post> & { itemType: 'post' });
 
@@ -33,13 +37,15 @@ const getActionIcon = (action: 'create' | 'update' | 'delete') => {
 
 export default function AdminDashboardPage() {
     const firestore = useFirestore();
+    const { user } = useUser();
+    const { toast } = useToast();
 
     const safarisCollection = useMemoFirebase(() => firestore ? collection(firestore, 'safaris') : null, [firestore]);
     const toursCollection = useMemoFirebase(() => firestore ? collection(firestore, 'tours') : null, [firestore]);
     const transfersCollection = useMemoFirebase(() => firestore ? collection(firestore, 'transfers') : null, [firestore]);
     const postsCollection = useMemoFirebase(() => firestore ? collection(firestore, 'news_updates') : null, [firestore]);
 
-    const { data: safaris, isLoading: loadingSafaris } = useCollection<Service>(safarisCollection);
+    const { data: safaris, isLoading: loadingSafaris, error: safarisError } = useCollection<Service>(safarisCollection);
     const { data: tours, isLoading: loadingTours } = useCollection<Service>(toursCollection);
     const { data: transfers, isLoading: loadingTransfers } = useCollection<Service>(transfersCollection);
     const { data: posts, isLoading: loadingPosts } = useCollection<Post>(postsCollection);
@@ -71,6 +77,60 @@ export default function AdminDashboardPage() {
         ...(recentTransfers || []).map(item => ({ ...item, itemType: 'transfer' as const })),
         ...(recentPosts || []).map(item => ({ ...item, itemType: 'post' as const })),
     ].sort((a, b) => (b.updatedAt as any) - (a.updatedAt as any)).slice(0, 5);
+    
+    const handleMakeAdmin = () => {
+        if (!user || !firestore) {
+            toast({
+                title: 'Error',
+                description: 'User not logged in or Firestore not available.',
+                variant: 'destructive',
+            });
+            return;
+        }
+
+        const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
+        const adminData = {
+            id: user.uid,
+            username: user.email,
+            role: 'admin',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        setDocumentNonBlocking(adminRoleRef, adminData, { merge: true });
+
+        toast({
+            title: 'Success!',
+            description: `Admin role granted to ${user.email}. Please refresh the page.`,
+        });
+    };
+    
+    if (safarisError) {
+        return (
+            <div className="container mx-auto p-8 text-center">
+                <Card className="max-w-md mx-auto">
+                    <CardHeader>
+                        <CardTitle className="text-destructive">Permission Denied</CardTitle>
+                        <CardDescription>
+                            You do not have sufficient permissions to view this content.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="mb-4">
+                            To access the admin dashboard, you need to be an administrator. Click the button below to grant admin privileges to your current account ({user?.email}).
+                        </p>
+                        <Button onClick={handleMakeAdmin}>
+                            <ShieldCheck className="mr-2 h-4 w-4" />
+                            Make Me Admin
+                        </Button>
+                         <p className="text-xs text-muted-foreground mt-4">
+                            Note: After clicking, you may need to refresh the page for the changes to take effect.
+                        </p>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
 
 
   return (
