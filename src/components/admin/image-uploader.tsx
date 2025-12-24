@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, ChangeEvent } from 'react';
@@ -5,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { UploadCloud, X } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
 interface ImageUploaderProps {
   onFileSelect: (file: File | null) => void;
