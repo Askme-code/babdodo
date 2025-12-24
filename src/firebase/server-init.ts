@@ -1,3 +1,4 @@
+'use server';
 // IMPORTANT: This file should only be used on the server.
 // It is not meant to be used in client components.
 import { App, cert, getApps, initializeApp } from "firebase-admin/app";
@@ -8,6 +9,22 @@ let app: App;
 // This is a robust, server-safe pattern for initializing the Firebase Admin SDK.
 // It ensures the app is initialized only once, preventing errors in hot-reload
 // and serverless environments.
+
+// Before initializing, check if all required environment variables are present.
+const requiredEnvVars = [
+  'FIREBASE_PROJECT_ID',
+  'FIREBASE_CLIENT_EMAIL',
+  'FIREBASE_PRIVATE_KEY'
+];
+
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  throw new Error(
+    `Firebase Admin SDK initialization failed. The following environment variables are missing: ${missingEnvVars.join(', ')}. Please check your .env file.`
+  );
+}
+
 if (!getApps().length) {
     app = initializeApp({
         credential: cert({
