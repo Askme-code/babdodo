@@ -17,25 +17,34 @@ const requiredEnvVars = [
   'FIREBASE_PRIVATE_KEY'
 ];
 
-const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+const missingEnvVars = requiredEnvVars.filter(envVar => {
+    const value = process.env[envVar];
+    // Check for null, undefined, or empty string
+    return !value;
+});
 
 if (missingEnvVars.length > 0) {
   throw new Error(
-    `Firebase Admin SDK initialization failed. The following environment variables are missing: ${missingEnvVars.join(', ')}. Please check your .env file.`
+    `Firebase Admin SDK initialization failed. The following environment variables are missing or empty: ${missingEnvVars.join(', ')}. Please check your .env file and ensure they have values.`
   );
 }
 
 if (!getApps().length) {
-    app = initializeApp({
-        credential: cert({
-          projectId: process.env.FIREBASE_PROJECT_ID!,
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-          privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
-        }),
-    });
+    try {
+        app = initializeApp({
+            credential: cert({
+              projectId: process.env.FIREBASE_PROJECT_ID!,
+              clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
+              // The replace is crucial for parsing the key from a single-line env var.
+              privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
+            }),
+        });
+    } catch (e: any) {
+        console.error("Firebase Admin Init Error:", e.message);
+        throw new Error(`Failed to initialize Firebase Admin SDK. Check your FIREBASE_PRIVATE_KEY format. Error: ${e.message}`);
+    }
 } else {
     // If an app is already initialized, get the existing one.
-    // This prevents re-initialization errors.
     app = getApps()[0];
 }
 

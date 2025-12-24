@@ -15,8 +15,8 @@ const Footer = () => {
               Explore the wonders of Zanzibar and Tanzania with our expert guides.
             </p>
             <div className="flex space-x-4 mt-4">
-              <Link href="#" className="hover:text-primary transition-colors"><Facebook className="w-6 h-6" /></Link>
-              <Link href="#" className="hover:text-primary transition-colors"><Instagram className="w-6 h-6" /></Link>
+              <Link href="https://www.facebook.com/share/1AXL9h5oHT/" className="hover:text-primary transition-colors"><Facebook className="w-6 h-6" /></Link>
+              <Link href="https://www.instagram.com/babdodotoursandsafaris" className="hover:text-primary transition-colors"><Instagram className="w-6 h-6" /></Link>
               <Link href="#" className="hover:text-primary transition-colors"><Twitter className="w-6 h-6" /></Link>
               <Link href="#" className="hover:text-primary transition-colors"><Youtube className="w-6 h-6" /></Link>
             </div>

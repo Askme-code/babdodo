@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -38,6 +38,7 @@ import { useToast } from '@/hooks/use-toast';
 import type { Service, Post } from '@/lib/types';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Card } from '../ui/card';
+import { Skeleton } from '../ui/skeleton';
 
 type Item = Partial<Service> & Partial<Post>;
 
@@ -62,6 +63,7 @@ interface CrudShellProps {
   itemType: string;
   items: Item[];
   isPostType?: boolean;
+  isLoading?: boolean;
   onCreate: (item: Item) => Promise<boolean>;
   onUpdate: (id: string, item: Item) => Promise<boolean>;
   onDelete: (id: string) => Promise<boolean>;
@@ -158,10 +160,11 @@ const CrudForm = ({
   );
 };
 
-export default function CrudShell({ itemType, items, isPostType = false, onCreate, onUpdate, onDelete }: CrudShellProps) {
+export default function CrudShell({ itemType, items, isPostType = false, isLoading = false, onCreate, onUpdate, onDelete }: CrudShellProps) {
   const { toast } = useToast();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | undefined>(undefined);
+  const [_, setForceRender] = useState(0); // Used to force re-render
 
   const handleFormSubmit = async (data: Item) => {
     try {
@@ -176,11 +179,13 @@ export default function CrudShell({ itemType, items, isPostType = false, onCreat
         toast({ title: `${itemType} ${editingItem ? 'updated' : 'created'} successfully!` });
         setIsFormOpen(false);
         setEditingItem(undefined);
+        // Force re-render to reflect changes as revalidatePath is server-side
+        setTimeout(() => window.location.reload(), 1500);
       } else {
         throw new Error('Operation failed');
       }
     } catch (error) {
-      toast({ title: `Error`, description: `Failed to save ${itemType.toLowerCase()}.`, variant: 'destructive' });
+      toast({ title: `Error`, description: `Failed to save ${itemType.toLowerCase()}. Check permissions.`, variant: 'destructive' });
     }
   };
   
@@ -189,11 +194,12 @@ export default function CrudShell({ itemType, items, isPostType = false, onCreat
       const success = await onDelete(id);
       if (success) {
         toast({ title: `${itemType} deleted successfully!` });
+        setTimeout(() => window.location.reload(), 1500);
       } else {
         throw new Error('Deletion failed');
       }
     } catch(error) {
-        toast({ title: 'Error', description: `Failed to delete ${itemType.toLowerCase()}.`, variant: 'destructive' });
+        toast({ title: 'Error', description: `Failed to delete ${itemType.toLowerCase()}. Check permissions.`, variant: 'destructive' });
     }
   };
 
@@ -239,52 +245,61 @@ export default function CrudShell({ itemType, items, isPostType = false, onCreat
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell className="font-medium">{item.title}</TableCell>
-                {!isPostType && <TableCell>${item.price}</TableCell>}
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => {
-                        setEditingItem(item);
-                        setIsFormOpen(true);
-                      }}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="icon">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete this {itemType.toLowerCase()}.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleDelete(item.id!)}>Delete</AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
+            {isLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                    <TableRow key={i}>
+                        <TableCell><Skeleton className="h-5 w-3/4" /></TableCell>
+                        {!isPostType && <TableCell><Skeleton className="h-5 w-12" /></TableCell>}
+                        <TableCell><div className="flex gap-2"><Skeleton className="h-10 w-10" /><Skeleton className="h-10 w-10" /></div></TableCell>
+                    </TableRow>
+                ))
+            ) : items.length > 0 ? (
+              items.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.title}</TableCell>
+                  {!isPostType && <TableCell>${item.price}</TableCell>}
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                          setEditingItem(item);
+                          setIsFormOpen(true);
+                        }}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="icon">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently delete this {itemType.toLowerCase()}.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(item.id!)}>Delete</AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
+                    No {itemType.toLowerCase()}s found.
                 </TableCell>
               </TableRow>
-            ))}
-             {items.length === 0 && (
-                <TableRow>
-                    <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
-                        No {itemType.toLowerCase()}s found.
-                    </TableCell>
-                </TableRow>
-             )}
+            )}
           </TableBody>
         </Table>
       </Card>
