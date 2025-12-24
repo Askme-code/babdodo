@@ -20,8 +20,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { Service, Post } from '@/lib/types';
-import { useUser, useFirestore } from '@/firebase';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { useUser, useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, setDoc, serverTimestamp, collection, query, orderBy, limit } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -89,23 +89,37 @@ export default function AdminDashboardPage() {
     const firestore = useFirestore();
     const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
 
-    // Dummy data for stats
+    const { data: safaris, error: safarisError } = useCollection<Service>(useMemoFirebase(() => firestore && query(collection(firestore, 'safaris')), [firestore]));
+    const { data: tours, error: toursError } = useCollection<Service>(useMemoFirebase(() => firestore && query(collection(firestore, 'tours')), [firestore]));
+    const { data: transfers, error: transfersError } = useCollection<Service>(useMemoFirebase(() => firestore && query(collection(firestore, 'transfers')), [firestore]));
+    const { data: posts, error: postsError } = useCollection<Post>(useMemoFirebase(() => firestore && query(collection(firestore, 'news_updates')), [firestore]));
+
+    // Dummy data for stats not related to content
     const stats = {
-        safaris: 0,
-        tours: 0,
-        transfers: 0,
-        posts: 0,
         revenue: 12530,
         bookings: 42,
     };
+
+    const isPermissionError = safarisError || toursError || transfersError || postsError;
     
-    // Dummy data for recent activity
-    const allRecentItems: CombinedItem[] = [];
+    // Combine and sort recent activities
+    const allRecentItems: CombinedItem[] = [
+        ...(safaris?.map(item => ({ ...item, itemType: 'safari' as const })) || []),
+        ...(tours?.map(item => ({ ...item, itemType: 'tour' as const })) || []),
+        ...(transfers?.map(item => ({ ...item, itemType: 'transfer' as const })) || []),
+        ...(posts?.map(item => ({ ...item, itemType: 'post' as const, title: item.title })) || [])
+    ]
+    .sort((a, b) => {
+        const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+        const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+        return dateB - dateA;
+    })
+    .slice(0, 5);
+
 
     const grantAdminAccess = async () => {
         if (!user || !firestore) return;
         const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
-        // Using non-blocking setDoc
         await setDoc(adminRoleRef, {
             id: user.uid,
             username: user.email,
@@ -114,18 +128,16 @@ export default function AdminDashboardPage() {
             updatedAt: serverTimestamp(),
         });
         setShowPermissionPrompt(false);
+        window.location.reload();
     };
 
     useEffect(() => {
-        // This is a simple client-side check to suggest granting admin rights.
-        // In a real app, this might be triggered by a failed data fetch.
-        // For now, we'll just show the button if a user is logged in.
-        if (user) {
-            // A more robust check is needed, but this is a good starting point.
-            // Let's assume if the prompt hasn't been dismissed, we show it.
+        if (user && isPermissionError) {
             setShowPermissionPrompt(true);
+        } else {
+            setShowPermissionPrompt(false);
         }
-    }, [user]);
+    }, [user, isPermissionError]);
 
   return (
     <div className="space-y-8">
@@ -143,7 +155,7 @@ export default function AdminDashboardPage() {
             <Mountain className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.safaris}</div>
+            <div className="text-2xl font-bold">{safaris?.length || 0}</div>
             <p className="text-xs text-muted-foreground">Managed safaris</p>
           </CardContent>
         </Card>
@@ -153,7 +165,7 @@ export default function AdminDashboardPage() {
             <Ship className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.tours}</div>
+            <div className="text-2xl font-bold">{tours?.length || 0}</div>
             <p className="text-xs text-muted-foreground">Managed tours</p>
           </CardContent>
         </Card>
@@ -163,7 +175,7 @@ export default function AdminDashboardPage() {
             <Car className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.transfers}</div>
+            <div className="text-2xl font-bold">{transfers?.length || 0}</div>
             <p className="text-xs text-muted-foreground">Managed transfers</p>
           </CardContent>
         </Card>
@@ -173,7 +185,7 @@ export default function AdminDashboardPage() {
             <Newspaper className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.posts}</div>
+            <div className="text-2xl font-bold">{posts?.length || 0}</div>
             <p className="text-xs text-muted-foreground">Published articles</p>
           </CardContent>
         </Card>
@@ -210,14 +222,14 @@ export default function AdminDashboardPage() {
                     allRecentItems.map((item) => (
                         <div key={`${item.itemType}-${item.id}`} className="flex items-center gap-4">
                             <Avatar className="h-9 w-9">
-                                <AvatarFallback>{getIconForItemType(item.itemType)}</AvatarFallback>
+                                <AvatarFallback>{getIconForItemType(item.itemType!)}</AvatarFallback>
                             </Avatar>
                             <div className="grid gap-1">
                                 <p className="text-sm font-medium leading-none">
                                     <span className="capitalize">{item.itemType}</span>: <Link href={`/admin/${item.itemType}s`} className="hover:underline">{item.title}</Link>
                                 </p>
                                 <p className="text-sm text-muted-foreground">
-                                    Last updated recently
+                                    Last updated {item.updatedAt ? new Date(item.updatedAt).toLocaleDateString() : 'recently'}
                                 </p>
                             </div>
                         </div>
