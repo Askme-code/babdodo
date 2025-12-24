@@ -1,15 +1,21 @@
 
+'use client';
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Check, Clock, MapPin, DollarSign, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
-import { getServiceBySlug, getAllServices } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
+import { useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, where, getDocs, doc } from 'firebase/firestore';
+import { useDoc } from '@/firebase/firestore/use-doc';
+import { useEffect, useState } from 'react';
+import type { Service } from '@/lib/types';
+
 
 type TransferPageProps = {
   params: {
@@ -17,26 +23,16 @@ type TransferPageProps = {
   };
 };
 
-export async function generateMetadata({ params }: TransferPageProps): Promise<Metadata> {
-  const transfer = await getServiceBySlug(params.slug);
-  if (!transfer) {
-    return {
-      title: 'Transfer Not Found',
-    };
-  }
-  return {
-    title: transfer.title,
-    description: transfer.description,
-  };
+async function getServiceRefBySlug(firestore: any, slug: string, type: string) {
+    const servicesRef = collection(firestore, `${type}s`);
+    const q = query(servicesRef, where('slug', '==', slug));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        return querySnapshot.docs[0].ref;
+    }
+    return null;
 }
 
-export async function generateStaticParams() {
-  const services = await getAllServices();
-  const transfers = services.filter(s => s.type === 'transfer');
-  return transfers.map(service => ({
-    slug: service.slug,
-  }));
-}
 
 const WhatsAppIcon = () => (
     <svg
@@ -55,10 +51,23 @@ const WhatsAppIcon = () => (
     </svg>
   );
 
-export default async function TransferPage({ params }: TransferPageProps) {
-  const transfer = await getServiceBySlug(params.slug);
+export default function TransferPage({ params }: TransferPageProps) {
+  const firestore = useFirestore();
+  const [itemRef, setItemRef] = useState(null);
 
-  if (!transfer || transfer.type !== 'transfer') {
+  useEffect(() => {
+    if (firestore) {
+        getServiceRefBySlug(firestore, params.slug, 'transfer').then(setItemRef);
+    }
+  }, [firestore, params.slug]);
+
+  const { data: transfer, isLoading } = useDoc<Service>(itemRef);
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!transfer) {
     notFound();
   }
 
@@ -89,9 +98,7 @@ export default async function TransferPage({ params }: TransferPageProps) {
       <div className="container py-12 md:py-16">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="lg:col-span-2">
-            <div className="prose prose-lg max-w-none text-foreground/90">
-                <h2 className="font-headline text-3xl text-primary">Transfer Overview</h2>
-                <p>{transfer.longDescription}</p>
+            <div className="prose prose-lg max-w-none text-foreground/90" dangerouslySetInnerHTML={{ __html: transfer.longDescription || '' }}>
             </div>
             
             <div className="mt-12">

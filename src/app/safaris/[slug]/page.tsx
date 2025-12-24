@@ -1,15 +1,19 @@
 
+'use client';
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Check, X, Clock, MapPin, DollarSign } from 'lucide-react';
-
-import { getServiceBySlug, getAllServices } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { JsonLd } from '@/components/JsonLd';
+import { useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, where, getDocs, doc } from 'firebase/firestore';
+import { useDoc } from '@/firebase/firestore/use-doc';
+import { useEffect, useState } from 'react';
+import type { Service } from '@/lib/types';
 
 
 type SafariPageProps = {
@@ -18,47 +22,34 @@ type SafariPageProps = {
   };
 };
 
-export async function generateMetadata({ params }: SafariPageProps): Promise<Metadata> {
-  const safari = await getServiceBySlug(params.slug);
-  if (!safari) {
-    return {
-      title: 'Safari Not Found',
-    };
-  }
-
-   const mainImage = PlaceHolderImages.find(p => p.id === safari.image);
-
-  return {
-    title: `${safari.title} - Tanzania Safari`,
-    description: safari.description,
-     openGraph: {
-        title: safari.title,
-        description: safari.description,
-        type: 'article',
-        images: [
-            {
-                url: mainImage?.imageUrl || '',
-                width: 1200,
-                height: 630,
-                alt: safari.title,
-            }
-        ]
+async function getServiceRefBySlug(firestore: any, slug: string, type: string) {
+    const servicesRef = collection(firestore, `${type}s`);
+    const q = query(servicesRef, where('slug', '==', slug));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        return querySnapshot.docs[0].ref;
     }
-  };
+    return null;
 }
 
-export async function generateStaticParams() {
-  const services = await getAllServices();
-  const safaris = services.filter(s => s.type === 'safari');
-  return safaris.map(service => ({
-    slug: service.slug,
-  }));
-}
 
-export default async function SafariPage({ params }: SafariPageProps) {
-  const safari = await getServiceBySlug(params.slug);
+export default function SafariPage({ params }: SafariPageProps) {
+  const firestore = useFirestore();
+  const [itemRef, setItemRef] = useState(null);
 
-  if (!safari || safari.type !== 'safari') {
+  useEffect(() => {
+    if (firestore) {
+        getServiceRefBySlug(firestore, params.slug, 'safari').then(setItemRef);
+    }
+  }, [firestore, params.slug]);
+
+  const { data: safari, isLoading } = useDoc<Service>(itemRef);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  if (!safari) {
     notFound();
   }
 
@@ -112,9 +103,7 @@ export default async function SafariPage({ params }: SafariPageProps) {
       <div className="container py-8 md:py-16 px-4">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="lg:col-span-2">
-            <div className="prose prose-lg max-w-none text-foreground/90">
-                <h2 className="font-headline text-3xl text-primary">Safari Overview</h2>
-                <p>{safari.longDescription}</p>
+            <div className="prose prose-lg max-w-none text-foreground/90" dangerouslySetInnerHTML={{ __html: safari.longDescription || '' }}>
             </div>
             
             <div className="grid md:grid-cols-2 gap-8 mt-12">

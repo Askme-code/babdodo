@@ -1,15 +1,19 @@
 
+'use client';
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { Check, X, Clock, MapPin, DollarSign } from 'lucide-react';
-
-import { getServiceBySlug, getAllServices } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { JsonLd } from '@/components/JsonLd';
+import { useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, where, getDocs, doc } from 'firebase/firestore';
+import { useDoc } from '@/firebase/firestore/use-doc';
+import { useEffect, useState } from 'react';
+import type { Service } from '@/lib/types';
 
 
 type TourPageProps = {
@@ -18,47 +22,33 @@ type TourPageProps = {
   };
 };
 
-export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
-  const tour = await getServiceBySlug(params.slug);
-  if (!tour) {
-    return {
-      title: 'Tour Not Found',
-    };
+async function getServiceRefBySlug(firestore: any, slug: string, type: string) {
+    const servicesRef = collection(firestore, `${type}s`);
+    const q = query(servicesRef, where('slug', '==', slug));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        return querySnapshot.docs[0].ref;
+    }
+    return null;
+}
+
+export default function TourPage({ params }: TourPageProps) {
+  const firestore = useFirestore();
+  const [itemRef, setItemRef] = useState(null);
+
+  useEffect(() => {
+    if (firestore) {
+        getServiceRefBySlug(firestore, params.slug, 'tour').then(setItemRef);
+    }
+  }, [firestore, params.slug]);
+
+  const { data: tour, isLoading } = useDoc<Service>(itemRef);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
-  const mainImage = PlaceHolderImages.find(p => p.id === tour.image);
-
-  return {
-    title: `${tour.title} - Zanzibar Tour`,
-    description: tour.description,
-    openGraph: {
-        title: tour.title,
-        description: tour.description,
-        type: 'article',
-        images: [
-            {
-                url: mainImage?.imageUrl || '',
-                width: 1200,
-                height: 630,
-                alt: tour.title,
-            }
-        ]
-    }
-  };
-}
-
-export async function generateStaticParams() {
-  const services = await getAllServices();
-  const tours = services.filter(s => s.type === 'tour');
-  return tours.map(service => ({
-    slug: service.slug,
-  }));
-}
-
-export default async function TourPage({ params }: TourPageProps) {
-  const tour = await getServiceBySlug(params.slug);
-
-  if (!tour || tour.type !== 'tour') {
+  if (!tour) {
     notFound();
   }
 
@@ -112,9 +102,7 @@ export default async function TourPage({ params }: TourPageProps) {
       <div className="container py-8 md:py-16 px-4">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="lg:col-span-2">
-            <div className="prose prose-lg max-w-none text-foreground/90">
-                <h2 className="font-headline text-3xl text-primary">Tour Overview</h2>
-                <p>{tour.longDescription}</p>
+            <div className="prose prose-lg max-w-none text-foreground/90" dangerouslySetInnerHTML={{ __html: tour.longDescription || '' }}>
             </div>
             
             <div className="grid md:grid-cols-2 gap-8 mt-12">
