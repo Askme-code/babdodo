@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Input } from '@/components/ui/input';
@@ -39,6 +39,8 @@ import type { Service, Post } from '@/lib/types';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Skeleton } from '../ui/skeleton';
+import { Alert, AlertTitle, AlertDescription } from '../ui/alert';
+import { FirestorePermissionError } from '@/firebase';
 
 type Item = Partial<Service> & Partial<Post>;
 
@@ -64,10 +66,51 @@ interface CrudShellProps {
   items: Item[];
   isPostType?: boolean;
   isLoading?: boolean;
+  loadingError?: Error | null;
+  onGrantAdmin: () => Promise<void>;
   onCreate: (item: Item) => Promise<boolean>;
   onUpdate: (id: string, item: Item) => Promise<boolean>;
   onDelete: (id: string) => Promise<boolean>;
 }
+
+const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { toast } = useToast();
+
+    const handleGrantAccess = async () => {
+        setIsSubmitting(true);
+        try {
+            await onGrant();
+            toast({
+                title: 'Access Granted!',
+                description: 'Admin role has been assigned. Please refresh the page.',
+            });
+        } catch (error) {
+            console.error('Failed to grant admin access', error);
+            toast({
+                title: 'Error',
+                description: 'Could not assign admin role. Please check the console.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <Alert variant="destructive" className="my-6">
+            <AlertTitle>Permission Denied</AlertTitle>
+            <AlertDescription>
+                Your account does not have sufficient permissions to view this data.
+                You can grant yourself admin access for development purposes.
+            </AlertDescription>
+            <Button onClick={handleGrantAccess} disabled={isSubmitting} className="mt-4">
+                {isSubmitting ? 'Granting...' : 'Make Me Admin'}
+            </Button>
+        </Alert>
+    );
+};
+
 
 const CrudForm = ({
   item,
@@ -85,7 +128,6 @@ const CrudForm = ({
     resolver: zodResolver(schema),
     defaultValues: item ? {
       ...item,
-      // Ensure date is in YYYY-MM-DD format for the input
       date: item.date ? new Date(item.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     } : {
       date: new Date().toISOString().split('T')[0]
@@ -160,11 +202,10 @@ const CrudForm = ({
   );
 };
 
-export default function CrudShell({ itemType, items, isPostType = false, isLoading = false, onCreate, onUpdate, onDelete }: CrudShellProps) {
+export default function CrudShell({ itemType, items, isPostType = false, isLoading = false, loadingError, onGrantAdmin, onCreate, onUpdate, onDelete }: CrudShellProps) {
   const { toast } = useToast();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | undefined>(undefined);
-  const [_, setForceRender] = useState(0); // Used to force re-render
 
   const handleFormSubmit = async (data: Item) => {
     try {
@@ -179,7 +220,6 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
         toast({ title: `${itemType} ${editingItem ? 'updated' : 'created'} successfully!` });
         setIsFormOpen(false);
         setEditingItem(undefined);
-        // Force re-render to reflect changes as revalidatePath is server-side
         setTimeout(() => window.location.reload(), 1500);
       } else {
         throw new Error('Operation failed');
@@ -202,6 +242,9 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
         toast({ title: 'Error', description: `Failed to delete ${itemType.toLowerCase()}. Check permissions.`, variant: 'destructive' });
     }
   };
+  
+  const hasPermissionError = loadingError instanceof FirestorePermissionError;
+
 
   return (
     <div className="space-y-4">
@@ -235,6 +278,9 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
           </DialogContent>
         </Dialog>
       </div>
+
+      {hasPermissionError && <PermissionErrorAlert onGrant={onGrantAdmin} />}
+
       <Card>
         <Table>
           <TableHeader>
@@ -253,7 +299,7 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
                         <TableCell><div className="flex gap-2"><Skeleton className="h-10 w-10" /><Skeleton className="h-10 w-10" /></div></TableCell>
                     </TableRow>
                 ))
-            ) : items.length > 0 ? (
+            ) : !hasPermissionError && items.length > 0 ? (
               items.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.title}</TableCell>
@@ -296,7 +342,7 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
             ) : (
               <TableRow>
                 <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
-                    No {itemType.toLowerCase()}s found.
+                   {hasPermissionError ? "Permissions required to view data." : `No ${itemType.toLowerCase()}s found.`}
                 </TableCell>
               </TableRow>
             )}
