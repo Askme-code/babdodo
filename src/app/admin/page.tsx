@@ -22,7 +22,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import type { Service, Post } from '@/lib/types';
 import { useUser, useFirestore } from '@/firebase';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -45,9 +45,6 @@ const getIconForItemType = (itemType: string) => {
   }
 };
 
-// This is a client component, so we can't fetch server-side data here.
-// We'll rely on client-side fetching or pass data as props if needed.
-// For now, we will display static data or loading states.
 
 const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -75,10 +72,9 @@ const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => 
 
     return (
         <Alert variant="destructive" className="mb-6">
-            <AlertTitle>Permission Denied</AlertTitle>
+            <AlertTitle>Admin Permissions Required</AlertTitle>
             <AlertDescription>
-                Your account does not have sufficient permissions to view this data.
-                You can grant yourself admin access for development purposes.
+                Your account does not have admin privileges. Granting access will allow you to manage all site content. This action only needs to be done once per admin user.
             </AlertDescription>
             <Button onClick={handleGrantAccess} disabled={isSubmitting} className="mt-4">
                 {isSubmitting ? 'Granting...' : 'Make Me Admin'}
@@ -91,9 +87,9 @@ const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => 
 export default function AdminDashboardPage() {
     const { user } = useUser();
     const firestore = useFirestore();
-    const [showPermissionError, setShowPermissionError] = useState(false);
+    const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
 
-    // Dummy data for stats - replace with client-side fetching if needed
+    // Dummy data for stats
     const stats = {
         safaris: 0,
         tours: 0,
@@ -109,30 +105,27 @@ export default function AdminDashboardPage() {
     const grantAdminAccess = async () => {
         if (!user || !firestore) return;
         const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
+        // Using non-blocking setDoc
         await setDoc(adminRoleRef, {
             id: user.uid,
+            username: user.email,
             role: 'admin',
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         });
-        // After granting, we might want to hide the error and let the user refresh
-        setShowPermissionError(false);
+        setShowPermissionPrompt(false);
     };
 
-    // Simulate checking permissions. A real app would get this from a hook.
-    // For now, we'll just show the button if a user is logged in.
-    // In a real scenario, a failed fetch would set showPermissionError to true.
-    // We can show it by default for demonstration if there's no other logic.
-    useState(() => {
-        // A simple way to decide if the error should be shown.
-        // In a real app, this would be set by a failed data fetch hook.
-        // For now, we'll assume if the user is logged in, they might need permissions.
+    useEffect(() => {
+        // This is a simple client-side check to suggest granting admin rights.
+        // In a real app, this might be triggered by a failed data fetch.
+        // For now, we'll just show the button if a user is logged in.
         if (user) {
-            // A more robust check would see if a fetch failed.
-            // Let's keep it simple: show error by default if logged in.
-            setShowPermissionError(true);
+            // A more robust check is needed, but this is a good starting point.
+            // Let's assume if the prompt hasn't been dismissed, we show it.
+            setShowPermissionPrompt(true);
         }
-    });
+    }, [user]);
 
   return (
     <div className="space-y-8">
@@ -141,7 +134,7 @@ export default function AdminDashboardPage() {
          <p className="text-muted-foreground">An overview of your tours and safaris business.</p>
        </div>
        
-       {showPermissionError && <PermissionErrorAlert onGrant={grantAdminAccess} />}
+       {showPermissionPrompt && <PermissionErrorAlert onGrant={grantAdminAccess} />}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
@@ -230,7 +223,7 @@ export default function AdminDashboardPage() {
                         </div>
                     ))
                 ) : (
-                    <p className="text-muted-foreground text-sm">No recent activity to display.</p>
+                    <p className="text-muted-foreground text-sm">This section will show recent content changes once data is available.</p>
                 )}
             </div>
         </CardContent>

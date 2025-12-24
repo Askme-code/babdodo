@@ -1,22 +1,18 @@
 'use client';
 
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  deleteDoc,
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
   doc,
-  serverTimestamp
+  serverTimestamp,
 } from 'firebase/firestore';
-import { getFirestore } from 'firebase/firestore'; // Changed from firebase-admin
 import { initializeFirebase } from '@/firebase';
 import type { Service, Post } from './types';
-import {
-  addDocumentNonBlocking,
-  updateDocumentNonBlocking,
-  deleteDocumentNonBlocking,
-} from '@/firebase/non-blocking-updates';
 
+// Ensure Firebase is initialized on the client
 const { firestore } = initializeFirebase();
 
 const generateSlug = (title: string) => {
@@ -49,14 +45,19 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
+
     if (itemType !== 'post') {
       docData.type = itemType;
+    } else {
+        if (!docData.date) {
+            docData.date = new Date().toISOString().split('T')[0];
+        }
     }
 
-    const docRef = await addDoc(collectionRef, docData);
-    await updateDoc(doc(firestore, collectionPath, docRef.id), { id: docRef.id });
 
-    // Cannot use revalidatePath on the client
+    const docRef = await addDoc(collectionRef, docData);
+    await updateDoc(docRef, { id: docRef.id });
+
     return true;
   } catch (e) {
     console.error(`Failed to create ${itemType}:`, e);
@@ -68,7 +69,7 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
 const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string, item: Partial<Service> | Partial<Post>) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const docRef = doc(firestore, collectionPath, id);
+    const docRef = doc(firestore, `${collectionPath}/${id}`);
     const slug = generateSlug(item.title!);
 
     const docData: any = {
@@ -76,8 +77,12 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
       slug,
       updatedAt: serverTimestamp(),
     };
+     if (itemType === 'post' && typeof docData.date === 'string') {
+        docData.date = docData.date;
+    }
 
-    updateDocumentNonBlocking(docRef, docData);
+    await updateDoc(docRef, docData);
+
     return true;
   } catch (e) {
     console.error(`Failed to update ${itemType}:`, e);
@@ -89,8 +94,8 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
 const deleteItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const docRef = doc(firestore, collectionPath, id);
-    deleteDocumentNonBlocking(docRef);
+    const docRef = doc(firestore, `${collectionPath}/${id}`);
+    await docRef.delete();
     return true;
   } catch (e) {
     console.error(`Failed to delete ${itemType}:`, e);

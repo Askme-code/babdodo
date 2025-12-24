@@ -40,7 +40,9 @@ import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Skeleton } from '../ui/skeleton';
 import { Alert, AlertTitle, AlertDescription } from '../ui/alert';
-import { FirestorePermissionError } from '@/firebase';
+import { useUser, useFirestore } from '@/firebase';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+
 
 type Item = Partial<Service> & Partial<Post>;
 
@@ -65,12 +67,11 @@ interface CrudShellProps {
   itemType: string;
   items: Item[];
   isPostType?: boolean;
-  isLoading?: boolean;
-  loadingError?: Error | null;
-  onGrantAdmin: () => Promise<void>;
   onCreate: (item: Item) => Promise<boolean>;
   onUpdate: (id: string, item: Item) => Promise<boolean>;
   onDelete: (id: string) => Promise<boolean>;
+  error?: Error | null;
+  isLoading?: boolean;
 }
 
 const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => {
@@ -83,8 +84,9 @@ const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => 
             await onGrant();
             toast({
                 title: 'Access Granted!',
-                description: 'Admin role has been assigned. Please refresh the page.',
+                description: 'Admin role has been assigned. The page will now reload.',
             });
+            setTimeout(() => window.location.reload(), 2000);
         } catch (error) {
             console.error('Failed to grant admin access', error);
             toast({
@@ -98,11 +100,10 @@ const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => 
     };
 
     return (
-        <Alert variant="destructive" className="my-6">
-            <AlertTitle>Permission Denied</AlertTitle>
+        <Alert variant="destructive" className="mb-6">
+            <AlertTitle>Admin Permissions Required</AlertTitle>
             <AlertDescription>
-                Your account does not have sufficient permissions to view this data.
-                You can grant yourself admin access for development purposes.
+                Your account does not have admin privileges to view this content. Granting access will allow you to manage all site content. This action only needs to be done once.
             </AlertDescription>
             <Button onClick={handleGrantAccess} disabled={isSubmitting} className="mt-4">
                 {isSubmitting ? 'Granting...' : 'Make Me Admin'}
@@ -202,10 +203,24 @@ const CrudForm = ({
   );
 };
 
-export default function CrudShell({ itemType, items, isPostType = false, isLoading = false, loadingError, onGrantAdmin, onCreate, onUpdate, onDelete }: CrudShellProps) {
+export default function CrudShell({ itemType, items, isPostType = false, onCreate, onUpdate, onDelete, error, isLoading }: CrudShellProps) {
   const { toast } = useToast();
+  const { user } = useUser();
+  const firestore = useFirestore();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | undefined>(undefined);
+
+  const grantAdminAccess = async () => {
+      if (!user || !firestore) return;
+      const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
+      await setDoc(adminRoleRef, {
+          id: user.uid,
+          username: user.email,
+          role: 'admin',
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+      });
+  };
 
   const handleFormSubmit = async (data: Item) => {
     try {
@@ -217,15 +232,15 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
       }
 
       if (success) {
-        toast({ title: `${itemType} ${editingItem ? 'updated' : 'created'} successfully!` });
+        toast({ title: `${itemType} ${editingItem ? 'updated' : 'created'} successfully! Refreshing...` });
         setIsFormOpen(false);
         setEditingItem(undefined);
-        setTimeout(() => window.location.reload(), 1500);
+        setTimeout(() => window.location.reload(), 1000);
       } else {
         throw new Error('Operation failed');
       }
     } catch (error) {
-      toast({ title: `Error`, description: `Failed to save ${itemType.toLowerCase()}. Check permissions.`, variant: 'destructive' });
+      toast({ title: `Error`, description: `Failed to save ${itemType.toLowerCase()}.`, variant: 'destructive' });
     }
   };
   
@@ -233,18 +248,17 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
     try {
       const success = await onDelete(id);
       if (success) {
-        toast({ title: `${itemType} deleted successfully!` });
-        setTimeout(() => window.location.reload(), 1500);
+        toast({ title: `${itemType} deleted successfully! Refreshing...` });
+        setTimeout(() => window.location.reload(), 1000);
       } else {
         throw new Error('Deletion failed');
       }
     } catch(error) {
-        toast({ title: 'Error', description: `Failed to delete ${itemType.toLowerCase()}. Check permissions.`, variant: 'destructive' });
+        toast({ title: 'Error', description: `Failed to delete ${itemType.toLowerCase()}.`, variant: 'destructive' });
     }
   };
-  
-  const hasPermissionError = loadingError instanceof FirestorePermissionError;
 
+  const hasPermissionError = error?.message.includes('Missing or insufficient permissions');
 
   return (
     <div className="space-y-4">
@@ -279,7 +293,7 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
         </Dialog>
       </div>
 
-      {hasPermissionError && <PermissionErrorAlert onGrant={onGrantAdmin} />}
+      {hasPermissionError && <PermissionErrorAlert onGrant={grantAdminAccess} />}
 
       <Card>
         <Table>
@@ -292,14 +306,12 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
           </TableHeader>
           <TableBody>
             {isLoading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                    <TableRow key={i}>
-                        <TableCell><Skeleton className="h-5 w-3/4" /></TableCell>
-                        {!isPostType && <TableCell><Skeleton className="h-5 w-12" /></TableCell>}
-                        <TableCell><div className="flex gap-2"><Skeleton className="h-10 w-10" /><Skeleton className="h-10 w-10" /></div></TableCell>
-                    </TableRow>
-                ))
-            ) : !hasPermissionError && items.length > 0 ? (
+                <TableRow>
+                    <TableCell colSpan={isPostType ? 2 : 3} className="h-24 text-center">
+                        <Skeleton className="h-4 w-1/2 mx-auto" />
+                    </TableCell>
+                </TableRow>
+            ) : !hasPermissionError && items && items.length > 0 ? (
               items.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.title}</TableCell>
@@ -342,7 +354,8 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
             ) : (
               <TableRow>
                 <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
-                   {hasPermissionError ? "Permissions required to view data." : `No ${itemType.toLowerCase()}s found.`}
+                   {!hasPermissionError && `No ${itemType.toLowerCase()}s found.`}
+                   {hasPermissionError && 'Permissions required to view content.'}
                 </TableCell>
               </TableRow>
             )}
@@ -352,5 +365,3 @@ export default function CrudShell({ itemType, items, isPostType = false, isLoadi
     </div>
   );
 }
-
-    

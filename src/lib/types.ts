@@ -1,4 +1,4 @@
-import type { Timestamp } from 'firebase/firestore';
+import type { Timestamp } from 'firebase-admin/firestore';
 
 export interface Service {
   id: string;
@@ -26,7 +26,7 @@ export interface Post {
   excerpt: string;
   content: string;
   author: string;
-  date: string;
+  date: string; // Changed to string to be serializable
   featuredImage?: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
