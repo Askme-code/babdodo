@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { getServicesByType } from '@/lib/data';
 import ServiceCard from '@/components/service-card';
-import { TransferVanIcon } from '@/components/icons';
 import { DollarSign, Smile, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -50,8 +49,8 @@ const TransfersPage = async () => {
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
         <div className="container h-full flex flex-col items-center justify-center text-center">
-           <div className="p-4 bg-primary text-primary-foreground rounded-full mb-4">
-              <TransferVanIcon className="w-10 h-10" />
+           <div className="p-2 bg-primary text-primary-foreground rounded-full mb-4">
+              <Image src="/image/logo.jpg" alt="Babdodo Tours Logo" width={40} height={40} className="rounded-full" />
             </div>
           <h1 className="text-4xl md:text-5xl font-headline font-bold">Airport & Hotel Transfers</h1>
           <p className="mt-4 text-lg md:text-xl max-w-2xl text-secondary-foreground">
