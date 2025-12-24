@@ -1,5 +1,6 @@
 
 'use client';
+import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { User, Calendar } from 'lucide-react';
@@ -15,12 +16,13 @@ import type { Post } from '@/lib/types';
 
 
 type PostPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-export default function PostPage({ params }: PostPageProps) {
+export default function PostPage({ params: paramsProp }: PostPageProps) {
+  const params = React.use(paramsProp);
   const firestore = useFirestore();
 
   const postQuery = useMemoFirebase(() => {

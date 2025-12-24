@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Check, X, Clock, MapPin, DollarSign } from 'lucide-react';
@@ -17,12 +18,13 @@ import type { Service } from '@/lib/types';
 
 
 type SafariPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-export default function SafariPage({ params }: SafariPageProps) {
+export default function SafariPage({ params: paramsProp }: SafariPageProps) {
+  const params = React.use(paramsProp);
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {

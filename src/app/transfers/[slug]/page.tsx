@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Check, Clock, MapPin, DollarSign, UserCheck } from 'lucide-react';
@@ -18,9 +19,9 @@ import type { Service } from '@/lib/types';
 
 
 type TransferPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 
@@ -41,7 +42,8 @@ const WhatsAppIcon = () => (
     </svg>
   );
 
-export default function TransferPage({ params }: TransferPageProps) {
+export default function TransferPage({ params: paramsProp }: TransferPageProps) {
+  const params = React.use(paramsProp);
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {

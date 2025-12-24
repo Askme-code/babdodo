@@ -1,6 +1,7 @@
 
 'use client';
 
+import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Check, X, Clock, MapPin, DollarSign } from 'lucide-react';
@@ -16,12 +17,13 @@ import type { Service } from '@/lib/types';
 
 
 type TourPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-export default function TourPage({ params }: TourPageProps) {
+export default function TourPage({ params: paramsProp }: TourPageProps) {
+  const params = React.use(paramsProp);
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {
