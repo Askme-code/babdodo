@@ -1,15 +1,26 @@
+
+'use client';
 import type { Metadata } from 'next';
-import { getServicesByType } from '@/lib/data';
 import ServiceCard from '@/components/service-card';
 import Image from 'next/image';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import type { Service } from '@/lib/types';
 
-export const metadata: Metadata = {
-  title: 'Tanzania Safaris',
-  description: 'Embark on a wild adventure through Tanzania\'s most famous national parks.',
-};
 
-const SafarisPage = async () => {
-  const safaris = await getServicesByType('safari');
+// export const metadata: Metadata = {
+//   title: 'Tanzania Safaris',
+//   description: 'Embark on a wild adventure through Tanzania\'s most famous national parks.',
+// };
+
+const SafarisPage = () => {
+  const firestore = useFirestore();
+  const safarisQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'safaris'), orderBy('createdAt', 'desc'));
+  }, [firestore]);
+
+  const { data: safaris } = useCollection<Service>(safarisQuery);
 
   return (
     <div className="bg-background">
@@ -28,11 +39,11 @@ const SafarisPage = async () => {
       <section className="py-16 md:py-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {safaris.map(safari => (
+            {safaris?.map(safari => (
               <ServiceCard key={safari.id} service={safari} />
             ))}
           </div>
-          {safaris.length === 0 && (
+          {safaris?.length === 0 && (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No safaris available at the moment. Please check back later.</p>
             </div>

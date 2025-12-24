@@ -1,8 +1,13 @@
+
 'use server';
 // IMPORTANT: This file should only be used on the server.
 // It is not meant to be used in client components.
 import { App, cert, getApps, initializeApp } from "firebase-admin/app";
 import { Firestore, getFirestore } from "firebase-admin/firestore";
+
+// Import the service account key from the JSON file.
+// Make sure the path is correct. It should be at the root of your project.
+import serviceAccount from '../../serviceAccountKey.json';
 
 let app: App;
 
@@ -10,38 +15,17 @@ let app: App;
 // It ensures the app is initialized only once, preventing errors in hot-reload
 // and serverless environments.
 
-// Before initializing, check if all required environment variables are present.
-const requiredEnvVars = [
-  'FIREBASE_PROJECT_ID',
-  'FIREBASE_CLIENT_EMAIL',
-  'FIREBASE_PRIVATE_KEY'
-];
-
-const missingEnvVars = requiredEnvVars.filter(envVar => {
-    const value = process.env[envVar];
-    // Check for null, undefined, or empty string
-    return !value;
-});
-
-if (missingEnvVars.length > 0) {
-  throw new Error(
-    `Firebase Admin SDK initialization failed. The following environment variables are missing or empty: ${missingEnvVars.join(', ')}. Please check your .env file and ensure they have values.`
-  );
-}
-
 if (!getApps().length) {
     try {
+        // Cast the imported JSON to the required credential type.
+        const credential = cert(serviceAccount as any);
+
         app = initializeApp({
-            credential: cert({
-              projectId: process.env.FIREBASE_PROJECT_ID!,
-              clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-              // The replace is crucial for parsing the key from a single-line env var.
-              privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
-            }),
+            credential,
         });
     } catch (e: any) {
         console.error("Firebase Admin Init Error:", e.message);
-        throw new Error(`Failed to initialize Firebase Admin SDK. Check your FIREBASE_PRIVATE_KEY format. Error: ${e.message}`);
+        throw new Error(`Failed to initialize Firebase Admin SDK from serviceAccountKey.json. Error: ${e.message}`);
     }
 } else {
     // If an app is already initialized, get the existing one.

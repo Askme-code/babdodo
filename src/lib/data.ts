@@ -1,135 +1,49 @@
 
-'use server';
+'use client';
 
-import { firestore } from '@/firebase/server-init';
-import { serviceFromDoc, postFromDoc } from './data-transforms';
+// This file is intended for client-side data fetching utilities.
+// We are using a client-side approach to avoid server-initialization errors.
+
+// Note: The unstable_cache function is for Server Components and will not be used here.
+
 import type { Service, Post } from './types';
-import { unstable_cache } from 'next/cache';
 
-const CACHE_REVALIDATION_TIME = 3600; // 1 hour in seconds
+// In this client-side architecture, data fetching is performed directly within components
+// using hooks like `useCollection` from Firebase. Therefore, this file will be primarily for
+// type definitions and transformations that can be used on the client.
 
-export const getServicesByType = unstable_cache(
-    async (type: 'tour' | 'safari' | 'transfer'): Promise<Service[]> => {
-        try {
-            const collectionPath = type === 'tour' ? 'tours' : type === 'safari' ? 'safaris' : 'transfers';
-            const snapshot = await firestore.collection(collectionPath).orderBy('createdAt', 'desc').get();
-            if (snapshot.empty) return [];
-            return snapshot.docs.map(serviceFromDoc);
-        } catch (error) {
-            console.error(`Error fetching services by type "${type}":`, error);
-            return []; // Return empty array on error
-        }
-    },
-    ['services-by-type'],
-    { revalidate: CACHE_REVALIDATION_TIME }
-);
+// A placeholder function to illustrate that server-side fetching is disabled.
+export const getServicesByType = async (type: 'tour' | 'safari' | 'transfer'): Promise<Service[]> => {
+    console.warn("Client-side data fetching is active. getServicesByType should not be called from the server.");
+    return [];
+};
 
-export const getFeaturedServices = unstable_cache(
-    async (type: 'tour' | 'safari' | 'transfer', count: number = 3): Promise<Service[]> => {
-        try {
-            const collectionPath = type === 'tour' ? 'tours' : type === 'safari' ? 'safaris' : 'transfers';
-            
-            // A real app might have a 'featured' boolean field to query.
-            let snapshot = await firestore.collection(collectionPath).where('featured', '==', true).limit(count).get();
+export const getFeaturedServices = async (type: 'tour' | 'safari' | 'transfer', count: number = 3): Promise<Service[]> => {
+    console.warn("Client-side data fetching is active. getFeaturedServices should not be called from the server.");
+    return [];
+};
 
-            // Fallback if no "featured" items are found
-            if (snapshot.empty) {
-                snapshot = await firestore.collection(collectionPath).orderBy('createdAt', 'desc').limit(count).get();
-            }
+export const getAllServices = async (): Promise<Service[]> => {
+     console.warn("Client-side data fetching is active. getAllServices should not be called from the server.");
+    return [];
+};
 
-            if (snapshot.empty) return [];
-            return snapshot.docs.map(serviceFromDoc);
-        } catch (error) {
-            console.error(`Error fetching featured services for "${type}":`, error);
-            return [];
-        }
-    },
-    ['featured-services'],
-    { revalidate: CACHE_REVALIDATION_TIME }
-);
+export const getServiceBySlug = async (slug: string): Promise<Service | null> => {
+    console.warn("Client-side data fetching is active. getServiceBySlug should not be called from the server.");
+    return null;
+};
 
+export const getAllPosts = async (): Promise<Post[]> => {
+    console.warn("Client-side data fetching is active. getAllPosts should not be called from the server.");
+    return [];
+}
 
-export const getAllServices = unstable_cache(
-    async (): Promise<Service[]> => {
-        try {
-            const tours = getServicesByType('tour');
-            const safaris = getServicesByType('safari');
-            const transfers = getServicesByType('transfer');
-            const [tourDocs, safariDocs, transferDocs] = await Promise.all([tours, safaris, transfers]);
-            return [...tourDocs, ...safariDocs, ...transferDocs];
-        } catch (error) {
-            console.error("Error fetching all services:", error);
-            return [];
-        }
-    },
-    ['all-services'],
-    { revalidate: CACHE_REVALIDATION_TIME }
-);
+export const getFeaturedPosts = async (count: number = 3): Promise<Post[]> => {
+    console.warn("Client-side data fetching is active. getFeaturedPosts should not be called from the server.");
+    return [];
+}
 
-export const getServiceBySlug = unstable_cache(
-    async (slug: string): Promise<Service | null> => {
-        try {
-            const serviceCollections = ['tours', 'safaris', 'transfers'];
-            for (const collectionName of serviceCollections) {
-                const snapshot = await firestore.collection(collectionName).where('slug', '==', slug).limit(1).get();
-                if (!snapshot.empty) {
-                    return serviceFromDoc(snapshot.docs[0]);
-                }
-            }
-            return null;
-        } catch (error) {
-            console.error(`Error fetching service by slug "${slug}":`, error);
-            return null;
-        }
-    },
-    ['service-by-slug'],
-    { revalidate: CACHE_REVALIDATION_TIME }
-);
-
-export const getAllPosts = unstable_cache(
-    async (): Promise<Post[]> => {
-        try {
-            const snapshot = await firestore.collection('news_updates').orderBy('date', 'desc').get();
-            if (snapshot.empty) return [];
-            return snapshot.docs.map(postFromDoc);
-        } catch (error) {
-            console.error("Error fetching all posts:", error);
-            return [];
-        }
-    },
-    ['all-posts'],
-    { revalidate: CACHE_REVALIDATION_TIME }
-);
-
-
-export const getFeaturedPosts = unstable_cache(
-    async (count: number = 3): Promise<Post[]> => {
-        try {
-            const snapshot = await firestore.collection('news_updates').orderBy('date', 'desc').limit(count).get();
-            if (snapshot.empty) return [];
-            return snapshot.docs.map(postFromDoc);
-        } catch (error) {
-            console.error("Error fetching featured posts:", error);
-            return [];
-        }
-    },
-    ['featured-posts'],
-    { revalidate: CACHE_REVALIDATION_TIME }
-);
-
-export const getPostBySlug = unstable_cache(
-    async (slug: string): Promise<Post | null> => {
-        try {
-            const snapshot = await firestore.collection('news_updates').where('slug', '==', slug).limit(1).get();
-            if (snapshot.empty) {
-                return null;
-            }
-            return postFromDoc(snapshot.docs[0]);
-        } catch (error) {
-            console.error(`Error fetching post by slug "${slug}":`, error);
-            return null;
-        }
-    },
-    ['post-by-slug'],
-    { revalidate: CACHE_REVALIDATION_TIME }
-);
+export const getPostBySlug = async (slug: string): Promise<Post | null> => {
+    console.warn("Client-side data fetching is active. getPostBySlug should not be called from the server.");
+    return null;
+}

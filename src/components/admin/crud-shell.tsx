@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -40,8 +39,10 @@ import { useToast } from '@/hooks/use-toast';
 import type { Service, Post } from '@/lib/types';
 import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Card } from '../ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Skeleton } from '../ui/skeleton';
 
-type Item = Partial<Service> & Partial<Post> & { id: string };
+type Item = Partial<Service> & Partial<Post> & { id?: string };
 
 const serviceSchema = z.object({
   title: z.string().min(3, 'Title is required'),
@@ -64,10 +65,51 @@ interface CrudShellProps {
   itemType: string;
   items: Item[];
   isPostType?: boolean;
+  isLoading: boolean;
+  isPermissionError: boolean;
+  onGrantAdminAccess: () => Promise<void>;
   onCreate: (item: Item) => Promise<boolean>;
   onUpdate: (id: string, item: Item) => Promise<boolean>;
   onDelete: (id: string) => Promise<boolean>;
 }
+
+const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { toast } = useToast();
+
+    const handleGrantAccess = async () => {
+        setIsSubmitting(true);
+        try {
+            await onGrant();
+            toast({
+                title: 'Access Granted!',
+                description: 'Admin role has been assigned. The page will now reload.',
+            });
+        } catch (error) {
+            console.error('Failed to grant admin access', error);
+            toast({
+                title: 'Error',
+                description: 'Could not assign admin role. Please check the console.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <Alert variant="destructive" className="mb-6">
+            <AlertTitle>Admin Permissions Required</AlertTitle>
+            <AlertDescription>
+                Your account needs admin privileges to manage this content. Click the button below to grant access.
+            </AlertDescription>
+            <Button onClick={handleGrantAccess} disabled={isSubmitting} className="mt-4">
+                {isSubmitting ? 'Granting...' : 'Make Me Admin'}
+            </Button>
+        </Alert>
+    );
+};
+
 
 const CrudForm = ({
   item,
@@ -162,7 +204,10 @@ const CrudForm = ({
 export default function CrudShell({ 
     itemType, 
     items, 
-    isPostType = false, 
+    isPostType = false,
+    isLoading,
+    isPermissionError,
+    onGrantAdminAccess,
     onCreate, 
     onUpdate, 
     onDelete,
@@ -188,7 +233,7 @@ export default function CrudShell({
         throw new Error('Operation failed');
       }
     } catch (error) {
-      toast({ title: `Error`, description: `Failed to save ${itemType.toLowerCase()}.`, variant: 'destructive' });
+      toast({ title: `Error`, description: `Failed to save ${itemType.toLowerCase()}. You may not have permissions.`, variant: 'destructive' });
     }
   };
   
@@ -204,6 +249,81 @@ export default function CrudShell({
         toast({ title: 'Error', description: `Failed to delete ${itemType.toLowerCase()}.`, variant: 'destructive' });
     }
   };
+
+  const renderTableBody = () => {
+    if (isLoading) {
+        return (
+            [...Array(3)].map((_, i) => (
+                <TableRow key={i}>
+                    <TableCell colSpan={isPostType ? 2 : 3}>
+                        <Skeleton className="h-8 w-full" />
+                    </TableCell>
+                </TableRow>
+            ))
+        );
+    }
+    
+    if (isPermissionError) {
+      return (
+         <TableRow>
+            <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
+              <PermissionErrorAlert onGrant={onGrantAdminAccess} />
+            </TableCell>
+          </TableRow>
+      );
+    }
+
+    if (items.length === 0) {
+       return (
+         <TableRow>
+            <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
+              No {itemType.toLowerCase()}s found.
+            </TableCell>
+          </TableRow>
+       );
+    }
+
+    return items.map((item) => (
+      <TableRow key={item.id}>
+        <TableCell className="font-medium">{item.title}</TableCell>
+        {!isPostType && <TableCell>${item.price}</TableCell>}
+        <TableCell>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                setEditingItem(item);
+                setIsFormOpen(true);
+              }}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="icon">
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete this {itemType.toLowerCase()}.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleDelete(item.id!)}>Delete</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </TableCell>
+      </TableRow>
+    ));
+  };
+
 
   return (
     <div className="space-y-4">
@@ -247,53 +367,7 @@ export default function CrudShell({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {items.length > 0 ? (
-              items.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.title}</TableCell>
-                  {!isPostType && <TableCell>${item.price}</TableCell>}
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => {
-                          setEditingItem(item);
-                          setIsFormOpen(true);
-                        }}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="destructive" size="icon">
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will permanently delete this {itemType.toLowerCase()}.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(item.id!)}>Delete</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
-                  No {itemType.toLowerCase()}s found.
-                </TableCell>
-              </TableRow>
-            )}
+            {renderTableBody()}
           </TableBody>
         </Table>
       </Card>

@@ -1,12 +1,17 @@
+
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { getFeaturedPosts, getFeaturedServices } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import ServiceCard from '@/components/service-card';
 import PostCard from '@/components/post-card';
 import { Button } from '@/components/ui/button';
 import { DhowBoatIcon, SafariJeepIcon } from '@/components/icons';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, where, limit, orderBy } from 'firebase/firestore';
+import type { Service, Post } from '@/lib/types';
+
 
 const Hero = () => {
   const heroImage = PlaceHolderImages.find(p => p.id === 'hero-safari');
@@ -41,10 +46,27 @@ const Hero = () => {
   );
 };
 
-export default async function Home() {
-  const featuredTours = await getFeaturedServices('tour');
-  const featuredSafaris = await getFeaturedServices('safari');
-  const latestPosts = await getFeaturedPosts(3);
+export default function Home() {
+  const firestore = useFirestore();
+
+  const featuredToursQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'tours'), where('featured', '==', true), limit(3));
+  }, [firestore]);
+  const { data: featuredTours } = useCollection<Service>(featuredToursQuery);
+
+  const featuredSafarisQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'safaris'), where('featured', '==', true), limit(3));
+  }, [firestore]);
+  const { data: featuredSafaris } = useCollection<Service>(featuredSafarisQuery);
+
+  const latestPostsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'news_updates'), orderBy('date', 'desc'), limit(3));
+  }, [firestore]);
+  const { data: latestPosts } = useCollection<Post>(latestPostsQuery);
+
   const aboutImage = PlaceHolderImages.find(p => p.id === 'dhow-sunset');
 
   return (
@@ -58,7 +80,7 @@ export default async function Home() {
             Embark on a journey through Tanzania's most iconic national parks. Witness breathtaking landscapes and majestic wildlife.
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {featuredSafaris.map(safari => (
+            {featuredSafaris?.map(safari => (
               <ServiceCard key={safari.id} service={safari} />
             ))}
           </div>
@@ -77,7 +99,7 @@ export default async function Home() {
             Experience the magic of the Spice Island, from historic Stone Town to pristine coral reefs.
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {featuredTours.map(tour => (
+            {featuredTours?.map(tour => (
               <ServiceCard key={tour.id} service={tour} />
             ))}
           </div>
@@ -139,7 +161,7 @@ export default async function Home() {
             Get the latest travel tips, stories from the wild, and updates from our team.
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {latestPosts.map(post => (
+            {latestPosts?.map(post => (
               <PostCard key={post.id} post={post} />
             ))}
           </div>

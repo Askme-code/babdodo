@@ -1,15 +1,27 @@
+
+'use client';
 import type { Metadata } from 'next';
-import { getServicesByType } from '@/lib/data';
 import ServiceCard from '@/components/service-card';
 import Image from 'next/image';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import type { Service } from '@/lib/types';
 
-export const metadata: Metadata = {
-  title: 'Zanzibar Tours',
-  description: 'Explore the best tours Zanzibar has to offer, from spice farms to historic Stone Town.',
-};
 
-const ToursPage = async () => {
-  const tours = await getServicesByType('tour');
+// export const metadata: Metadata = {
+//   title: 'Zanzibar Tours',
+//   description: 'Explore the best tours Zanzibar has to offer, from spice farms to historic Stone Town.',
+// };
+
+const ToursPage = () => {
+  const firestore = useFirestore();
+
+  const toursQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'tours'), orderBy('createdAt', 'desc'));
+  }, [firestore]);
+  const { data: tours } = useCollection<Service>(toursQuery);
+
 
   return (
     <div className="bg-background">
@@ -28,11 +40,11 @@ const ToursPage = async () => {
       <section className="py-16 md:py-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {tours.map(tour => (
+            {tours?.map(tour => (
               <ServiceCard key={tour.id} service={tour} />
             ))}
           </div>
-           {tours.length === 0 && (
+           {tours?.length === 0 && (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No tours available at the moment. Please check back later.</p>
             </div>

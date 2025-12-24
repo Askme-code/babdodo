@@ -1,5 +1,9 @@
+
+'use client';
 import type { Metadata } from 'next';
-import { getServicesByType } from '@/lib/data';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import type { Service } from '@/lib/types';
 import ServiceCard from '@/components/service-card';
 import { DollarSign, Smile, Clock } from 'lucide-react';
 import Link from 'next/link';
@@ -8,10 +12,10 @@ import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-export const metadata: Metadata = {
-  title: 'Airport Transfers',
-  description: 'Reliable and comfortable airport transfers in Zanzibar and mainland Tanzania.',
-};
+// export const metadata: Metadata = {
+//   title: 'Airport Transfers',
+//   description: 'Reliable and comfortable airport transfers in Zanzibar and mainland Tanzania.',
+// };
 
 const popularRoutes = [
     { to: 'Jambiani' },
@@ -42,8 +46,15 @@ const transportTypes = [
   },
 ]
 
-const TransfersPage = async () => {
-  const transfers = await getServicesByType('transfer');
+const TransfersPage = () => {
+  const firestore = useFirestore();
+  const transfersQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'transfers'), orderBy('createdAt', 'desc'));
+  }, [firestore]);
+
+  const { data: transfers } = useCollection<Service>(transfersQuery);
+
 
   return (
     <div className="bg-background">
@@ -62,11 +73,11 @@ const TransfersPage = async () => {
       <section className="py-16 md:py-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {transfers.map(transfer => (
+            {transfers?.map(transfer => (
               <ServiceCard key={transfer.id} service={transfer} />
             ))}
           </div>
-          {transfers.length === 0 && (
+          {transfers?.length === 0 && (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No transfers available at the moment. Please check back later.</p>
             </div>

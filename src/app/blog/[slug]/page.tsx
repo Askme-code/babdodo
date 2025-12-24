@@ -1,15 +1,17 @@
 
+'use client';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import type { Metadata } from 'next';
 import { User, Calendar } from 'lucide-react';
-
-import { getPostBySlug, getAllPosts } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { JsonLd } from '@/components/JsonLd';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc, collection, query, where, getDocs } from 'firebase/firestore';
+import type { Post } from '@/lib/types';
+import { useEffect, useState } from 'react';
 
 
 type PostPageProps = {
@@ -18,46 +20,32 @@ type PostPageProps = {
   };
 };
 
-export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
-  if (!post) {
-    return {
-      title: 'Post Not Found',
-    };
-  }
-
-  const mainImage = PlaceHolderImages.find(p => p.id === post.featuredImage);
-
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-        title: post.title,
-        description: post.excerpt,
-        type: 'article',
-        publishedTime: new Date(post.date).toISOString(),
-        authors: [post.author],
-        images: [
-            {
-                url: mainImage?.imageUrl || '',
-                width: 1200,
-                height: 630,
-                alt: post.title,
-            }
-        ]
+async function getPostRefBySlug(firestore: any, slug: string) {
+    const postsRef = collection(firestore, 'news_updates');
+    const q = query(postsRef, where('slug', '==', slug), limit(1));
+    const querySnapshot = await getDocs(q);
+    if (!querySnapshot.empty) {
+        return querySnapshot.docs[0].ref;
     }
-  };
+    return null;
 }
 
-export async function generateStaticParams() {
-  const posts = await getAllPosts();
-  return posts.map(post => ({
-    slug: post.slug,
-  }));
-}
 
-export default async function PostPage({ params }: PostPageProps) {
-  const post = await getPostBySlug(params.slug);
+export default function PostPage({ params }: PostPageProps) {
+  const firestore = useFirestore();
+  const [postRef, setPostRef] = useState(null);
+
+  useEffect(() => {
+    if (firestore) {
+        getPostRefBySlug(firestore, params.slug).then(setPostRef);
+    }
+  }, [firestore, params.slug]);
+  
+  const { data: post, isLoading } = useDoc<Post>(postRef);
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   if (!post) {
     notFound();

@@ -1,15 +1,27 @@
+
+'use client';
 import type { Metadata } from 'next';
-import { getAllPosts } from '@/lib/data';
 import PostCard from '@/components/post-card';
 import Image from 'next/image';
+import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import type { Post } from '@/lib/types';
 
-export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'News, travel tips, and stories from Babdodo Tours & Safaris.',
-};
+// export const metadata: Metadata = {
+//   title: 'Blog',
+//   description: 'News, travel tips, and stories from Babdodo Tours & Safaris.',
+// };
 
-const BlogPage = async () => {
-  const posts = await getAllPosts();
+const BlogPage = () => {
+  const firestore = useFirestore();
+  
+  const postsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'news_updates'), orderBy('date', 'desc'));
+  }, [firestore]);
+
+  const { data: posts } = useCollection<Post>(postsQuery);
+
 
   return (
     <div className="bg-background">
@@ -28,11 +40,11 @@ const BlogPage = async () => {
       <section className="py-16 md:py-24">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map(post => (
+            {posts?.map(post => (
               <PostCard key={post.id} post={post} />
             ))}
           </div>
-           {posts.length === 0 && (
+           {(posts?.length === 0) && (
             <div className="text-center py-16">
               <p className="text-muted-foreground text-lg">No posts available at the moment. Please check back later.</p>
             </div>

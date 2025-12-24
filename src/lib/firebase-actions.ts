@@ -1,5 +1,5 @@
 
-'use server';
+'use client';
 
 import { 
     collection, 
@@ -8,11 +8,12 @@ import {
     updateDoc, 
     deleteDoc, 
     serverTimestamp,
-} from 'firebase-admin/firestore';
-import { firestore } from '@/firebase/server-init';
-import { revalidatePath } from 'next/cache';
+    getFirestore,
+} from 'firebase/firestore';
+import { initializeFirebase } from '@/firebase';
 import type { Service, Post } from './types';
 
+const { firestore } = initializeFirebase();
 
 const generateSlug = (title: string) => {
   if (!title) return '';
@@ -35,7 +36,7 @@ const getCollectionPathForType = (itemType: 'tour' | 'safari' | 'transfer' | 'po
 const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', item: Partial<Service> | Partial<Post>) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const collectionRef = firestore.collection(collectionPath);
+    const collectionRef = collection(firestore, collectionPath);
     const slug = generateSlug(item.title!);
     
     const docData: any = {
@@ -54,12 +55,13 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
     }
     
     const docRef = await addDoc(collectionRef, docData);
-    await docRef.update({ id: docRef.id });
+    await updateDoc(docRef, { id: docRef.id });
 
-    revalidatePath(`/admin/${collectionPath}`);
+    // Client-side revalidation is handled by page reload or state management
     return true;
   } catch (e: any) {
     console.error(`Failed to create ${itemType}:`, e);
+    // You should emit a permission error here if that's the case
     return false;
   }
 };
@@ -68,7 +70,7 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
 const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string, item: Partial<Service> | Partial<Post>) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const docRef = firestore.doc(`${collectionPath}/${id}`);
+    const docRef = doc(firestore, collectionPath, id);
     const slug = generateSlug(item.title!);
 
     const docData: any = {
@@ -82,8 +84,6 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
 
     await updateDoc(docRef, docData);
     
-    revalidatePath(`/admin/${collectionPath}`);
-    revalidatePath(`/${collectionPath}/${slug}`);
     return true;
   } catch (e: any) {
     console.error(`Failed to update ${itemType}:`, e);
@@ -95,9 +95,8 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
 const deleteItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const docRef = firestore.doc(`${collectionPath}/${id}`);
-    await docRef.delete();
-    revalidatePath(`/admin/${collectionPath}`);
+    const docRef = doc(firestore, collectionPath, id);
+    await deleteDoc(docRef);
     return true;
   } catch (e: any) {
     console.error(`Failed to delete ${itemType}:`, e);
@@ -118,7 +117,7 @@ export const deleteTour = async (id: string) => deleteItem('tour', id);
 
 // Transfers
 export const createTransfer = async (item: Partial<Service>) => createItem('transfer', item);
-export const updateTransfer = async (id: string, item: Partial<Service>) => updateItem('transfer', id, item);
+export const updateTransfer = async (id:string, item: Partial<Service>) => updateItem('transfer', id, item);
 export const deleteTransfer = async (id: string) => deleteItem('transfer', id);
 
 // Posts
