@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -29,7 +28,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Input } from '@/components/ui/input';
@@ -41,16 +40,19 @@ import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '../ui/skeleton';
+import ImageUploader from './image-uploader';
 
-type Item = Partial<Service> & Partial<Post> & { id?: string };
+
+type Item = Partial<Service> & Partial<Post> & { id?: string; imageFile?: File };
 
 const serviceSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
   longDescription: z.string().optional(),
-  price: z.preprocess((a) => parseInt(z.string().parse(a), 10), z.number().positive().optional()),
+  price: z.preprocess((a) => parseInt(z.string().parse(a || '0'), 10), z.number().positive().optional()),
   duration: z.string().optional(),
   location: z.string().optional(),
+  imageFile: z.any().optional(),
 });
 
 const postSchema = z.object({
@@ -59,6 +61,7 @@ const postSchema = z.object({
   content: z.string().min(20, 'Content is required'),
   author: z.string().optional(),
   date: z.string().optional(),
+  imageFile: z.any().optional(),
 });
 
 interface CrudShellProps {
@@ -123,7 +126,7 @@ const CrudForm = ({
   closeDialog: () => void;
 }) => {
   const schema = isPostType ? postSchema : serviceSchema;
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, control, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: item ? {
       ...item,
@@ -140,6 +143,20 @@ const CrudForm = ({
         <Input id="title" {...register('title')} />
         {errors.title && <p className="text-destructive text-sm mt-1">{`${errors.title.message}`}</p>}
       </div>
+
+       <div>
+        <Label>{isPostType ? 'Featured Image' : 'Main Image'}</Label>
+        <Controller
+            name="imageFile"
+            control={control}
+            render={({ field }) => (
+                <ImageUploader 
+                    onFileSelect={(file) => setValue('imageFile', file)}
+                    currentImage={isPostType ? item?.featuredImage : item?.image}
+                />
+            )}
+        />
+       </div>
 
       {isPostType ? (
         <>

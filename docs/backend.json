@@ -166,6 +166,11 @@
           "type": "string",
           "description": "Full content of the news update."
         },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the featured image for the news update.",
+          "format": "uri"
+        },
         "status": {
           "type": "string",
           "description": "Status of the news update (e.g., active, inactive)."

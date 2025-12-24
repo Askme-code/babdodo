@@ -3,7 +3,7 @@
 // Note: Using string for dates to ensure serializability between Server and Client Components
 export interface Service {
   id: string;
-  slug: string;
+  slug?: string;
   title: string;
   description: string;
   longDescription?: string;
@@ -22,7 +22,7 @@ export interface Service {
 
 export interface Post {
   id: string;
-  slug: string;
+  slug?: string;
   title: string;
   excerpt: string;
   content: string;
