@@ -9,7 +9,6 @@ import {
   serverTimestamp
 } from 'firebase/firestore';
 import { getFirestore } from 'firebase/firestore'; // Changed from firebase-admin
-import { revalidatePath } from 'next/cache';
 import { initializeFirebase } from '@/firebase';
 import type { Service, Post } from './types';
 import {
