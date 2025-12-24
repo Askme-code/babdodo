@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/header';
@@ -67,6 +68,7 @@ export default function RootLayout({
       </head>
       <body className="font-body bg-background text-foreground antialiased">
         <FirebaseClientProvider>
+          <div className="gtranslate_wrapper"></div>
           <div className="relative flex min-h-screen flex-col">
             <Header />
             <main className="flex-1">{children}</main>
@@ -75,6 +77,10 @@ export default function RootLayout({
           <WhatsAppButton />
           <Toaster />
         </FirebaseClientProvider>
+        <Script id="gtranslate-settings">
+          {`window.gtranslateSettings = {"default_language":"en","languages":["en","fr","it","es","ar"],"wrapper_selector":".gtranslate_wrapper"}`}
+        </Script>
+        <Script src="https://cdn.gtranslate.net/widgets/latest/float.js" strategy="afterInteractive" />
       </body>
     </html>
   );
