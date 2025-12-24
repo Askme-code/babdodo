@@ -1,31 +1,35 @@
-'use client';
 
-import { useMemo } from 'react';
-import { collection }from 'firebase/firestore';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
+'use server';
+
 import CrudShell from '@/components/admin/crud-shell';
 import { createSafari, updateSafari, deleteSafari } from '@/lib/firebase-actions';
+import { firestore } from '@/firebase/server-init';
+import { serviceFromDoc } from '@/lib/data-transforms';
 import type { Service } from '@/lib/types';
 
-export default function AdminSafarisPage() {
-    const firestore = useFirestore();
-    
-    const safarisCollection = useMemoFirebase(() => {
-        if (!firestore) return null;
-        return collection(firestore, 'safaris');
-    }, [firestore]);
 
-    const { data: safaris, error, isLoading } = useCollection<Service>(safarisCollection);
-    
+async function getSafaris(): Promise<Service[]> {
+    try {
+        const snapshot = await firestore.collection('safaris').orderBy('createdAt', 'desc').get();
+        if (snapshot.empty) return [];
+        return snapshot.docs.map(serviceFromDoc);
+    } catch(e) {
+        console.error("Failed to fetch safaris:", e);
+        return [];
+    }
+}
+
+
+export default async function AdminSafarisPage() {
+    const safaris = await getSafaris();
+
     return (
         <CrudShell
             itemType="Safari"
-            items={safaris || []}
+            items={safaris}
             onCreate={createSafari}
             onUpdate={updateSafari}
             onDelete={deleteSafari}
-            error={error}
-            isLoading={isLoading}
         />
     );
 }

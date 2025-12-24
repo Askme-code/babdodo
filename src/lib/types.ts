@@ -1,5 +1,6 @@
-import type { Timestamp } from 'firebase-admin/firestore';
 
+
+// Note: Using string for dates to ensure serializability between Server and Client Components
 export interface Service {
   id: string;
   slug: string;
@@ -15,8 +16,8 @@ export interface Service {
   excluded?:string[];
   type: 'tour' | 'safari' | 'transfer';
   featured?: boolean;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: string; 
+  updatedAt: string;
 }
 
 export interface Post {
@@ -26,8 +27,8 @@ export interface Post {
   excerpt: string;
   content: string;
   author: string;
-  date: string; // Changed to string to be serializable
+  date: string; // Keep as string for serializability
   featuredImage?: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: string;
+  updatedAt: string;
 }

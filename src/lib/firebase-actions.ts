@@ -1,19 +1,18 @@
-'use client';
+
+'use server';
 
 import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
-  doc,
-  serverTimestamp,
-} from 'firebase/firestore';
-import { initializeFirebase } from '@/firebase';
+    collection, 
+    addDoc, 
+    doc, 
+    updateDoc, 
+    deleteDoc, 
+    serverTimestamp,
+} from 'firebase-admin/firestore';
+import { firestore } from '@/firebase/server-init';
+import { revalidatePath } from 'next/cache';
 import type { Service, Post } from './types';
 
-// Ensure Firebase is initialized on the client
-const { firestore } = initializeFirebase();
 
 const generateSlug = (title: string) => {
   if (!title) return '';
@@ -36,7 +35,7 @@ const getCollectionPathForType = (itemType: 'tour' | 'safari' | 'transfer' | 'po
 const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', item: Partial<Service> | Partial<Post>) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const collectionRef = collection(firestore, collectionPath);
+    const collectionRef = firestore.collection(collectionPath);
     const slug = generateSlug(item.title!);
     
     const docData: any = {
@@ -53,13 +52,13 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
             docData.date = new Date().toISOString().split('T')[0];
         }
     }
-
-
+    
     const docRef = await addDoc(collectionRef, docData);
-    await updateDoc(docRef, { id: docRef.id });
+    await docRef.update({ id: docRef.id });
 
+    revalidatePath(`/admin/${collectionPath}`);
     return true;
-  } catch (e) {
+  } catch (e: any) {
     console.error(`Failed to create ${itemType}:`, e);
     return false;
   }
@@ -69,7 +68,7 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
 const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string, item: Partial<Service> | Partial<Post>) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const docRef = doc(firestore, `${collectionPath}/${id}`);
+    const docRef = firestore.doc(`${collectionPath}/${id}`);
     const slug = generateSlug(item.title!);
 
     const docData: any = {
@@ -82,9 +81,11 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
     }
 
     await updateDoc(docRef, docData);
-
+    
+    revalidatePath(`/admin/${collectionPath}`);
+    revalidatePath(`/${collectionPath}/${slug}`);
     return true;
-  } catch (e) {
+  } catch (e: any) {
     console.error(`Failed to update ${itemType}:`, e);
     return false;
   }
@@ -94,10 +95,11 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
 const deleteItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
-    const docRef = doc(firestore, `${collectionPath}/${id}`);
+    const docRef = firestore.doc(`${collectionPath}/${id}`);
     await docRef.delete();
+    revalidatePath(`/admin/${collectionPath}`);
     return true;
-  } catch (e) {
+  } catch (e: any) {
     console.error(`Failed to delete ${itemType}:`, e);
     return false;
   }
