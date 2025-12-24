@@ -11,8 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, where, getDocs, doc } from 'firebase/firestore';
-import { useDoc } from '@/firebase/firestore/use-doc';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { useCollection } from '@/firebase/firestore/use-collection';
 import { useEffect, useState } from 'react';
 import type { Service } from '@/lib/types';
 
@@ -22,16 +22,6 @@ type TransferPageProps = {
     slug: string;
   };
 };
-
-async function getServiceRefBySlug(firestore: any, slug: string, type: string) {
-    const servicesRef = collection(firestore, `${type}s`);
-    const q = query(servicesRef, where('slug', '==', slug));
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-        return querySnapshot.docs[0].ref;
-    }
-    return null;
-}
 
 
 const WhatsAppIcon = () => (
@@ -53,21 +43,20 @@ const WhatsAppIcon = () => (
 
 export default function TransferPage({ params }: TransferPageProps) {
   const firestore = useFirestore();
-  const [itemRef, setItemRef] = useState(null);
 
-  useEffect(() => {
-    if (firestore) {
-        getServiceRefBySlug(firestore, params.slug, 'transfer').then(setItemRef);
-    }
+  const itemQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'transfers'), where('slug', '==', params.slug), limit(1));
   }, [firestore, params.slug]);
 
-  const { data: transfer, isLoading } = useDoc<Service>(itemRef);
+  const { data: items, isLoading } = useCollection<Service>(itemQuery);
+  const transfer = items?.[0];
   
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (!transfer) {
+  if (!isLoading && !transfer) {
     notFound();
   }
 

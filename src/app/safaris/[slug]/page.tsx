@@ -10,8 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { JsonLd } from '@/components/JsonLd';
 import { useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, where, getDocs, doc } from 'firebase/firestore';
-import { useDoc } from '@/firebase/firestore/use-doc';
+import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { useCollection } from '@/firebase/firestore/use-collection';
 import { useEffect, useState } from 'react';
 import type { Service } from '@/lib/types';
 
@@ -22,34 +22,22 @@ type SafariPageProps = {
   };
 };
 
-async function getServiceRefBySlug(firestore: any, slug: string, type: string) {
-    const servicesRef = collection(firestore, `${type}s`);
-    const q = query(servicesRef, where('slug', '==', slug));
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-        return querySnapshot.docs[0].ref;
-    }
-    return null;
-}
-
-
 export default function SafariPage({ params }: SafariPageProps) {
   const firestore = useFirestore();
-  const [itemRef, setItemRef] = useState(null);
 
-  useEffect(() => {
-    if (firestore) {
-        getServiceRefBySlug(firestore, params.slug, 'safari').then(setItemRef);
-    }
+  const itemQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'safaris'), where('slug', '==', params.slug), limit(1));
   }, [firestore, params.slug]);
 
-  const { data: safari, isLoading } = useDoc<Service>(itemRef);
+  const { data: items, isLoading } = useCollection<Service>(itemQuery);
+  const safari = items?.[0];
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
   
-  if (!safari) {
+  if (!isLoading && !safari) {
     notFound();
   }
 

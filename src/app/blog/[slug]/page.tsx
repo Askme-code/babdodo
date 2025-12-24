@@ -8,10 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { JsonLd } from '@/components/JsonLd';
-import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc, collection, query, where, getDocs } from 'firebase/firestore';
+import { useFirestore, useMemoFirebase } from '@/firebase';
+import { collection, query, where, limit } from 'firebase/firestore';
+import { useCollection } from '@/firebase/firestore/use-collection';
 import type { Post } from '@/lib/types';
-import { useEffect, useState } from 'react';
 
 
 type PostPageProps = {
@@ -20,34 +20,22 @@ type PostPageProps = {
   };
 };
 
-async function getPostRefBySlug(firestore: any, slug: string) {
-    const postsRef = collection(firestore, 'news_updates');
-    const q = query(postsRef, where('slug', '==', slug), limit(1));
-    const querySnapshot = await getDocs(q);
-    if (!querySnapshot.empty) {
-        return querySnapshot.docs[0].ref;
-    }
-    return null;
-}
-
-
 export default function PostPage({ params }: PostPageProps) {
   const firestore = useFirestore();
-  const [postRef, setPostRef] = useState(null);
 
-  useEffect(() => {
-    if (firestore) {
-        getPostRefBySlug(firestore, params.slug).then(setPostRef);
-    }
+  const postQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'news_updates'), where('slug', '==', params.slug), limit(1));
   }, [firestore, params.slug]);
   
-  const { data: post, isLoading } = useDoc<Post>(postRef);
+  const { data: posts, isLoading } = useCollection<Post>(postQuery);
+  const post = posts?.[0];
 
   if (isLoading) {
     return <div>Loading...</div>
   }
 
-  if (!post) {
+  if (!isLoading && !post) {
     notFound();
   }
 
