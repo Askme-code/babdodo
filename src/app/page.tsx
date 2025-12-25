@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import ServiceCard from '@/components/service-card';
 import PostCard from '@/components/post-card';
 import { Button } from '@/components/ui/button';
@@ -14,16 +13,16 @@ import type { Service, Post } from '@/lib/types';
 
 
 const Hero = () => {
-  const heroImage = PlaceHolderImages.find(p => p.id === 'hero-safari');
+  const heroImage = "https://images.unsplash.com/photo-1689479665129-bf064a64feaa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzYWZhcmklMjBlbGVwaGFudHN8ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080";
   return (
     <section className="relative h-[70vh] md:h-[85vh] w-full">
       <Image
-        src={heroImage?.imageUrl || ''}
-        alt={heroImage?.description || 'Safari landscape with elephants in Tanzania'}
+        src={heroImage}
+        alt={'Safari landscape with elephants in Tanzania'}
         fill
         className="object-cover"
         priority
-        data-ai-hint={heroImage?.imageHint}
+        data-ai-hint="safari elephants"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
       <div className="relative container h-full flex flex-col items-center justify-center text-center text-white p-4">
@@ -67,7 +66,7 @@ export default function Home() {
   }, [firestore]);
   const { data: latestPosts } = useCollection<Post>(latestPostsQuery);
 
-  const aboutImage = PlaceHolderImages.find(p => p.id === 'dhow-sunset');
+  const aboutImage = "https://images.unsplash.com/photo-1666778439853-540bae64fa9f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkaG93JTIwc3Vuc2V0fGVufDB8fHx8MTc2NjMxMzYxOXww&ixlib=rb-4.1.0&q=80&w=1080";
 
   return (
     <div>
@@ -143,12 +142,12 @@ export default function Home() {
             </div>
             <div className="order-1 md:order-2">
                 <Image
-                src={aboutImage?.imageUrl || ''}
-                alt={aboutImage?.description || 'A traditional dhow boat at sunset in Zanzibar'}
+                src={aboutImage}
+                alt={'A traditional dhow boat at sunset in Zanzibar'}
                 width={600}
                 height={500}
                 className="rounded-lg shadow-xl w-full h-auto object-cover"
-                data-ai-hint={aboutImage?.imageHint}
+                data-ai-hint={'dhow sunset'}
                 />
             </div>
         </div>

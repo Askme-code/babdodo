@@ -1,4 +1,5 @@
-import data from './placeholder-images.json';
+// This file is now deprecated as we are using direct URLs for images.
+// It is kept for reference but is no longer used by the application components.
 
 export type ImagePlaceholder = {
   id: string;
@@ -7,4 +8,4 @@ export type ImagePlaceholder = {
   imageHint: string;
 };
 
-export const PlaceHolderImages: ImagePlaceholder[] = data.placeholderImages;
+export const PlaceHolderImages: ImagePlaceholder[] = [];

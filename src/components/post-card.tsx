@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { User, Calendar } from 'lucide-react';
 
 import type { Post } from '@/lib/types';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 interface PostCardProps {
@@ -11,9 +10,7 @@ interface PostCardProps {
 }
 
 const PostCard = ({ post }: PostCardProps) => {
-  const placeholder = PlaceHolderImages.find(p => p.id === post.featuredImage);
-  const imageUrl = placeholder?.imageUrl || "https://picsum.photos/seed/default-post/400/300";
-  const imageHint = placeholder?.imageHint || "travel blog";
+  const imageUrl = post.featuredImage || "https://picsum.photos/seed/default-post/400/300";
   
   return (
     <Card className="flex flex-col overflow-hidden h-full transition-transform transform hover:-translate-y-2 hover:shadow-xl group">
@@ -26,7 +23,7 @@ const PostCard = ({ post }: PostCardProps) => {
               width={400}
               height={300}
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-              data-ai-hint={imageHint}
+              data-ai-hint="travel blog"
             />
           </div>
         </Link>

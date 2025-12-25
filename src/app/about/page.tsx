@@ -2,7 +2,6 @@ import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Globe, Heart, ShieldCheck } from 'lucide-react';
 
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { DhowBoatIcon, SafariJeepIcon } from '@/components/icons';
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const AboutPage = () => {
-  const aboutImage = PlaceHolderImages.find(p => p.id === 'about-us');
+  const aboutImageUrl = "https://images.unsplash.com/photo-1656692324500-fc7854008f79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx0b3VyJTIwZ3VpZGVzfGVufDB8fHx8MTc2NjM2MTU3MHww&ixlib=rb-4.1.0&q=80&w=1080";
 
   return (
     <div className="bg-background">
@@ -37,12 +36,12 @@ const AboutPage = () => {
           </div>
           <div>
             <Image
-              src={aboutImage?.imageUrl || ''}
-              alt={aboutImage?.description || 'Babdodo team'}
+              src={aboutImageUrl}
+              alt={'Babdodo team'}
               width={600}
               height={500}
               className="rounded-lg shadow-xl w-full h-auto object-cover"
-              data-ai-hint={aboutImage?.imageHint}
+              data-ai-hint="tour guides"
             />
           </div>
         </div>

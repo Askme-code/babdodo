@@ -10,7 +10,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 // export const metadata: Metadata = {
 //   title: 'Airport Transfers',
@@ -33,16 +32,22 @@ const transportTypes = [
     id: "transport-alphard",
     name: "Toyota Alphard",
     capacity: "1 - 6 Travelers",
+    imageUrl: "https://images.unsplash.com/photo-1558101847-e017d5e414a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0b3lvdGElMjBhbHBoYXJkfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+    imageHint: "toyota alphard"
   },
   {
     id: "transport-hiace",
     name: "Toyota Hiace",
     capacity: "7 - 14 Travelers",
+    imageUrl: "https://images.unsplash.com/photo-1521014710171-f44dfe788ece?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0b3lvdGElMjBoaWFjZXxlbnwwfHx8fDE3NjY0MDA3MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    imageHint: "toyota hiace"
   },
   {
     id: "transport-coaster",
     name: "Coaster Bus",
     capacity: "15 - 28 Travelers",
+    imageUrl: "https://images.unsplash.com/photo-1622390573893-d61510131108?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb2FzdGVyJTIwYnVzfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+    imageHint: "coaster bus"
   },
 ]
 
@@ -95,16 +100,15 @@ const TransfersPage = () => {
           </div>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             {transportTypes.map((vehicle) => {
-              const image = PlaceHolderImages.find(img => img.id === vehicle.id);
               return (
                 <div key={vehicle.id} className="text-center">
                   <Image 
-                    src={image?.imageUrl || ''} 
+                    src={vehicle.imageUrl} 
                     alt={vehicle.name} 
                     width={400} 
                     height={300} 
                     className="rounded-lg object-contain aspect-[4/3]"
-                    data-ai-hint={image?.imageHint}
+                    data-ai-hint={vehicle.imageHint}
                   />
                   <h3 className="mt-4 text-xl font-headline font-semibold">{vehicle.name}</h3>
                   <p className="text-muted-foreground">{vehicle.capacity}</p>

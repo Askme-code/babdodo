@@ -4,7 +4,6 @@ import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { User, Calendar } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -41,14 +40,14 @@ export default function PostPage({ params: paramsProp }: PostPageProps) {
     notFound();
   }
 
-  const mainImage = PlaceHolderImages.find(p => p.id === post.featuredImage);
+  const mainImageUrl = post.featuredImage || "https://picsum.photos/seed/default-post/1200/600";
 
   const jsonLdData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": post.title,
     "description": post.excerpt,
-    "image": mainImage?.imageUrl || '',
+    "image": mainImageUrl,
     "author": {
       "@type": "Person",
       "name": post.author
@@ -90,13 +89,13 @@ export default function PostPage({ params: paramsProp }: PostPageProps) {
           </header>
 
           <Image
-            src={mainImage?.imageUrl || ''}
+            src={mainImageUrl}
             alt={post.title}
             width={1200}
             height={600}
             className="rounded-lg object-cover aspect-video w-full mb-8"
             priority
-            data-ai-hint={mainImage?.imageHint}
+            data-ai-hint="blog post"
           />
           
           <div className="prose prose-lg dark:prose-invert max-w-none mx-auto text-foreground/90" dangerouslySetInnerHTML={{ __html: post.content || ''}}>

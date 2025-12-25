@@ -5,15 +5,13 @@ import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Check, X, Clock, MapPin, DollarSign } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { JsonLd } from '@/components/JsonLd';
 import { useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { collection, query, where, limit } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
-import { useEffect, useState } from 'react';
 import type { Service } from '@/lib/types';
 
 
@@ -43,8 +41,8 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
     notFound();
   }
 
-  const mainImage = PlaceHolderImages.find(p => p.id === safari.image);
-  const galleryImages = safari.gallery ? safari.gallery.map(id => PlaceHolderImages.find(p => p.id === id)).filter(Boolean) : [];
+  const mainImageUrl = safari.image || "https://picsum.photos/seed/safari-hero/1200/600";
+  const galleryImages = safari.gallery || [];
 
 
   const jsonLdData = {
@@ -52,7 +50,7 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
       "@type": "TouristTrip",
       "name": safari.title,
       "description": safari.longDescription,
-      "image": mainImage?.imageUrl || '',
+      "image": mainImageUrl,
       "provider": {
         "@type": "TravelAgency",
         "name": "Babdodo Tours & Safaris",
@@ -74,12 +72,12 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
     <div className="bg-background">
       <section className="relative h-[50vh] w-full">
         <Image
-          src={mainImage?.imageUrl || ''}
+          src={mainImageUrl}
           alt={safari.title}
           fill
           className="object-cover"
           priority
-          data-ai-hint={mainImage?.imageHint}
+          data-ai-hint="safari landscape"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
         <div className="relative container h-full flex flex-col items-start justify-end pb-12 text-white px-4">
@@ -124,15 +122,15 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
              <div className="mt-12">
               <h3 className="font-headline text-2xl text-primary mb-4">Photo Gallery</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {galleryImages.map((img, index) => (
-                    img && <Image
+                {galleryImages.map((imgUrl, index) => (
+                    <Image
                       key={index}
-                      src={img.imageUrl}
+                      src={imgUrl}
                       alt={`${safari.title} gallery image ${index + 1}`}
                       width={400}
                       height={300}
                       className="rounded-lg object-cover aspect-square"
-                      data-ai-hint={img.imageHint}
+                      data-ai-hint="safari gallery"
                     />
                   ))}
               </div>

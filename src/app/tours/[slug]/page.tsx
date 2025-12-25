@@ -5,7 +5,6 @@ import * as React from 'react';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Check, X, Clock, MapPin, DollarSign } from 'lucide-react';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
@@ -42,8 +41,8 @@ export default function TourPage({ params: paramsProp }: TourPageProps) {
     notFound();
   }
 
-  const mainImage = PlaceHolderImages.find(p => p.id === tour.image);
-  const galleryImages = tour.gallery ? tour.gallery.map(id => PlaceHolderImages.find(p => p.id === id)).filter(Boolean) : [];
+  const mainImageUrl = tour.image || "https://picsum.photos/seed/tour-hero/1200/600";
+  const galleryImages = tour.gallery || [];
 
 
   const jsonLdData = {
@@ -51,7 +50,7 @@ export default function TourPage({ params: paramsProp }: TourPageProps) {
       "@type": "TouristTrip",
       "name": tour.title,
       "description": tour.longDescription,
-      "image": mainImage?.imageUrl || '',
+      "image": mainImageUrl,
       "provider": {
         "@type": "TravelAgency",
         "name": "Babdodo Tours & Safaris",
@@ -73,12 +72,12 @@ export default function TourPage({ params: paramsProp }: TourPageProps) {
     <div className="bg-background">
       <section className="relative h-[50vh] w-full">
         <Image
-          src={mainImage?.imageUrl || ''}
+          src={mainImageUrl}
           alt={tour.title}
           fill
           className="object-cover"
           priority
-          data-ai-hint={mainImage?.imageHint}
+          data-ai-hint="zanzibar tour"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
         <div className="relative container h-full flex flex-col items-start justify-end pb-12 text-white px-4">
@@ -123,15 +122,15 @@ export default function TourPage({ params: paramsProp }: TourPageProps) {
              <div className="mt-12">
               <h3 className="font-headline text-2xl text-primary mb-4">Photo Gallery</h3>
                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {galleryImages.map((img, index) => (
-                    img && <Image
+                {galleryImages.map((imgUrl, index) => (
+                    <Image
                       key={index}
-                      src={img.imageUrl}
+                      src={imgUrl}
                       alt={`${tour.title} gallery image ${index + 1}`}
                       width={400}
                       height={300}
                       className="rounded-lg object-cover aspect-square"
-                      data-ai-hint={img.imageHint}
+                      data-ai-hint="tour gallery"
                     />
                   ))}
               </div>

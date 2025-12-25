@@ -7,14 +7,12 @@ import Image from 'next/image';
 import { Check, Clock, MapPin, DollarSign, UserCheck } from 'lucide-react';
 import Link from 'next/link';
 
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import ContentRecommender from '@/components/content-recommender';
 import { useFirestore, useMemoFirebase } from '@/firebase';
-import { collection, query, where, getDocs, limit } from 'firebase/firestore';
+import { collection, query, where, limit } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
-import { useEffect, useState } from 'react';
 import type { Service } from '@/lib/types';
 
 
@@ -62,7 +60,7 @@ export default function TransferPage({ params: paramsProp }: TransferPageProps) 
     notFound();
   }
 
-  const mainImage = PlaceHolderImages.find(p => p.id === transfer.image);
+  const mainImageUrl = transfer.image || "https://picsum.photos/seed/transfer-hero/1200/600";
   const phoneNumber = "255678575092";
   const message = `Hello! I'm interested in booking the ${transfer.title} transfer.`;
 
@@ -70,12 +68,12 @@ export default function TransferPage({ params: paramsProp }: TransferPageProps) 
     <div className="bg-background">
       <section className="relative h-[50vh] w-full">
         <Image
-          src={mainImage?.imageUrl || ''}
+          src={mainImageUrl}
           alt={transfer.title}
           fill
           className="object-cover"
           priority
-          data-ai-hint={mainImage?.imageHint}
+          data-ai-hint="airport transfer"
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative container h-full flex flex-col items-start justify-end pb-12 text-white">

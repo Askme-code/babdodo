@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Clock } from 'lucide-react';
 
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Service } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -13,9 +12,7 @@ interface ServiceCardProps {
 }
 
 const ServiceCard = ({ service }: ServiceCardProps) => {
-  const placeholder = PlaceHolderImages.find(p => p.id === service.image);
-  const imageUrl = placeholder?.imageUrl || "https://picsum.photos/seed/default/600/400";
-  const imageHint = placeholder?.imageHint || "tour landscape";
+  const imageUrl = service.image || "https://picsum.photos/seed/default/600/400";
   const serviceUrl = `/${service.type}s/${service.slug}`;
 
   return (
@@ -29,7 +26,7 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
               width={600}
               height={400}
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-              data-ai-hint={imageHint}
+              data-ai-hint="tour landscape"
             />
           </div>
         </Link>
