@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -40,10 +41,8 @@ import { PlusCircle, Edit, Trash2 } from 'lucide-react';
 import { Card } from '../ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '../ui/skeleton';
-import ImageUploader from './image-uploader';
 
-
-type Item = Partial<Service> & Partial<Post> & { id?: string; imageFile?: File };
+type Item = Partial<Service> & Partial<Post> & { id?: string };
 
 const serviceSchema = z.object({
   title: z.string().min(3, 'Title is required'),
@@ -52,7 +51,7 @@ const serviceSchema = z.object({
   price: z.preprocess((a) => parseInt(z.string().parse(a || '0'), 10), z.number().positive().optional()),
   duration: z.string().optional(),
   location: z.string().optional(),
-  imageFile: z.any().optional(),
+  image: z.string().url('Must be a valid URL').optional().or(z.literal('')),
 });
 
 const postSchema = z.object({
@@ -61,7 +60,7 @@ const postSchema = z.object({
   content: z.string().min(20, 'Content is required'),
   author: z.string().optional(),
   date: z.string().optional(),
-  imageFile: z.any().optional(),
+  featuredImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
 });
 
 interface CrudShellProps {
@@ -145,17 +144,10 @@ const CrudForm = ({
       </div>
 
        <div>
-        <Label>{isPostType ? 'Featured Image' : 'Main Image'}</Label>
-        <Controller
-            name="imageFile"
-            control={control}
-            render={({ field }) => (
-                <ImageUploader 
-                    onFileSelect={(file) => setValue('imageFile', file)}
-                    currentImage={isPostType ? item?.featuredImage : item?.image}
-                />
-            )}
-        />
+        <Label htmlFor={isPostType ? 'featuredImage' : 'image'}>{isPostType ? 'Featured Image URL' : 'Main Image URL'}</Label>
+        <Input id={isPostType ? 'featuredImage' : 'image'} {...register(isPostType ? 'featuredImage' : 'image')} placeholder="https://example.com/image.jpg" />
+        {errors.image && <p className="text-destructive text-sm mt-1">{`${errors.image.message}`}</p>}
+        {errors.featuredImage && <p className="text-destructive text-sm mt-1">{`${errors.featuredImage.message}`}</p>}
        </div>
 
       {isPostType ? (

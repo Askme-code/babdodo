@@ -10,8 +10,8 @@ export interface Service {
   price: number;
   duration?: string;
   location?: string;
-  image?: string;
-  gallery?: string[];
+  image?: string; // URL string
+  gallery?: string[]; // Array of URL strings
   included?: string[];
   excluded?:string[];
   type: 'tour' | 'safari' | 'transfer';
@@ -28,7 +28,7 @@ export interface Post {
   content: string;
   author: string;
   date: string; // Keep as string for serializability
-  featuredImage?: string;
+  featuredImage?: string; // URL string
   createdAt: string;
   updatedAt: string;
 }
