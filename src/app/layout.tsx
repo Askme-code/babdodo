@@ -65,6 +65,17 @@ export default function RootLayout({
             "url": "https://www.babdodotours.com", // Replace with your actual domain
              "image": "https://images.unsplash.com/photo-1689479665129-bf064a64feaa?w=1200&h=630&fit=crop"
           }} />
+        {/* Google tag (gtag.js) */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=AW-17720442799" strategy="afterInteractive" />
+        <Script id="google-analytics">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'AW-17720442799');
+          `}
+        </Script>
       </head>
       <body className="font-body bg-background text-foreground antialiased">
         <FirebaseClientProvider>
