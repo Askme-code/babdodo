@@ -76,6 +76,8 @@ export default function RootLayout({
             gtag('config', 'AW-17720442799');
           `}
         </Script>
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5805028999017949"
+          crossOrigin="anonymous" strategy="afterInteractive" />
       </head>
       <body className="font-body bg-background text-foreground antialiased">
         <FirebaseClientProvider>
