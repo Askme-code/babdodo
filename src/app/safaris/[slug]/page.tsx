@@ -13,6 +13,7 @@ import { useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import type { Service } from '@/lib/types';
+import MediaRenderer from '@/components/MediaRenderer';
 
 
 type SafariPageProps = {
@@ -71,11 +72,10 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
     <JsonLd data={jsonLdData} />
     <div className="bg-background">
       <section className="relative h-[50vh] w-full">
-        <Image
+        <MediaRenderer
           src={mainImageUrl}
           alt={safari.title}
-          fill
-          className="object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
           priority
           data-ai-hint="safari landscape"
         />
@@ -123,7 +123,7 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
               <h3 className="font-headline text-2xl text-primary mb-4">Photo Gallery</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {galleryImages.map((imgUrl, index) => (
-                    <Image
+                    <MediaRenderer
                       key={index}
                       src={imgUrl}
                       alt={`${safari.title} gallery image ${index + 1}`}

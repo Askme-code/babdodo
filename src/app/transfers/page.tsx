@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Image from 'next/image';
+import MediaRenderer from '@/components/MediaRenderer';
 
 // export const metadata: Metadata = {
 //   title: 'Airport Transfers',
@@ -102,11 +103,9 @@ const TransfersPage = () => {
             {transportTypes.map((vehicle) => {
               return (
                 <div key={vehicle.id} className="text-center">
-                  <Image 
+                  <MediaRenderer 
                     src={vehicle.imageUrl} 
                     alt={vehicle.name} 
-                    width={400} 
-                    height={300} 
                     className="rounded-lg object-contain aspect-[4/3]"
                     data-ai-hint={vehicle.imageHint}
                   />

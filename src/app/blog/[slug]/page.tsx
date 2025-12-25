@@ -12,6 +12,7 @@ import { useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import type { Post } from '@/lib/types';
+import MediaRenderer from '@/components/MediaRenderer';
 
 
 type PostPageProps = {
@@ -88,11 +89,9 @@ export default function PostPage({ params: paramsProp }: PostPageProps) {
             </div>
           </header>
 
-          <Image
+          <MediaRenderer
             src={mainImageUrl}
             alt={post.title}
-            width={1200}
-            height={600}
             className="rounded-lg object-cover aspect-video w-full mb-8"
             priority
             data-ai-hint="blog post"

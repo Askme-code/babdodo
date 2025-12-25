@@ -10,6 +10,7 @@ import { DhowBoatIcon, SafariJeepIcon } from '@/components/icons';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where, limit, orderBy } from 'firebase/firestore';
 import type { Service, Post } from '@/lib/types';
+import MediaRenderer from '@/components/MediaRenderer';
 
 
 const Hero = () => {

@@ -14,6 +14,7 @@ import { useFirestore, useMemoFirebase } from '@/firebase';
 import { collection, query, where, limit } from 'firebase/firestore';
 import { useCollection } from '@/firebase/firestore/use-collection';
 import type { Service } from '@/lib/types';
+import MediaRenderer from '@/components/MediaRenderer';
 
 
 type TransferPageProps = {
@@ -67,11 +68,10 @@ export default function TransferPage({ params: paramsProp }: TransferPageProps) 
   return (
     <div className="bg-background">
       <section className="relative h-[50vh] w-full">
-        <Image
+        <MediaRenderer
           src={mainImageUrl}
           alt={transfer.title}
-          fill
-          className="object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
           priority
           data-ai-hint="airport transfer"
         />

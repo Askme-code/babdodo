@@ -6,6 +6,7 @@ import type { Service } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import MediaRenderer from './MediaRenderer';
 
 interface ServiceCardProps {
   service: Service;
@@ -20,11 +21,9 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
       <CardHeader className="p-0 relative">
         <Link href={serviceUrl} className="block" aria-label={`View details for ${service.title}`}>
           <div className="overflow-hidden">
-             <Image
+             <MediaRenderer
               src={imageUrl}
               alt={service.title}
-              width={600}
-              height={400}
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
               data-ai-hint="tour landscape"
             />

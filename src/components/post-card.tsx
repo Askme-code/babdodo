@@ -4,6 +4,7 @@ import { User, Calendar } from 'lucide-react';
 
 import type { Post } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import MediaRenderer from './MediaRenderer';
 
 interface PostCardProps {
   post: Post;
@@ -17,11 +18,9 @@ const PostCard = ({ post }: PostCardProps) => {
       <CardHeader className="p-0">
         <Link href={`/blog/${post.slug}`} aria-label={`Read more about ${post.title}`}>
           <div className="overflow-hidden">
-            <Image
+            <MediaRenderer
               src={imageUrl}
               alt={post.title}
-              width={400}
-              height={300}
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
               data-ai-hint="travel blog"
             />
