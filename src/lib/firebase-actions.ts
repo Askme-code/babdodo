@@ -8,6 +8,7 @@ import {
     updateDoc, 
     deleteDoc, 
     serverTimestamp,
+    Timestamp,
 } from 'firebase/firestore';
 import { initializeFirebase } from '@/firebase';
 import type { Service, Post } from './types';
@@ -51,6 +52,10 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
         if (!docData.date) {
             docData.date = new Date().toISOString().split('T')[0];
         }
+        // Convert date string to Timestamp for Firestore
+        if (typeof docData.date === 'string') {
+            docData.date = Timestamp.fromDate(new Date(docData.date));
+        }
     }
     
     const docRef = await addDoc(collectionRef, docData);
@@ -68,18 +73,20 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
   try {
     const collectionPath = getCollectionPathForType(itemType);
     const docRef = doc(firestore, collectionPath, id);
-    const slug = generateSlug(item.title!);
-
+    
     const docData: any = {
       ...item,
-      slug,
       updatedAt: serverTimestamp(),
     };
 
-     if (itemType === 'post') {
-        if (typeof docData.date === 'string') {
-          docData.date = docData.date;
-        }
+    // Only generate a new slug if the title is being changed
+    if (item.title) {
+        docData.slug = generateSlug(item.title);
+    }
+
+     if (itemType === 'post' && typeof docData.date === 'string') {
+        // Convert date string to Timestamp for Firestore
+        docData.date = Timestamp.fromDate(new Date(docData.date));
     }
 
     await updateDoc(docRef, docData);

@@ -48,7 +48,11 @@ const serviceSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
   longDescription: z.string().optional(),
-  price: z.preprocess((a) => parseInt(z.string().parse(a || '0'), 10), z.number().positive().optional()),
+  price: z.preprocess((val) => {
+    if (typeof val === 'string' && val.trim() === '') return undefined;
+    const num = Number(val);
+    return isNaN(num) ? val : num;
+  }, z.number({ invalid_type_error: 'Price must be a number.' }).positive('Price must be a positive number.').optional()),
   duration: z.string().optional(),
   location: z.string().optional(),
   image: z.string().url('Must be a valid URL').optional().or(z.literal('')),
