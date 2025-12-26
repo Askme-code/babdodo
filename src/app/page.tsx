@@ -51,13 +51,13 @@ export default function Home() {
 
   const featuredToursQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'tours'), where('featured', '==', true), limit(3));
+    return query(collection(firestore, 'tours'), orderBy('createdAt', 'desc'), limit(3));
   }, [firestore]);
   const { data: featuredTours } = useCollection<Service>(featuredToursQuery);
 
   const featuredSafarisQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'safaris'), where('featured', '==', true), limit(3));
+    return query(collection(firestore, 'safaris'), orderBy('createdAt', 'desc'), limit(3));
   }, [firestore]);
   const { data: featuredSafaris } = useCollection<Service>(featuredSafarisQuery);
 
