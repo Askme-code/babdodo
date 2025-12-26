@@ -2,6 +2,7 @@
 'use client';
 
 import Image from 'next/image';
+import React from 'react';
 
 interface MediaRendererProps {
   src: string;
@@ -23,7 +24,7 @@ const getYouTubeId = (url: string): string | null => {
 const getInstagramId = (url: string): { type: 'p' | 'reel', id: string } | null => {
     if (!url) return null;
     const regExp = /https?:\/\/(?:www\.)?instagram\.com\/(p|reel)\/([a-zA-Z0-9_-]+)/;
-    const match = url.match(regExp);
+    const match = url.match(RegExp);
     if (match && match[1] && match[2]) {
         return {
             type: match[1] as 'p' | 'reel',
@@ -31,6 +32,33 @@ const getInstagramId = (url: string): { type: 'p' | 'reel', id: string } | null 
         };
     }
     return null;
+}
+
+
+class MediaErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error("MediaRenderer Error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-48 flex items-center justify-center bg-muted rounded-lg">
+          <p className="text-muted-foreground text-sm">Error loading media</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
 }
 
 
@@ -54,8 +82,6 @@ const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
   }
 
   if (instagramInfo) {
-    // Note: Instagram embeds have limitations and might not always display correctly.
-    // They work best with a fixed aspect ratio or size.
     return (
         <div className="w-full overflow-hidden rounded-lg" style={{aspectRatio: '1/1'}}>
             <iframe
@@ -70,16 +96,16 @@ const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
     );
   }
 
-
-  // Fallback to next/image for regular image URLs
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={600}
-      height={400}
-      {...props}
-    />
+    <MediaErrorBoundary>
+      <Image
+        src={src}
+        alt={alt}
+        width={600}
+        height={400}
+        {...props}
+      />
+    </MediaErrorBoundary>
   );
 };
 
