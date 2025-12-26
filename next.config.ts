@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'httpshttps',
         hostname: 'i.ytimg.com',
         port: '',
         pathname: '/**',
@@ -43,6 +43,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'www.tanzaniatourism.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
         port: '',
         pathname: '/**',
       }
