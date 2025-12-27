@@ -1,11 +1,43 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Allow any logged-in user to read/write everything
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
+    // Publicly readable collections
+    match /reviews/{reviewId} {
+      // Anyone can read approved reviews
+      allow get, list: if resource.data.status == 'approved';
+      // Anyone can create a new review (for submission)
+      allow create: if request.resource.data.status == 'pending';
+      // Only admins can update (approve/reject) or delete reviews
+      allow update, delete: if isAdmin();
+    }
+    
+    // Publicly readable service and post data
+    match /safaris/{safariId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /tours/{tourId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /transfers/{transferId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /news_updates/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Admin-only collections
+    match /roles_admin/{userId} {
+      allow read, write: if isAdmin();
+    }
   }
 }
