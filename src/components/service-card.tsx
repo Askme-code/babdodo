@@ -46,8 +46,8 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
           {service.description}
         </CardDescription>
       </CardContent>
-      <CardFooter className="p-4 flex flex-col sm:flex-row justify-between items-center">
-        <div className="text-lg font-bold text-primary mb-4 sm:mb-0">
+      <CardFooter className="p-4 flex justify-between items-center">
+        <div className="text-lg font-bold text-primary">
           ${service.price}
           <span className="text-sm font-normal text-muted-foreground">/person</span>
         </div>

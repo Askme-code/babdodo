@@ -17,13 +17,12 @@ import MediaRenderer from '@/components/MediaRenderer';
 
 
 type SafariPageProps = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 };
 
-export default function SafariPage({ params: paramsProp }: SafariPageProps) {
-  const params = React.use(paramsProp);
+export default function SafariPage({ params }: SafariPageProps) {
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {
@@ -75,6 +74,7 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
         <MediaRenderer
           src={mainImageUrl}
           alt={safari.title}
+          fill
           className="absolute inset-0 w-full h-full object-cover"
           priority
           data-ai-hint="safari landscape"

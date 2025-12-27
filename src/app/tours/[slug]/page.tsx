@@ -17,13 +17,12 @@ import MediaRenderer from '@/components/MediaRenderer';
 
 
 type TourPageProps = {
-  params: Promise<{
+  params: {
     slug: string;
-  }>;
+  };
 };
 
-export default function TourPage({ params: paramsProp }: TourPageProps) {
-  const params = React.use(paramsProp);
+export default function TourPage({ params }: TourPageProps) {
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {
@@ -75,6 +74,7 @@ export default function TourPage({ params: paramsProp }: TourPageProps) {
         <MediaRenderer
           src={mainImageUrl}
           alt={tour.title}
+          fill
           className="absolute inset-0 w-full h-full object-cover"
           priority
           data-ai-hint="zanzibar tour"
