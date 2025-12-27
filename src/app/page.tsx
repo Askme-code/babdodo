@@ -61,6 +61,12 @@ export default function Home() {
   }, [firestore]);
   const { data: featuredSafaris } = useCollection<Service>(featuredSafarisQuery);
 
+  const featuredTransfersQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'transfers'), orderBy('createdAt', 'desc'), limit(3));
+    }, [firestore]);
+  const { data: featuredTransfers } = useCollection<Service>(featuredTransfersQuery);
+
   const latestPostsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
     return query(collection(firestore, 'news_updates'), orderBy('date', 'desc'), limit(3));
@@ -108,6 +114,26 @@ export default function Home() {
            <div className="text-center mt-12">
             <Button asChild>
               <Link href="/tours">View All Tours</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 md:py-20 bg-card">
+        <div className="container">
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">Convenient Transfers</h2>
+          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
+            Travel with ease and comfort. We offer reliable transfers to and from airports, hotels, and more.
+          </p>
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {featuredTransfers?.map(transfer => (
+              <ServiceCard key={transfer.id} service={transfer} />
+            ))}
+             {(!featuredTransfers || featuredTransfers.length === 0) && <p className="text-center text-muted-foreground col-span-full">No transfers to display yet.</p>}
+          </div>
+          <div className="text-center mt-12">
+            <Button asChild>
+              <Link href="/transfers">View All Transfers</Link>
             </Button>
           </div>
         </div>
