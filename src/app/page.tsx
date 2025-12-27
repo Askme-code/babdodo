@@ -21,57 +21,26 @@ import {
 import Autoplay from "embla-carousel-autoplay"
 
 
-const heroImages = [
-    { src: "/image/sunset background.jpg", alt: "Safari sunset with elephants", hint: "safari sunset", caption: "Experience the majestic African safari" },
-    { src: "/image/kilimanjaro.jpg", alt: "Mount Kilimanjaro with clouds", hint: "mount kilimanjaro", caption: "Conquer the roof of Africa" },
-    { src: "/image/sunset cru.jpg", alt: "Dhow sunset cruise in Zanzibar", hint: "dhow sunset", caption: "Sail into a Zanzibar sunset" },
-    { src: "/image/local boats.jpg", alt: "Local fishing boats on a Zanzibar beach", hint: "zanzibar boats", caption: "Discover the charm of local life" },
-    { src: "/image/airport.jpg", alt: "Zanzibar airport terminal", hint: "zanzibar airport", caption: "Seamless arrivals and departures" },
-]
-
 const Hero = () => {
   return (
     <section className="relative h-[70vh] md:h-[85vh] w-full">
-       <Carousel 
-        className="w-full h-full"
-        plugins={[
-            Autoplay({
-              delay: 5000,
-              stopOnInteraction: false,
-            }),
-          ]}
-        opts={{
-            loop: true,
-        }}
-       >
-        <CarouselContent>
-          {heroImages.map((image, index) => (
-            <CarouselItem key={index} className="relative">
-                 <MediaRenderer
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                    data-ai-hint={image.hint}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
-                <div className="absolute inset-x-0 bottom-0 pb-12 sm:pb-20 text-center text-white">
-                    <p className="text-xl md:text-2xl font-body drop-shadow-md">{image.caption}</p>
-                </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-
-      <div className="absolute top-0 inset-0 flex flex-col items-center justify-center text-center text-white p-4 pointer-events-none">
+      <MediaRenderer
+        src="/image/sunset background.jpg"
+        alt="Safari sunset with elephants"
+        fill
+        className="object-cover"
+        priority
+        data-ai-hint="safari sunset"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
+      <div className="absolute top-0 inset-0 flex flex-col items-center justify-center text-center text-white p-4">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg">
           Your Adventure Awaits
         </h1>
         <p className="mt-4 text-lg md:text-xl max-w-3xl drop-shadow-md">
           Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Tours & Safaris.
         </p>
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 pointer-events-auto">
+        <div className="mt-8 flex flex-col sm:flex-row gap-4">
           <Button size="lg" asChild>
             <Link href="/safaris">Explore Safaris</Link>
           </Button>
