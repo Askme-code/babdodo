@@ -177,18 +177,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
-      <section className="py-12 md:py-20">
-        <div className="container">
-            <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">What Our Guests Say</h2>
-            <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-              Real stories from travelers who have explored with us.
-            </p>
-            <div className="mt-12">
-                <Testimonials />
-            </div>
-        </div>
-      </section>
 
       <section className="py-12 md:py-20 bg-secondary">
         <div className="container grid md:grid-cols-2 gap-12 items-center">
