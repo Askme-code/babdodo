@@ -23,32 +23,62 @@ import { Handshake, MapPin, PlaneTakeoff } from 'lucide-react';
 
 
 const Hero = () => {
+  const heroImages = [
+    { src: '/image/airport.jpg', caption: 'Seamless Airport Transfers' },
+    { src: '/image/sunset cru.jpg', caption: 'Unforgettable Sunset Cruises' },
+    { src: '/image/sunset background.jpg', caption: 'Breathtaking Safari Sunsets' },
+    { src: '/image/local boats.jpg', caption: 'Authentic Local Experiences' },
+    { src: '/image/kilimanjaro.jpg', caption: 'Majestic Mount Kilimanjaro' },
+  ];
+
   return (
-    <section className="relative h-[70vh] md:h-[85vh] w-full">
-      <MediaRenderer
-        src="/image/sunset background.jpg"
-        alt="Safari sunset with elephants"
-        fill
-        className="object-cover"
-        priority
-        data-ai-hint="safari sunset"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
-      <div className="container relative h-full flex flex-col items-center justify-center text-center text-white p-4">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg">
-          Your Adventure Awaits
-        </h1>
-        <p className="mt-4 text-lg md:text-xl max-w-3xl drop-shadow-md">
-          Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Tours & Safaris.
-        </p>
-        <div className="mt-8 flex flex-col sm:flex-row gap-4">
-          <Button size="lg" asChild>
-            <Link href="/safaris">Explore Safaris</Link>
-          </Button>
-          <Button size="lg" variant="secondary" asChild>
-            <Link href="/tours">Discover Tours</Link>
-          </Button>
-        </div>
+     <section className="relative h-[70vh] md:h-[85vh] w-full">
+      <Carousel
+        opts={{ loop: true }}
+        plugins={[
+          Autoplay({
+            delay: 5000,
+          }),
+        ]}
+        className="w-full h-full"
+      >
+        <CarouselContent>
+          {heroImages.map((img, index) => (
+            <CarouselItem key={index}>
+              <div className="relative w-full h-[70vh] md:h-[85vh]">
+                <MediaRenderer
+                  src={img.src}
+                  alt={img.caption}
+                  fill
+                  className="object-cover"
+                  priority={index === 0}
+                  data-ai-hint="safari sunset"
+                />
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
+                 <div className="container relative h-full flex flex-col items-center justify-center text-center text-white p-4">
+                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg animate-in fade-in slide-in-from-bottom-12 duration-1000">
+                     {img.caption}
+                   </h1>
+                 </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+        <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
+            <div className="container flex flex-col items-center justify-center text-center text-white">
+                 <p className="text-lg md:text-xl max-w-3xl drop-shadow-md mb-8">
+                    Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Tours & Safaris.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <Button size="lg" asChild>
+                        <Link href="/safaris">Explore Safaris</Link>
+                    </Button>
+                    <Button size="lg" variant="secondary" asChild>
+                        <Link href="/tours">Discover Tours</Link>
+                    </Button>
+                </div>
+            </div>
       </div>
     </section>
   );
@@ -107,6 +137,15 @@ export default function Home() {
   const { data: latestPosts } = useCollection<Post>(latestPostsQuery);
 
   const aboutImage = "/image/masai.jpg";
+  const galleryImages = [
+    { src: '/image/ngorongoro.jpg', alt: 'Wildlife in Ngorongoro Crater' },
+    { src: '/image/beach 1.jpg', alt: 'Pristine beach in Zanzibar' },
+    { src: '/image/masai.jpg', alt: 'Maasai people in traditional attire' },
+    { src: '/image/sunset cru.jpg', alt: 'Sunset dhow cruise' },
+    { src: '/image/kilimanjaro.jpg', alt: 'Mount Kilimanjaro' },
+    { src: '/image/star fish.jpg', alt: 'Starfish on a sandbank' },
+  ];
+
 
   return (
     <div>
@@ -216,6 +255,34 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="py-12 md:py-20 bg-background">
+        <div className="container">
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">From Our Gallery</h2>
+          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
+            A glimpse into the unforgettable moments captured during our adventures.
+          </p>
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-4">
+            {galleryImages.map((image, index) => (
+                <div key={index} className="overflow-hidden rounded-lg group">
+                    <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={600}
+                    height={400}
+                    className="w-full h-auto object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-110"
+                    />
+                </div>
+            ))}
+          </div>
+          <div className="text-center mt-12">
+            <Button asChild>
+              <Link href="/gallery">View Full Gallery</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+
       <section className="py-12 md:py-20">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -252,3 +319,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
