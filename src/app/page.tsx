@@ -23,10 +23,11 @@ import Autoplay from "embla-carousel-autoplay"
 
 
 const heroImages = [
-    { src: "/image/sunset background.jpg", alt: "Safari landscape with elephants in Tanzania", hint: "safari elephants" },
-    { src: "/image/kilimanjaro.jpg", alt: "Mount Kilimanjaro with clouds", hint: "kilimanjaro mountain" },
-    { src: "/image/beach 1.jpg", alt: "Pristine beach in Zanzibar", hint: "zanzibar beach" },
-    { src: "/image/ngorongoro.jpg", alt: "Wildebeest in Ngorongoro Crater", hint: "ngorongoro crater" },
+    { src: "/image/sunset background.jpg", alt: "Safari sunset with elephants", hint: "safari sunset" },
+    { src: "/image/kilimanjaro.jpg", alt: "Mount Kilimanjaro with clouds", hint: "mount kilimanjaro" },
+    { src: "/image/sunset cru.jpg", alt: "Dhow sunset cruise in Zanzibar", hint: "dhow sunset" },
+    { src: "/image/local boats.jpg", alt: "Local fishing boats on a Zanzibar beach", hint: "zanzibar boats" },
+    { src: "/image/airport.jpg", alt: "Zanzibar airport terminal", hint: "zanzibar airport" },
 ]
 
 const Hero = () => {
