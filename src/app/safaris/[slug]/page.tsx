@@ -17,12 +17,13 @@ import MediaRenderer from '@/components/MediaRenderer';
 
 
 type SafariPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-export default function SafariPage({ params }: SafariPageProps) {
+export default function SafariPage({ params: paramsProp }: SafariPageProps) {
+  const params = React.use(paramsProp);
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {

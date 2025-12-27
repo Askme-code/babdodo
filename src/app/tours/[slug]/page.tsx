@@ -17,12 +17,13 @@ import MediaRenderer from '@/components/MediaRenderer';
 
 
 type TourPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
-export default function TourPage({ params }: TourPageProps) {
+export default function TourPage({ params: paramsProp }: TourPageProps) {
+  const params = React.use(paramsProp);
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {

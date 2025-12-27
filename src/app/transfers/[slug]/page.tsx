@@ -18,9 +18,9 @@ import MediaRenderer from '@/components/MediaRenderer';
 
 
 type TransferPageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 
@@ -41,7 +41,8 @@ const WhatsAppIcon = () => (
     </svg>
   );
 
-export default function TransferPage({ params }: TransferPageProps) {
+export default function TransferPage({ params: paramsProp }: TransferPageProps) {
+  const params = React.use(paramsProp);
   const firestore = useFirestore();
 
   const itemQuery = useMemoFirebase(() => {
