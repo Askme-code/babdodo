@@ -62,7 +62,7 @@ service cloud.firestore {
       // List Rules:
       // - Admins can list all reviews (for the dashboard).
       // - The public can list ONLY approved reviews (for the homepage carousel).
-      allow list: if isAdmin() || (request.query.where.status == 'approved');
+      allow list: if isAdmin() || request.query.where.status == 'approved';
     }
   }
 }
