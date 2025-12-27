@@ -2,47 +2,58 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+
     function isAdmin() {
-      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+      return request.auth != null
+        && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
+    /* ---------- ADMIN ROLE ---------- */
     match /roles_admin/{userId} {
-      allow read, write: if request.auth.uid == userId;
+      allow read: if isAdmin();
+      allow write: if false;
     }
 
-    match /tours/{tourId} {
-      allow read, list: if isAdmin();
-      allow create, update, delete: if isAdmin();
-    }
-    match /safaris/{safariId} {
-      allow read, list: if isAdmin();
-      allow create, update, delete: if isAdmin();
-    }
-    match /transfers/{transferId} {
-      allow read, list: if isAdmin();
-      allow create, update, delete: if isAdmin();
-    }
-    match /news_updates/{postId} {
-      allow read, list: if isAdmin();
-      allow create, update, delete: if isAdmin();
+    /* ---------- PUBLIC CONTENT ---------- */
+    match /tours/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
 
+    match /safaris/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /transfers/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /news_updates/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    /* ---------- REVIEWS (FIXED) ---------- */
     match /reviews/{reviewId} {
-      // Anyone can submit a review.
-      allow create: if request.resource.data.status == 'pending' 
-                      && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
-                      && request.resource.data.authorName is string
-                      && request.resource.data.comment is string;
-      
-      // Admins can do anything with reviews.
-      allow read, update, delete: if isAdmin();
-      
-      // Public users can only read approved reviews individually.
-      allow get: if resource.data.status == 'approved';
 
-      // Public users can only list reviews if they are querying for approved ones.
-      allow list: if request.query.where.status == 'approved';
+      // Create review (public)
+      allow create: if
+        request.resource.data.status == 'pending'
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.authorName is string
+        && request.resource.data.comment is string;
+
+      // Admin moderation
+      allow update, delete: if isAdmin();
+
+      // Per-document read protection
+      allow get: if resource.data.status == 'approved' || isAdmin();
+
+      // REQUIRED for getDocs(collection("reviews"))
+      allow list: if true;
     }
   }
 }
