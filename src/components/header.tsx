@@ -22,6 +22,7 @@ const navLinks = [
   { href: '/tours', label: 'Tours' },
   { href: '/safaris', label: 'Safaris' },
   { href: '/transfers', label: 'Transfers' },
+  { href: '/gallery', label: 'Gallery' },
   { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
