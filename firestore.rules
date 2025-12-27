@@ -1,11 +1,83 @@
-
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow all reads and writes for any authenticated user.
-    // This is for development purposes only.
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+
+    // Check if user is signed in
+    function isSignedIn() {
+      return request.auth != null;
     }
+
+    // Check if user is admin
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /* ============================
+       ROLES ADMIN COLLECTION
+       ============================ */
+    match /roles_admin/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+
+    /* ============================
+       REVIEWS COLLECTION
+       ============================ */
+    match /reviews/{reviewId} {
+
+      // Anyone can read approved reviews
+      allow get: if resource.data.status == 'approved' || isAdmin();
+
+      // Allow listing approved reviews for anyone, or all reviews for admins
+      allow list: if isAdmin() || (request.query.where.status == 'approved');
+
+      // Signed-in users can create reviews, but I'll allow anonymous for now to avoid breaking the form
+      allow create: if request.resource.data.status == 'pending'
+                    && request.resource.data.rating >= 1
+                    && request.resource.data.rating <= 5
+                    && request.resource.data.comment is string
+                    && request.resource.data.authorName is string;
+
+      // Only admin can update/delete reviews
+      allow update, delete: if isAdmin();
+    }
+
+    /* ============================
+       TOURS COLLECTION
+       ============================ */
+    match /tours/{tourId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ============================
+       SAFARIS COLLECTION
+       ============================ */
+    match /safaris/{safariId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ============================
+       TRANSFERS COLLECTION
+       ============================ */
+    match /transfers/{transferId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /* ============================
+       NEWS UPDATES COLLECTION
+       ============================ */
+    match /news_updates/{postId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // A default-deny rule is not strictly necessary if no other rules match,
+    // but can be added for clarity if desired.
+    // match /{document=**} {
+    //  allow read, write: if false;
+    // }
+
   }
 }
