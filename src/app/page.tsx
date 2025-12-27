@@ -1,6 +1,13 @@
+
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from '@/components/ui/carousel';
+import Autoplay from 'embla-carousel-autoplay';
 
 import ServiceCard from '@/components/service-card';
 import PostCard from '@/components/post-card';
@@ -11,72 +18,97 @@ import { collection, query, where, limit, orderBy } from 'firebase/firestore';
 import type { Service, Post, Review } from '@/lib/types';
 import MediaRenderer from '@/components/MediaRenderer';
 import ReviewForm from '@/components/review-form';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel"
-import Autoplay from "embla-carousel-autoplay"
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from '@/components/ui/card';
 import { Handshake, MapPin, PlaneTakeoff } from 'lucide-react';
-import Testimonials from '@/components/testimonials';
 import Counter from '@/components/counter';
-
+import { useEffect, useState } from 'react';
+import { useTypewriter } from '@/hooks/use-typewriter';
 
 const Hero = () => {
-  const heroImages = [
-    { src: '/image/airport.jpg', caption: 'Seamless Airport Transfers' },
-    { src: '/image/sunset cru.jpg', caption: 'Unforgettable Sunset Cruises' },
-    { src: '/image/sunset background.jpg', caption: 'Breathtaking Safari Sunsets' },
-    { src: '/image/local boats.jpg', caption: 'Authentic Local Experiences' },
-    { src: '/image/kilimanjaro.jpg', caption: 'Majestic Mount Kilimanjaro' },
+  const heroSlides = [
+    {
+      src: '/image/sunset background.jpg',
+      caption: 'Breathtaking Safari Sunsets',
+      alt: 'African sunset on a safari',
+    },
+    {
+      src: '/image/airport.jpg',
+      caption: 'Seamless Airport Transfers',
+      alt: 'Zanzibar Airport',
+    },
+    {
+      src: '/image/sunset cru.jpg',
+      caption: 'Unforgettable Sunset Cruises',
+      alt: 'Sunset dhow cruise',
+    },
+    {
+      src: '/image/local boats.jpg',
+      caption: 'Authentic Local Experiences',
+      alt: 'Traditional dhow boats',
+    },
+    {
+      src: '/image/kilimanjaro.jpg',
+      caption: 'Majestic Mount Kilimanjaro',
+      alt: 'Mount Kilimanjaro',
+    },
   ];
 
+  const [activeIndex, setActiveIndex] = useState(0);
+  const typewriterText = useTypewriter(heroSlides[activeIndex].caption, 100);
+
   return (
-    <section className="relative h-[70vh] md:h-[85vh] w-full">
+    <section className="relative h-[70vh] w-full overflow-hidden md:h-[85vh]">
       <Carousel
         opts={{ loop: true }}
-        plugins={[
-          Autoplay({
-            delay: 5000,
-          }),
-        ]}
-        className="w-full h-full"
+        plugins={[Autoplay({ delay: 5000 })]}
+        setApi={(api) => {
+          api?.on('select', () => {
+            setActiveIndex(api.selectedScrollSnap());
+          });
+        }}
+        className="h-full w-full"
       >
         <CarouselContent>
-          {heroImages.map((img, index) => (
+          {heroSlides.map((slide, index) => (
             <CarouselItem key={index}>
-              <div className="relative w-full h-[70vh] md:h-[85vh]">
+              <div className="relative h-[70vh] w-full md:h-[85vh]">
                 <MediaRenderer
-                  src={img.src}
-                  alt={img.caption}
+                  src={slide.src}
+                  alt={slide.alt}
                   fill
                   className="object-cover"
                   priority={index === 0}
                   data-ai-hint="safari sunset"
                 />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
-      <div className="absolute inset-0 flex items-center justify-center z-10 p-4">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
+      <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
         <div className="container flex flex-col items-center justify-center text-center text-white">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg animate-in fade-in slide-in-from-bottom-12 duration-1000">
-                Unforgettable Adventures Await
-            </h1>
-            <p className="text-lg md:text-xl max-w-3xl drop-shadow-md mt-4 mb-8">
-                Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Tours & Safaris.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" asChild>
-                    <Link href="/safaris">Explore Safaris</Link>
-                </Button>
-                <Button size="lg" variant="secondary" asChild>
-                    <Link href="/tours">Discover Tours</Link>
-                </Button>
-            </div>
+          <h1 className="text-4xl font-bold text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
+            {typewriterText}
+          </h1>
+          <p className="mt-4 mb-8 max-w-3xl text-lg text-white/90 drop-shadow-md md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            Discover the untamed beauty of Tanzania and the serene beaches of
+            Zanzibar with Babdodo Tours & Safaris.
+          </p>
+          <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
+            <Button size="lg" asChild>
+              <Link href="/safaris">Explore Safaris</Link>
+            </Button>
+            <Button size="lg" variant="secondary" asChild>
+              <Link href="/tours">Discover Tours</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>
@@ -85,9 +117,14 @@ const Hero = () => {
 
 const Stats = () => {
   const stats = [
-    { icon: Handshake, label: "Happy Clients", value: 1000, suffix: '+' },
-    { icon: MapPin, label: "Destinations", value: 100, suffix: '+' },
-    { icon: PlaneTakeoff, label: "Tours & Excursions", value: 10000, suffix: '+' },
+    { icon: Handshake, label: 'Happy Clients', value: 1000, suffix: '+' },
+    { icon: MapPin, label: 'Destinations', value: 100, suffix: '+' },
+    {
+      icon: PlaneTakeoff,
+      label: 'Tours & Excursions',
+      value: 10000,
+      suffix: '+',
+    },
   ];
 
   return (
@@ -95,22 +132,24 @@ const Stats = () => {
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {stats.map((stat) => (
-             <div key={stat.label} className="flex flex-col items-center">
-               <div className="p-4 border-2 border-primary rounded-full mb-4 bg-primary/10">
-                 <stat.icon className="w-10 h-10 text-primary" />
-               </div>
-                <div className="text-4xl font-bold">
-                  <Counter to={stat.value} />
-                  {stat.suffix}
-                </div>
-               <h3 className="text-sm uppercase tracking-widest text-muted-foreground mt-2">{stat.label}</h3>
-          </div>
+            <div key={stat.label} className="flex flex-col items-center">
+              <div className="p-4 border-2 border-primary rounded-full mb-4 bg-primary/10">
+                <stat.icon className="w-10 h-10 text-primary" />
+              </div>
+              <div className="text-4xl font-bold">
+                <Counter to={stat.value} />
+                {stat.suffix}
+              </div>
+              <h3 className="text-sm uppercase tracking-widest text-muted-foreground mt-2">
+                {stat.label}
+              </h3>
+            </div>
           ))}
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default function Home() {
   const firestore = useFirestore();
@@ -123,23 +162,36 @@ export default function Home() {
 
   const featuredSafarisQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'safaris'), orderBy('createdAt', 'desc'), limit(3));
+    return query(
+      collection(firestore, 'safaris'),
+      orderBy('createdAt', 'desc'),
+      limit(3)
+    );
   }, [firestore]);
   const { data: featuredSafaris } = useCollection<Service>(featuredSafarisQuery);
 
   const featuredTransfersQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'transfers'), orderBy('createdAt', 'desc'), limit(3));
-    }, [firestore]);
-  const { data: featuredTransfers } = useCollection<Service>(featuredTransfersQuery);
+    return query(
+      collection(firestore, 'transfers'),
+      orderBy('createdAt', 'desc'),
+      limit(3)
+    );
+  }, [firestore]);
+  const { data: featuredTransfers } =
+    useCollection<Service>(featuredTransfersQuery);
 
   const latestPostsQuery = useMemoFirebase(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'news_updates'), orderBy('date', 'desc'), limit(3));
+    return query(
+      collection(firestore, 'news_updates'),
+      orderBy('date', 'desc'),
+      limit(3)
+    );
   }, [firestore]);
   const { data: latestPosts } = useCollection<Post>(latestPostsQuery);
 
-  const aboutImage = "/image/masai.jpg";
+  const aboutImage = '/image/masai.jpg';
   const galleryImages = [
     { src: '/image/ngorongoro.jpg', alt: 'Wildlife in Ngorongoro Crater' },
     { src: '/image/beach 1.jpg', alt: 'Pristine beach in Zanzibar' },
@@ -149,22 +201,28 @@ export default function Home() {
     { src: '/image/star fish.jpg', alt: 'Starfish on a sandbank' },
   ];
 
-
   return (
     <div>
       <Hero />
-      
+
       <section className="py-12 md:py-20 bg-card">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">Featured Safaris</h2>
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+            Featured Safaris
+          </h2>
           <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-            Embark on a journey through Tanzania's most iconic national parks. Witness breathtaking landscapes and majestic wildlife.
+            Embark on a journey through Tanzania's most iconic national parks.
+            Witness breathtaking landscapes and majestic wildlife.
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {featuredSafaris?.map(safari => (
+            {featuredSafaris?.map((safari) => (
               <ServiceCard key={safari.id} service={safari} />
             ))}
-             {(!featuredSafaris || featuredSafaris.length === 0) && <p className="text-center text-muted-foreground col-span-full">No safaris to display yet.</p>}
+            {(!featuredSafaris || featuredSafaris.length === 0) && (
+              <p className="text-center text-muted-foreground col-span-full">
+                No safaris to display yet.
+              </p>
+            )}
           </div>
           <div className="text-center mt-12">
             <Button asChild>
@@ -176,17 +234,24 @@ export default function Home() {
 
       <section className="py-12 md:py-20">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">Popular Zanzibar Tours</h2>
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+            Popular Zanzibar Tours
+          </h2>
           <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-            Experience the magic of the Spice Island, from historic Stone Town to pristine coral reefs.
+            Experience the magic of the Spice Island, from historic Stone Town
+            to pristine coral reefs.
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {featuredTours?.map(tour => (
+            {featuredTours?.map((tour) => (
               <ServiceCard key={tour.id} service={tour} />
             ))}
-             {(!featuredTours || featuredTours.length === 0) && <p className="text-center text-muted-foreground col-span-full">No tours to display yet.</p>}
+            {(!featuredTours || featuredTours.length === 0) && (
+              <p className="text-center text-muted-foreground col-span-full">
+                No tours to display yet.
+              </p>
+            )}
           </div>
-           <div className="text-center mt-12">
+          <div className="text-center mt-12">
             <Button asChild>
               <Link href="/tours">View All Tours</Link>
             </Button>
@@ -196,15 +261,22 @@ export default function Home() {
 
       <section className="py-12 md:py-20 bg-card">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">Convenient Transfers</h2>
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+            Convenient Transfers
+          </h2>
           <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-            Travel with ease and comfort. We offer reliable transfers to and from airports, hotels, and more.
+            Travel with ease and comfort. We offer reliable transfers to and
+            from airports, hotels, and more.
           </p>
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {featuredTransfers?.map(transfer => (
+            {featuredTransfers?.map((transfer) => (
               <ServiceCard key={transfer.id} service={transfer} />
             ))}
-             {(!featuredTransfers || featuredTransfers.length === 0) && <p className="text-center text-muted-foreground col-span-full">No transfers to display yet.</p>}
+            {(!featuredTransfers || featuredTransfers.length === 0) && (
+              <p className="text-center text-muted-foreground col-span-full">
+                No transfers to display yet.
+              </p>
+            )}
           </div>
           <div className="text-center mt-12">
             <Button asChild>
@@ -216,44 +288,56 @@ export default function Home() {
 
       <section className="py-12 md:py-20 bg-secondary">
         <div className="container grid md:grid-cols-2 gap-12 items-center">
-            <div className="order-2 md:order-1">
-                <h2 className="text-3xl md:text-4xl font-headline font-bold">Why Choose Babdodo?</h2>
-                <p className="mt-4 text-secondary-foreground/80">
-                  We are a team of passionate local experts dedicated to crafting unforgettable experiences. With years of experience and a deep love for our homeland, we ensure your journey is authentic, comfortable, and truly magical.
-                </p>
-                <div className="mt-6 space-y-4">
-                    <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-full p-2">
-                           <SafariJeepIcon className="w-6 h-6" />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-lg">Expert Local Guides</h3>
-                            <p className="text-secondary-foreground/80 text-sm">Our guides are your key to unlocking the secrets of Tanzania and Zanzibar.</p>
-                        </div>
-                    </div>
-                     <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-full p-2">
-                            <DhowBoatIcon className="w-6 h-6" />
-                        </div>
-                        <div>
-                            <h3 className="font-bold text-lg">Tailor-Made Itineraries</h3>
-                            <p className="text-secondary-foreground/80 text-sm">We customize every trip to match your dreams and your budget.</p>                        </div>
-                    </div>
+          <div className="order-2 md:order-1">
+            <h2 className="text-3xl md:text-4xl font-headline font-bold">
+              Why Choose Babdodo?
+            </h2>
+            <p className="mt-4 text-secondary-foreground/80">
+              We are a team of passionate local experts dedicated to crafting
+              unforgettable experiences. With years of experience and a deep
+              love for our homeland, we ensure your journey is authentic,
+              comfortable, and truly magical.
+            </p>
+            <div className="mt-6 space-y-4">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-full p-2">
+                  <SafariJeepIcon className="w-6 h-6" />
                 </div>
-                <Button asChild className="mt-8">
-                    <Link href="/about">Learn More About Us</Link>
-                </Button>
+                <div>
+                  <h3 className="font-bold text-lg">Expert Local Guides</h3>
+                  <p className="text-secondary-foreground/80 text-sm">
+                    Our guides are your key to unlocking the secrets of Tanzania
+                    and Zanzibar.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 bg-primary text-primary-foreground rounded-full p-2">
+                  <DhowBoatIcon className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg">Tailor-Made Itineraries</h3>
+                  <p className="text-secondary-foreground/80 text-sm">
+                    We customize every trip to match your dreams and your
+                    budget.
+                  </p>{' '}
+                </div>
+              </div>
             </div>
-            <div className="order-1 md:order-2">
-                <Image
-                src={aboutImage}
-                alt={'Maasai people in traditional clothing'}
-                width={600}
-                height={500}
-                className="rounded-lg shadow-xl w-full h-auto object-cover"
-                data-ai-hint={'maasai people'}
-                />
-            </div>
+            <Button asChild className="mt-8">
+              <Link href="/about">Learn More About Us</Link>
+            </Button>
+          </div>
+          <div className="order-1 md:order-2">
+            <Image
+              src={aboutImage}
+              alt={'Maasai people in traditional clothing'}
+              width={600}
+              height={500}
+              className="rounded-lg shadow-xl w-full h-auto object-cover"
+              data-ai-hint={'maasai people'}
+            />
+          </div>
         </div>
       </section>
 
@@ -261,21 +345,24 @@ export default function Home() {
 
       <section className="py-12 md:py-20 bg-background">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">From Our Gallery</h2>
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+            From Our Gallery
+          </h2>
           <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-            A glimpse into the unforgettable moments captured during our adventures.
+            A glimpse into the unforgettable moments captured during our
+            adventures.
           </p>
           <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-4">
             {galleryImages.map((image, index) => (
-                <div key={index} className="overflow-hidden rounded-lg group">
-                    <Image
-                    src={image.src}
-                    alt={image.alt}
-                    width={600}
-                    height={400}
-                    className="w-full h-auto object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-110"
-                    />
-                </div>
+              <div key={index} className="overflow-hidden rounded-lg group">
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  width={600}
+                  height={400}
+                  className="w-full h-auto object-cover aspect-[3/2] transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
             ))}
           </div>
           <div className="text-center mt-12">
@@ -290,35 +377,44 @@ export default function Home() {
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-headline font-bold">Leave a Review</h2>
+              <h2 className="text-3xl md:text-4xl font-headline font-bold">
+                Leave a Review
+              </h2>
               <p className="mt-4 text-muted-foreground">
-                Had a great experience with us? We'd love to hear about it! Your feedback helps us and other travelers.
+                Had a great experience with us? We'd love to hear about it! Your
+                feedback helps us and other travelers.
               </p>
-               <div className="mt-6 bg-card p-8 rounded-lg shadow-lg">
-                 <ReviewForm />
-               </div>
+              <div className="mt-6 bg-card p-8 rounded-lg shadow-lg">
+                <ReviewForm />
+              </div>
             </div>
             <div className="mt-12 md:mt-0">
-                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Latest From Our Blog</h2>
-                  <p className="mt-4 text-muted-foreground">
-                    Get the latest travel tips, stories from the wild, and updates from our team.
+              <h2 className="text-3xl md:text-4xl font-headline font-bold">
+                Latest From Our Blog
+              </h2>
+              <p className="mt-4 text-muted-foreground">
+                Get the latest travel tips, stories from the wild, and updates
+                from our team.
+              </p>
+              <div className="mt-6 grid grid-cols-1 gap-6">
+                {latestPosts?.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+                {(!latestPosts || latestPosts.length === 0) && (
+                  <p className="text-center text-muted-foreground">
+                    No blog posts to display yet.
                   </p>
-                  <div className="mt-6 grid grid-cols-1 gap-6">
-                     {latestPosts?.map(post => (
-                        <PostCard key={post.id} post={post} />
-                    ))}
-                     {(!latestPosts || latestPosts.length === 0) && <p className="text-center text-muted-foreground">No blog posts to display yet.</p>}
-                  </div>
-                   <div className="text-left mt-8">
-                    <Button asChild>
-                      <Link href="/blog">Read Our Blog</Link>
-                    </Button>
-                  </div>
+                )}
+              </div>
+              <div className="text-left mt-8">
+                <Button asChild>
+                  <Link href="/blog">Read Our Blog</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </section>
-
     </div>
   );
 }
