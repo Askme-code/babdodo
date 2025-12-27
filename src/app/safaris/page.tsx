@@ -25,12 +25,19 @@ const SafarisPage = () => {
   return (
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
-        <div className="container h-full flex flex-col items-center justify-center text-center">
+        <Image
+            src="/image/kilimanjaro.jpg"
+            alt="Mount Kilimanjaro"
+            fill
+            className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="container relative h-full flex flex-col items-center justify-center text-center text-white">
            <div className="p-2 bg-primary text-primary-foreground rounded-full mb-4">
               <Image src="/image/logo.jpg" alt="Babdodo Tours Logo" width={40} height={40} className="rounded-full" />
             </div>
           <h1 className="text-4xl md:text-5xl font-headline font-bold">Tanzania Safaris</h1>
-          <p className="mt-4 text-lg md:text-xl max-w-2xl text-secondary-foreground">
+          <p className="mt-4 text-lg md:text-xl max-w-2xl">
             Witness the Great Migration, see the Big Five, and create memories that will last a lifetime.
           </p>
         </div>

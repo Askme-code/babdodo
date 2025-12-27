@@ -31,23 +31,23 @@ const popularRoutes = [
 const transportTypes = [
   {
     id: "transport-alphard",
-    name: "Toyota Alphard",
+    name: "Standard Car",
     capacity: "1 - 6 Travelers",
-    imageUrl: "https://images.unsplash.com/photo-1558101847-e017d5e414a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0b3lvdGElMjBhbHBoYXJkfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
-    imageHint: "toyota alphard"
+    imageUrl: "/image/zanzibar local ride.jpg",
+    imageHint: "sedan car"
   },
   {
     id: "transport-hiace",
-    name: "Toyota Hiace",
+    name: "Van / Minibus",
     capacity: "7 - 14 Travelers",
-    imageUrl: "https://images.unsplash.com/photo-1521014710171-f44dfe788ece?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0b3lvdGElMjBoaWFjZXxlbnwwfHx8fDE3NjY0MDA3MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    imageHint: "toyota hiace"
+    imageUrl: "/image/zanzibar local rides vespa.jpg",
+    imageHint: "minibus"
   },
   {
     id: "transport-coaster",
     name: "Coaster Bus",
     capacity: "15 - 28 Travelers",
-    imageUrl: "https://images.unsplash.com/photo-1622390573893-d61510131108?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb2FzdGVyJTIwYnVzfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+    imageUrl: "/image/hotels.jpg",
     imageHint: "coaster bus"
   },
 ]
@@ -65,12 +65,19 @@ const TransfersPage = () => {
   return (
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
-        <div className="container h-full flex flex-col items-center justify-center text-center">
+        <Image
+            src="/image/airport.jpg"
+            alt="Zanzibar Airport"
+            fill
+            className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="container relative h-full flex flex-col items-center justify-center text-center text-white">
            <div className="p-2 bg-primary text-primary-foreground rounded-full mb-4">
               <Image src="/image/logo.jpg" alt="Babdodo Tours Logo" width={40} height={40} className="rounded-full" />
             </div>
           <h1 className="text-4xl md:text-5xl font-headline font-bold">Airport & Hotel Transfers</h1>
-          <p className="mt-4 text-lg md:text-xl max-w-2xl text-secondary-foreground">
+          <p className="mt-4 text-lg md:text-xl max-w-2xl">
             Start and end your journey with seamless, safe, and comfortable transportation.
           </p>
         </div>

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { DhowBoatIcon, SafariJeepIcon } from '@/components/icons';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where, limit, orderBy } from 'firebase/firestore';
-import type { Service, Post } from '@/lib/types';
+import type { Service, Post, Review } from '@/lib/types';
 import MediaRenderer from '@/components/MediaRenderer';
 import ReviewForm from '@/components/review-form';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -17,7 +17,7 @@ import Testimonials from '@/components/testimonials';
 
 
 const Hero = () => {
-  const heroImage = "https://images.unsplash.com/photo-1689479665129-bf064a64feaa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzYWZhcmklMjBlbGVwaGFudHN8ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080";
+  const heroImage = "/image/sunset background.jpg";
   return (
     <section className="relative h-[70vh] md:h-[85vh] w-full">
       <MediaRenderer
@@ -76,7 +76,7 @@ export default function Home() {
   }, [firestore]);
   const { data: latestPosts } = useCollection<Post>(latestPostsQuery);
 
-  const aboutImage = "https://images.unsplash.com/photo-1666778439853-540bae64fa9f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkaG93JTIwc3Vuc2V0fGVufDB8fHx8MTc2NjMxMzYxOXww&ixlib=rb-4.1.0&q=80&w=1080";
+  const aboutImage = "/image/masai.jpg";
 
   return (
     <div>
@@ -177,11 +177,11 @@ export default function Home() {
             <div className="order-1 md:order-2">
                 <Image
                 src={aboutImage}
-                alt={'A traditional dhow boat at sunset in Zanzibar'}
+                alt={'Maasai people in traditional clothing'}
                 width={600}
                 height={500}
                 className="rounded-lg shadow-xl w-full h-auto object-cover"
-                data-ai-hint={'dhow sunset'}
+                data-ai-hint={'maasai people'}
                 />
             </div>
         </div>

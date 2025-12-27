@@ -3,115 +3,115 @@
     {
       "id": "hero-safari",
       "description": "A safari jeep with elephants in the background in a savanna.",
-      "imageUrl": "https://images.unsplash.com/photo-1689479665129-bf064a64feaa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzYWZhcmklMjBlbGVwaGFudHN8ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/sunset background.jpg",
       "imageHint": "safari elephants"
     },
     {
       "id": "zanzibar-beach",
       "description": "A beautiful white sand beach in Zanzibar with turquoise water.",
-      "imageUrl": "https://images.unsplash.com/photo-1665449417444-fe7fec4b7425?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx6YW56aWJhciUyMGJlYWNofGVufDB8fHx8MTc2NjM5Mjc3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/beach 1.jpg",
       "imageHint": "zanzibar beach"
     },
     {
       "id": "serengeti-safari",
       "description": "A safari vehicle driving through the Serengeti plains.",
-      "imageUrl": "https://images.unsplash.com/photo-1704699980617-2c6459eee6f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzZXJlbmdldGklMjBzYWZhcml8ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/ngorongoro.jpg",
       "imageHint": "serengeti safari"
     },
     {
       "id": "stone-town",
       "description": "A narrow street in Stone Town, Zanzibar, with historic buildings.",
-      "imageUrl": "https://images.unsplash.com/photo-1713253981772-c3dcda50b748?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzdG9uZSUyMHRvd258ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/forozani zanzibar.jpg",
       "imageHint": "stone town"
     },
     {
       "id": "airport-transfer",
       "description": "A modern van waiting at an airport terminal.",
-      "imageUrl": "https://images.unsplash.com/photo-1762088532199-0e201de35044?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtb2Rlcm4lMjB2YW58ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/airport.jpg",
       "imageHint": "modern van"
     },
     {
       "id": "ngorongoro-crater",
       "description": "View of the Ngorongoro Crater teeming with wildlife.",
-      "imageUrl": "https://images.unsplash.com/photo-1507088164404-020d1e905959?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxuZ29yb25nb3JvJTIwY3JhdGVyfGVufDB8fHx8MTc2NjM5Mjc3Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/ngorongoro.jpg",
       "imageHint": "ngorongoro crater"
     },
     {
       "id": "dhow-sunset",
       "description": "A traditional dhow boat sailing at sunset in Zanzibar.",
-      "imageUrl": "https://images.unsplash.com/photo-1666778439853-540bae64fa9f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkaG93JTIwc3Vuc2V0fGVufDB8fHx8MTc2NjMxMzYxOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/sunset cru.jpg",
       "imageHint": "dhow sunset"
     },
     {
       "id": "blog-wildlife",
-      "description": "A close-up of a lion in the wild.",
-      "imageUrl": "https://images.unsplash.com/photo-1601226372120-fdfd6060d203?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bGlvbiUyMGNsb3NldXB8ZW58MHx8fHwxNzY2MzkyNzc3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "lion closeup"
+      "description": "A close-up of a monkey in jozani forest.",
+      "imageUrl": "/image/monkey from jozan.jpg",
+      "imageHint": "monkey jozani"
     },
     {
       "id": "blog-culture",
       "description": "Maasai people in traditional clothing.",
-      "imageUrl": "https://images.unsplash.com/photo-1586397868769-2310217fd7fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtYWFzYWklMjBwZW9wbGV8ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/masai.jpg",
       "imageHint": "maasai people"
     },
     {
       "id": "blog-guide",
       "description": "A travel guide with a map and compass.",
-      "imageUrl": "https://images.unsplash.com/photo-1615318201878-e3499973e9dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0cmF2ZWwlMjBndWlkZXxlbnwwfHx8fDE3NjYzOTI3NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/local boats.jpg",
       "imageHint": "travel guide"
     },
     {
       "id": "about-us",
       "description": "A friendly team of tour guides smiling.",
-      "imageUrl": "https://images.unsplash.com/photo-1656692324500-fc7854008f79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx0b3VyJTIwZ3VpZGVzfGVufDB8fHx8MTc2NjM2MTU3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/masai.jpg",
       "imageHint": "tour guides"
     },
     {
       "id": "contact-us",
       "description": "A stylized image of a vintage telephone and a letter.",
-      "imageUrl": "https://images.unsplash.com/photo-1766119407159-9de4c9b887b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjb250YWN0JTIwdmludGFnZXxlbnwwfHx8fDE3NjYzOTI3NzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/local boats.jpg",
       "imageHint": "contact vintage"
     },
     {
       "id": "gallery-1",
       "description": "A group of giraffes on the savanna.",
-      "imageUrl": "https://images.unsplash.com/photo-1687461312085-4ae69e7b07d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxnaXJhZmZlcyUyMHNhdmFubmF8ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/kilimanjaro.jpg",
       "imageHint": "giraffes savanna"
     },
     {
       "id": "gallery-2",
       "description": "A spice farm in Zanzibar with various plants.",
-      "imageUrl": "https://images.unsplash.com/photo-1632580793012-6719368b4560?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzcGljZSUyMGZhcm18ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/foods.jpg",
       "imageHint": "spice farm"
     },
     {
       "id": "gallery-3",
       "description": "A stunning waterfall in the Tanzanian highlands.",
-      "imageUrl": "https://images.unsplash.com/photo-1715094313256-31859c8ef92e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx0YW56YW5pYSUyMHdhdGVyZmFsbHxlbnwwfHx8fDE3NjYzOTI3Nzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/mount kilimanjaro.jpg",
       "imageHint": "tanzania waterfall"
     },
     {
       "id": "gallery-4",
       "description": "A diver exploring a coral reef in the Indian Ocean.",
-      "imageUrl": "https://images.unsplash.com/photo-1682687981907-170c006e3744?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y29yYWwlMjByZWVmfGVufDB8fHx8MTc2NjI5OTIyMHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/snowkelling.jpg",
       "imageHint": "coral reef"
     },
     {
       "id": "transport-hiace",
       "description": "A white Toyota Hiace van.",
-      "imageUrl": "https://images.unsplash.com/photo-1521014710171-f44dfe788ece?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx0b3lvdGElMjBoaWFjZXxlbnwwfHx8fDE3NjY0MDA3MDV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/zanzibar local rides vespa.jpg",
       "imageHint": "toyota hiace"
     },
     {
       "id": "transport-coaster",
       "description": "A white and gold coaster bus.",
-      "imageUrl": "https://images.unsplash.com/photo-1622390573893-d61510131108?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxjb2FzdGVyJTIwYnVzfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/hotels.jpg",
       "imageHint": "coaster bus"
     },
     {
       "id": "transport-alphard",
       "description": "A white Toyota Alphard minivan.",
-      "imageUrl": "https://images.unsplash.com/photo-1558101847-e017d5e414a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHx0b3lvdGElMjBhbHBoYXJkfGVufDB8fHx8MTc2NjQwMDcwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "/image/zanzibar local ride.jpg",
       "imageHint": "toyota alphard"
     }
   ]

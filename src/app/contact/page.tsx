@@ -1,6 +1,8 @@
+
 import type { Metadata } from 'next';
 import { Mail, Phone, MapPin } from 'lucide-react';
 import ContactForm from '@/components/contact-form';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
@@ -11,9 +13,16 @@ const ContactPage = () => {
   return (
     <div className="bg-background">
        <section className="relative h-[40vh] w-full bg-secondary">
-        <div className="container h-full flex flex-col items-center justify-center text-center">
+        <Image
+            src="/image/local boats.jpg"
+            alt="Local boats on a Zanzibar beach"
+            fill
+            className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="container relative h-full flex flex-col items-center justify-center text-center text-white">
           <h1 className="text-4xl md:text-5xl font-headline font-bold">Get In Touch</h1>
-          <p className="mt-4 text-lg md:text-xl max-w-2xl text-secondary-foreground">
+          <p className="mt-4 text-lg md:text-xl max-w-2xl">
             We're here to help you plan the adventure of a lifetime. Questions? Inquiries? Let us know!
           </p>
         </div>

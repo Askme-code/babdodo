@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import { Globe, Heart, ShieldCheck } from 'lucide-react';
@@ -10,14 +11,21 @@ export const metadata: Metadata = {
 };
 
 const AboutPage = () => {
-  const aboutImageUrl = "https://images.unsplash.com/photo-1656692324500-fc7854008f79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHx0b3VyJTIwZ3VpZGVzfGVufDB8fHx8MTc2NjM2MTU3MHww&ixlib=rb-4.1.0&q=80&w=1080";
+  const aboutImageUrl = "/image/masai.jpg";
 
   return (
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
-        <div className="container h-full flex flex-col items-center justify-center text-center">
+        <Image
+            src="/image/forozani zanzibar.jpg"
+            alt="Forozani Zanzibar"
+            fill
+            className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="container relative h-full flex flex-col items-center justify-center text-center text-white">
           <h1 className="text-4xl md:text-5xl font-headline font-bold">About Babdodo Tours & Safaris</h1>
-          <p className="mt-4 text-lg md:text-xl max-w-2xl text-secondary-foreground">
+          <p className="mt-4 text-lg md:text-xl max-w-2xl">
             Your trusted partner for authentic adventures in Tanzania and Zanzibar.
           </p>
         </div>
@@ -41,7 +49,7 @@ const AboutPage = () => {
               width={600}
               height={500}
               className="rounded-lg shadow-xl w-full h-auto object-cover"
-              data-ai-hint="tour guides"
+              data-ai-hint="maasai people"
             />
           </div>
         </div>
