@@ -57,55 +57,44 @@ const Testimonials = () => {
     );
   }, [firestore]);
 
-  const { data: reviews, isLoading } = useCollection<Review>(reviewsQuery);
+  const { data: reviews, isLoading, error } = useCollection<Review>(reviewsQuery);
 
   if (isLoading) {
     return (
-        <div className="container py-12 md:py-20">
-             <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">What Our Guests Say</h2>
-            <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-                Real stories from travelers who have explored with us.
-            </p>
-            <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                <Skeleton className="h-48 w-full" />
-                <Skeleton className="h-48 w-full" />
-                <Skeleton className="h-48 w-full" />
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            <Skeleton className="h-48 w-full" />
+            <Skeleton className="h-48 w-full" />
+            <Skeleton className="h-48 w-full" />
         </div>
     );
   }
-
-  if (!reviews || reviews.length === 0) {
-    return null; // Don't render the section if there are no approved reviews
+  
+  // Do not render if there's a permission error, to avoid crashing the page.
+  if (error || !reviews || reviews.length === 0) {
+    return (
+      <div className="text-center py-8 bg-muted/50 rounded-lg">
+        <p className="text-muted-foreground">Guest reviews will be shown here soon.</p>
+      </div>
+    );
   }
 
   return (
-    <section className="py-12 md:py-20 bg-background">
-      <div className="container">
-        <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">What Our Guests Say</h2>
-        <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-          Real stories from travelers who have explored with us.
-        </p>
-        <Carousel
-          opts={{
-            align: 'start',
-            loop: true,
-          }}
-          className="w-full max-w-5xl mx-auto mt-12"
-        >
-          <CarouselContent>
-            {reviews.map((review) => (
-              <TestimonialCard key={review.id} review={review} />
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </div>
-    </section>
+    <Carousel
+      opts={{
+        align: 'start',
+        loop: true,
+      }}
+      className="w-full max-w-5xl mx-auto"
+    >
+      <CarouselContent>
+        {reviews.map((review) => (
+          <TestimonialCard key={review.id} review={review} />
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
   );
 };
 
 export default Testimonials;
-
-    
