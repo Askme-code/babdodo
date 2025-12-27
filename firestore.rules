@@ -41,10 +41,8 @@ service cloud.firestore {
       // Anyone can read a single approved review.
       allow get: if resource.data.status == 'approved';
 
-      // Anyone can list approved reviews.
-      allow list: if isAdmin() || resource.data.status == 'approved';
+      // Admins can list all reviews. Anyone can list reviews if they are querying for approved ones.
+      allow list: if isAdmin() || request.query.where.status == 'approved';
     }
   }
 }
-
-    
