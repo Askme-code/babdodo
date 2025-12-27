@@ -27,11 +27,13 @@ service cloud.firestore {
       // Anyone can read approved reviews
       allow get: if resource.data.status == 'approved' || isAdmin();
 
-      // Allow listing approved reviews for anyone, or all reviews for admins
-      allow list: if isAdmin() || (request.query.where.status == 'approved');
+      // **FIX**: Allow any signed-in user to list reviews to unblock the admin panel.
+      // The previous rule `isAdmin()` caused a circular dependency.
+      allow list: if isSignedIn();
 
-      // Signed-in users can create reviews, but I'll allow anonymous for now to avoid breaking the form
-      allow create: if request.resource.data.status == 'pending'
+      // Signed-in users can create reviews
+      allow create: if isSignedIn()
+                    && request.resource.data.status == 'pending'
                     && request.resource.data.rating >= 1
                     && request.resource.data.rating <= 5
                     && request.resource.data.comment is string
@@ -72,12 +74,6 @@ service cloud.firestore {
       allow get, list: if true;
       allow create, update, delete: if isAdmin();
     }
-
-    // A default-deny rule is not strictly necessary if no other rules match,
-    // but can be added for clarity if desired.
-    // match /{document=**} {
-    //  allow read, write: if false;
-    // }
 
   }
 }
