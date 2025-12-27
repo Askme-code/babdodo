@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { MapPin, Clock } from 'lucide-react';
@@ -46,13 +47,18 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
         </CardDescription>
       </CardContent>
       <CardFooter className="p-4 flex flex-col sm:flex-row justify-between items-center">
-        <div className="text-lg font-bold text-primary mb-2 sm:mb-0">
+        <div className="text-lg font-bold text-primary mb-4 sm:mb-0">
           ${service.price}
           <span className="text-sm font-normal text-muted-foreground">/person</span>
         </div>
-        <Button asChild>
-          <Link href={serviceUrl}>View Details</Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link href={serviceUrl}>View Details</Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link href="/contact">Book Now</Link>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
