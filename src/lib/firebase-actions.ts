@@ -68,9 +68,13 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'r
     
     const docRef = await addDoc(collectionRef, docData);
 
-    if (itemType !== 'review') {
-        await updateDoc(docRef, { id: docRef.id });
+    // After creating the doc, update it with its own ID and a slug.
+    const updateData: { id: string; slug?: string } = { id: docRef.id };
+    if (item.title) {
+        updateData.slug = generateSlug(item.title);
     }
+    await updateDoc(docRef, updateData);
+
 
     return true;
   } catch (e: any) {
@@ -150,5 +154,3 @@ export const deletePost = async (id: string) => deleteItem('post', id);
 export const createReview = async (item: Partial<Review>) => createItem('review', item);
 export const updateReview = async (id: string, item: Partial<Review>) => updateItem('review', id, item);
 export const deleteReview = async (id: string) => deleteItem('review', id);
-
-    
