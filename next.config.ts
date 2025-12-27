@@ -65,6 +65,12 @@ const nextConfig: NextConfig = {
         hostname: 'media-cdn.tripadvisor.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'media.istockphoto.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
