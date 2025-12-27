@@ -13,7 +13,6 @@ import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 export default function AdminSafarisPage() {
     const firestore = useFirestore();
     const { user } = useUser();
-    const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
     
     const safarisQuery = useMemoFirebase(() => {
         if (!firestore) return null;
@@ -22,7 +21,7 @@ export default function AdminSafarisPage() {
 
     const { data: safaris, error, isLoading } = useCollection<Service>(safarisQuery);
 
-    const isPermissionError = error?.name === 'FirebaseError' && error.message.includes('permission-denied');
+    const isPermissionError = !!error;
 
     const grantAdminAccess = async () => {
         if (!user || !firestore) return;
@@ -34,8 +33,6 @@ export default function AdminSafarisPage() {
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         });
-        setShowPermissionPrompt(false);
-        // We might want to force a refetch here, but for now a page reload is simplest
         window.location.reload();
     };
 
@@ -71,3 +68,5 @@ export default function AdminSafarisPage() {
         />
     );
 }
+
+    

@@ -21,7 +21,7 @@ export default function AdminTransfersPage() {
 
     const { data: transfers, error, isLoading } = useCollection<Service>(transfersQuery);
 
-    const isPermissionError = error?.name === 'FirebaseError' && error.message.includes('permission-denied');
+    const isPermissionError = !!error;
 
     const grantAdminAccess = async () => {
         if (!user || !firestore) return;
@@ -67,3 +67,5 @@ export default function AdminTransfersPage() {
         />
     );
 }
+
+    

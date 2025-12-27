@@ -280,7 +280,7 @@ export default function CrudShell({
       return (
          <TableRow>
             <TableCell colSpan={isPostType ? 2 : 3} className="text-center h-24">
-              <PermissionErrorAlert onGrant={onGrantAdminAccess} />
+              <p className="text-destructive">You don't have permission to view this content.</p>
             </TableCell>
           </TableRow>
       );
@@ -340,6 +340,7 @@ export default function CrudShell({
 
   return (
     <div className="space-y-4">
+      {isPermissionError && <PermissionErrorAlert onGrant={onGrantAdminAccess} />}
       <div className="flex justify-between items-center">
         <div>
             <h1 className="text-3xl font-bold font-headline">Manage {itemType}s</h1>
@@ -387,3 +388,5 @@ export default function CrudShell({
     </div>
   );
 }
+
+    

@@ -21,7 +21,7 @@ export default function AdminToursPage() {
 
     const { data: tours, error, isLoading } = useCollection<Service>(toursQuery);
 
-    const isPermissionError = error?.name === 'FirebaseError' && error.message.includes('permission-denied');
+    const isPermissionError = !!error;
 
     const grantAdminAccess = async () => {
         if (!user || !firestore) return;
@@ -67,3 +67,5 @@ export default function AdminToursPage() {
         />
     );
 }
+
+    

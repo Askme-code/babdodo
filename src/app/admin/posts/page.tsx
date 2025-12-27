@@ -23,7 +23,7 @@ export default function AdminPostsPage() {
     const { data: posts, error, isLoading } = useCollection<Post>(postsQuery);
     const adaptedPosts = posts ? posts.map(p => ({...p, description: p.excerpt, type: 'post' })) : [];
 
-    const isPermissionError = error?.name === 'FirebaseError' && error.message.includes('permission-denied');
+    const isPermissionError = !!error;
     
     const grantAdminAccess = async () => {
         if (!user || !firestore) return;
@@ -71,3 +71,5 @@ export default function AdminPostsPage() {
         />
     );
 }
+
+    
