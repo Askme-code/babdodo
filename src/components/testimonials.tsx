@@ -71,11 +71,8 @@ const Testimonials = () => {
   
   // Do not render if there's a permission error, to avoid crashing the page.
   if (error || !reviews || reviews.length === 0) {
-    return (
-      <div className="text-center py-8 bg-muted/50 rounded-lg">
-        <p className="text-muted-foreground">Guest reviews will be shown here soon.</p>
-      </div>
-    );
+    // Silently fail and don't render the component if there's an error or no reviews.
+    return null;
   }
 
   return (

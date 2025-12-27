@@ -2,8 +2,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
-import { collection, doc, query, updateDoc, orderBy } from 'firebase/firestore';
+import { useFirestore, useCollection, useMemoFirebase, useUser } from '@/firebase';
+import { collection, doc, query, updateDoc, orderBy, setDoc, serverTimestamp } from 'firebase/firestore';
 import type { Review } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,9 +16,6 @@ import {
 } from '@/components/ui/table';
 import {
   Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
   CardContent,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -26,6 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Star } from 'lucide-react';
+import { updateReview } from '@/lib/firebase-actions';
 
 const StarRating = ({ rating }: { rating: number }) => (
   <div className="flex items-center">
@@ -50,36 +48,87 @@ const getBadgeVariant = (status: Review['status']) => {
   }
 };
 
+const PermissionErrorAlert = ({ onGrant }: { onGrant: () => Promise<void> }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { toast } = useToast();
+
+    const handleGrantAccess = async () => {
+        setIsSubmitting(true);
+        try {
+            await onGrant();
+            toast({
+                title: 'Access Granted!',
+                description: 'Admin role has been assigned. Please refresh the page.',
+            });
+        } catch (error) {
+            console.error('Failed to grant admin access', error);
+            toast({
+                title: 'Error',
+                description: 'Could not assign admin role. Please check the console.',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <Alert variant="destructive" className="mb-6">
+            <AlertTitle>Admin Permissions Required</AlertTitle>
+            <AlertDescription>
+                Your account needs admin privileges to manage reviews. This might be because you just signed up. Click the button below to grant access.
+            </AlertDescription>
+            <Button onClick={handleGrantAccess} disabled={isSubmitting} className="mt-4">
+                {isSubmitting ? 'Granting...' : 'Grant Admin Access'}
+            </Button>
+        </Alert>
+    );
+};
+
+
 export default function AdminReviewsPage() {
   const { toast } = useToast();
+  const firestore = useFirestore();
+  const { user } = useUser();
   
-  // Temporarily disable review fetching to avoid permission errors
-  const reviews: Review[] = [];
-  const isLoading = false;
-  const isPermissionError = true; // Assume error to show message
+  const reviewsQuery = useMemoFirebase(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'reviews'), orderBy('createdAt', 'desc'));
+  }, [firestore]);
+
+  const { data: reviews, isLoading, error: isPermissionError } = useCollection<Review>(reviewsQuery);
+
 
   const handleUpdateStatus = async (id: string, status: Review['status']) => {
-    toast({
-      title: 'Action Disabled',
-      description: 'Review management is temporarily disabled due to permission issues.',
-      variant: 'destructive',
-    });
+    const success = await updateReview(id, { status });
+    if (success) {
+      toast({
+        title: 'Review Updated',
+        description: `The review has been ${status}.`,
+      });
+    } else {
+      toast({
+        title: 'Update Failed',
+        description: 'Could not update the review status. You may lack permissions.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const grantAdminAccess = async () => {
+      if (!user || !firestore) return;
+      const adminRoleRef = doc(firestore, 'roles_admin', user.uid);
+      await setDoc(adminRoleRef, {
+          id: user.uid,
+          username: user.email,
+          role: 'admin',
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+      });
+      window.location.reload();
   };
 
   const renderTableBody = () => {
-    if (isPermissionError) {
-      return (
-        <TableRow>
-          <TableCell colSpan={5} className="text-center h-24">
-             <Alert variant="destructive">
-              <AlertTitle>Feature Temporarily Disabled</AlertTitle>
-              <AlertDescription>Review management is currently unavailable due to persistent security rule issues. We are working on a solution.</AlertDescription>
-            </Alert>
-          </TableCell>
-        </TableRow>
-      );
-    }
-    
     if (isLoading) {
       return [...Array(3)].map((_, i) => (
         <TableRow key={i}>
@@ -88,6 +137,16 @@ export default function AdminReviewsPage() {
           </TableCell>
         </TableRow>
       ));
+    }
+    
+    if (isPermissionError) {
+      return (
+        <TableRow>
+          <TableCell colSpan={5} className="text-center h-24">
+             <p>You do not have permission to view reviews.</p>
+          </TableCell>
+        </TableRow>
+      );
     }
     
     if (!reviews || reviews.length === 0) {
@@ -114,7 +173,7 @@ export default function AdminReviewsPage() {
                 {review.status === 'pending' && (
                     <>
                     <Button size="sm" onClick={() => handleUpdateStatus(review.id, 'approved')}>Approve</Button>
-                    <Button size="sm" variant="destructive" onClick={() => handleUpdateStatus(review.id, 'rejected')}>Reject</Button>
+                    <Button size="sm" variant="outline" onClick={() => handleUpdateStatus(review.id, 'rejected')}>Reject</Button>
                     </>
                 )}
             </div>
@@ -125,6 +184,7 @@ export default function AdminReviewsPage() {
   
   return (
     <div className="space-y-4">
+      {isPermissionError && <PermissionErrorAlert onGrant={grantAdminAccess} />}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold font-headline">Manage Reviews</h1>
