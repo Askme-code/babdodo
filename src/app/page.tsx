@@ -13,7 +13,6 @@ import type { Service, Post, Review } from '@/lib/types';
 import MediaRenderer from '@/components/MediaRenderer';
 import ReviewForm from '@/components/review-form';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import Testimonials from '@/components/testimonials';
 import {
   Carousel,
   CarouselContent,
