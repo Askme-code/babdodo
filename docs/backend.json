@@ -226,6 +226,54 @@
         "id",
         "username"
       ]
+    },
+    "Review": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Review",
+      "type": "object",
+      "description": "Represents a customer review.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the review.",
+          "format": "uuid"
+        },
+        "authorName": {
+          "type": "string",
+          "description": "Name of the customer who wrote the review."
+        },
+        "rating": {
+          "type": "number",
+          "description": "Rating given by the customer, from 1 to 5.",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "comment": {
+          "type": "string",
+          "description": "The text content of the review."
+        },
+        "status": {
+          "type": "string",
+          "description": "The moderation status of the review.",
+          "enum": [
+            "pending",
+            "approved",
+            "rejected"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of when the review was submitted.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "authorName",
+        "rating",
+        "comment",
+        "status"
+      ]
     }
   },
   "auth": {
@@ -315,8 +363,26 @@
             }
           ]
         }
+      },
+       {
+        "path": "/reviews/{reviewId}",
+        "definition": {
+          "entityName": "Review",
+          "schema": {
+            "$ref": "#/backend/entities/Review"
+          },
+          "description": "Stores customer reviews. Publicly submittable, admin-moderated.",
+          "params": [
+            {
+              "name": "reviewId",
+              "description": "Unique identifier for the review."
+            }
+          ]
+        }
       }
     ],
     "reasoning": "The Firestore data structure is designed to support the Babdodo Tours & Safaris application, focusing on secure access control and data integrity. It leverages structural segregation and denormalization to ensure authorization independence and simplify security rules. The structure is designed to support CRUD operations by admins via a dedicated admin dashboard.\n\n**Core Principles and Strategies Applied:**\n\n*   **Authorization Independence:** All collections are designed to avoid hierarchical authorization dependencies (`get()` calls in security rules). Admin access is controlled via the `/roles_admin/{uid}` collection. Denormalization is not used in this structure as all collections are only accessible to admins.\n*   **Structural Segregation:** Each data type (tours, safaris, transfers, news updates, and admin users) resides in its own top-level collection. This segregation simplifies security rules by ensuring that all documents within a collection share the same access control requirements.\n*   **Access Modeling:** Admin access is modeled using the **Existence over Content** strategy. The presence of a document in the `/roles_admin/{uid}` collection grants admin privileges.\n*   **Data Clarity and Predictability:** Each document follows a predictable schema based on the provided data entities. Timestamps (`createdAt`, `updatedAt`) are included for auditing and data management.\n\n**Explanation of QAPs Support (Rules are not Filters):**\n\n*   The segregation of data into distinct collections (e.g., `/tours`, `/safaris`, `/transfers`, `/news_updates`) allows for efficient and secure `list` operations. Security rules can be applied at the collection level to ensure that only authorized admins can access the data.\n\n**Authorization Independence Details**\n\nAuthorization Independence is achieved by limiting collections to a single access profile (admin only). This removes the need for `get()` calls in security rules as all data within each collection is treated equally from an access control perspective. Security rules can simply check if a user is an admin (by verifying existence in the `/roles_admin` collection), and then grant full CRUD access to any of the data collections. There is no need to check any data elements in any documents. No data fields are copied to implement Authorization Independence, this reduces complexity in data storage, and updating data. This approach simplifies data updating.\n\nThe architecture supports the core application features, including the admin dashboard, image management, content recommendations, contact form, and WhatsApp integration."
   }
 }
+
+    

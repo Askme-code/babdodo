@@ -32,3 +32,14 @@ export interface Post {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Review {
+  id: string;
+  authorName: string;
+  rating: number; // 1-5
+  comment: string;
+  status: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+}
+
+    

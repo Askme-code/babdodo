@@ -11,7 +11,7 @@ import {
     Timestamp,
 } from 'firebase/firestore';
 import { initializeFirebase } from '@/firebase';
-import type { Service, Post } from './types';
+import type { Service, Post, Review } from './types';
 
 const { firestore } = initializeFirebase();
 
@@ -23,33 +23,41 @@ const generateSlug = (title: string) => {
     .replace(/[^\w-]+/g, '');
 };
 
-const getCollectionPathForType = (itemType: 'tour' | 'safari' | 'transfer' | 'post') => {
+const getCollectionPathForType = (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'review') => {
     switch (itemType) {
         case 'tour': return 'tours';
         case 'safari': return 'safaris';
         case 'transfer': return 'transfers';
         case 'post': return 'news_updates';
+        case 'review': return 'reviews';
     }
 }
 
 // Generic Create
-const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', item: (Partial<Service> | Partial<Post>)) => {
+const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'review', item: (Partial<Service> | Partial<Post> | Partial<Review>)) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
     const collectionRef = collection(firestore, collectionPath);
-    const slug = generateSlug(item.title!);
     
     const docData: any = {
       ...item,
-      slug,
       createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
     };
-    
-    if (itemType !== 'post') {
-      docData.type = itemType;
+
+    if (itemType === 'review') {
+        docData.status = 'pending';
     } else {
-        if (!docData.date) {
+       if (item.title) {
+         docData.slug = generateSlug(item.title);
+       }
+       docData.updatedAt = serverTimestamp();
+    }
+    
+    if (itemType !== 'post' && itemType !== 'review') {
+      docData.type = itemType;
+    } else if (itemType === 'post') {
+        const postData = item as Partial<Post>;
+        if (!postData.date) {
             docData.date = new Date().toISOString().split('T')[0];
         }
         // Convert date string to Timestamp for Firestore
@@ -59,7 +67,10 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
     }
     
     const docRef = await addDoc(collectionRef, docData);
-    await updateDoc(docRef, { id: docRef.id });
+
+    if (itemType !== 'review') {
+        await updateDoc(docRef, { id: docRef.id });
+    }
 
     return true;
   } catch (e: any) {
@@ -69,24 +80,27 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', ite
 };
 
 // Generic Update
-const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string, item: (Partial<Service> | Partial<Post>)) => {
+const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'review', id: string, item: (Partial<Service> | Partial<Post> | Partial<Review>)) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
     const docRef = doc(firestore, collectionPath, id);
     
     const docData: any = {
       ...item,
-      updatedAt: serverTimestamp(),
     };
+    
+    if (itemType !== 'review') {
+        docData.updatedAt = serverTimestamp();
+    }
 
     // Only generate a new slug if the title is being changed
     if (item.title) {
         docData.slug = generateSlug(item.title);
     }
 
-     if (itemType === 'post' && typeof docData.date === 'string') {
+     if (itemType === 'post' && (item as Partial<Post>).date && typeof (item as Partial<Post>).date === 'string') {
         // Convert date string to Timestamp for Firestore
-        docData.date = Timestamp.fromDate(new Date(docData.date));
+        docData.date = Timestamp.fromDate(new Date((item as Partial<Post>).date!));
     }
 
     await updateDoc(docRef, docData);
@@ -99,7 +113,7 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id:
 };
 
 // Generic Delete
-const deleteItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post', id: string) => {
+const deleteItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'review', id: string) => {
   try {
     const collectionPath = getCollectionPathForType(itemType);
     const docRef = doc(firestore, collectionPath, id);
@@ -131,3 +145,10 @@ export const deleteTransfer = async (id: string) => deleteItem('transfer', id);
 export const createPost = async (item: Partial<Post>) => createItem('post', item);
 export const updatePost = async (id: string, item: Partial<Post>) => updateItem('post', id, item);
 export const deletePost = async (id: string) => deleteItem('post', id);
+
+// Reviews
+export const createReview = async (item: Partial<Review>) => createItem('review', item);
+export const updateReview = async (id: string, item: Partial<Review>) => updateItem('review', id, item);
+export const deleteReview = async (id: string) => deleteItem('review', id);
+
+    

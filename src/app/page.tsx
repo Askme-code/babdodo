@@ -11,6 +11,9 @@ import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where, limit, orderBy } from 'firebase/firestore';
 import type { Service, Post } from '@/lib/types';
 import MediaRenderer from '@/components/MediaRenderer';
+import ReviewForm from '@/components/review-form';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import Testimonials from '@/components/testimonials';
 
 
 const Hero = () => {
@@ -138,6 +141,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+      <Testimonials />
 
       <section className="py-12 md:py-20 bg-secondary">
         <div className="container grid md:grid-cols-2 gap-12 items-center">
@@ -184,20 +189,33 @@ export default function Home() {
 
       <section className="py-12 md:py-20">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">News & Updates</h2>
-          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-            Get the latest travel tips, stories from the wild, and updates from our team.
-          </p>
-          <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {latestPosts?.map(post => (
-              <PostCard key={post.id} post={post} />
-            ))}
-             {(!latestPosts || latestPosts.length === 0) && <p className="text-center text-muted-foreground col-span-full">No blog posts to display yet.</p>}
-          </div>
-           <div className="text-center mt-12">
-            <Button asChild>
-              <Link href="/blog">Read Our Blog</Link>
-            </Button>
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-headline font-bold">Leave a Review</h2>
+              <p className="mt-4 text-muted-foreground">
+                Had a great experience with us? We'd love to hear about it! Your feedback helps us and other travelers.
+              </p>
+               <div className="mt-6 bg-card p-8 rounded-lg shadow-lg">
+                 <ReviewForm />
+               </div>
+            </div>
+            <div className="mt-12 md:mt-0">
+                 <h2 className="text-3xl md:text-4xl font-headline font-bold">Latest From Our Blog</h2>
+                  <p className="mt-4 text-muted-foreground">
+                    Get the latest travel tips, stories from the wild, and updates from our team.
+                  </p>
+                  <div className="mt-6 grid grid-cols-1 gap-6">
+                     {latestPosts?.map(post => (
+                        <PostCard key={post.id} post={post} />
+                    ))}
+                     {(!latestPosts || latestPosts.length === 0) && <p className="text-center text-muted-foreground">No blog posts to display yet.</p>}
+                  </div>
+                   <div className="text-left mt-8">
+                    <Button asChild>
+                      <Link href="/blog">Read Our Blog</Link>
+                    </Button>
+                  </div>
+            </div>
           </div>
         </div>
       </section>
@@ -205,3 +223,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

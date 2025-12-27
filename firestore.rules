@@ -3,32 +3,48 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Function to check if a user is an administrator
     function isAdmin() {
       return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
-    // Admins can read and write to their own role document
     match /roles_admin/{userId} {
       allow read, write: if request.auth.uid == userId;
     }
 
-    // Public read access for viewing content
     match /tours/{tourId} {
       allow get, list: if true;
-      allow write: if isAdmin();
+      allow create, update, delete: if isAdmin();
     }
     match /safaris/{safariId} {
       allow get, list: if true;
-      allow write: if isAdmin();
+      allow create, update, delete: if isAdmin();
     }
     match /transfers/{transferId} {
       allow get, list: if true;
-      allow write: if isAdmin();
+      allow create, update, delete: if isAdmin();
     }
     match /news_updates/{postId} {
       allow get, list: if true;
-      allow write: if isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /reviews/{reviewId} {
+      // Anyone can submit a review, but they can't specify an ID or status other than 'pending'.
+      allow create: if request.resource.data.status == 'pending' 
+                      && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
+                      && request.resource.data.authorName is string
+                      && request.resource.data.comment is string;
+      
+      // Admins can update reviews (to approve/reject them) or delete them.
+      allow update, delete: if isAdmin();
+
+      // Anyone can read a single approved review.
+      allow get: if resource.data.status == 'approved';
+
+      // Anyone can list approved reviews.
+      allow list: if isAdmin() || resource.data.status == 'approved';
     }
   }
 }
+
+    

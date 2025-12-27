@@ -9,6 +9,7 @@ import {
   Car,
   Ship,
   Newspaper,
+  Star,
 } from 'lucide-react';
 
 import {
@@ -117,6 +118,14 @@ export default function AdminLayout({
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
+               <SidebarMenuItem>
+                <Link href="/admin/reviews">
+                  <SidebarMenuButton isActive={pathname === '/admin/reviews'} tooltip={{children: 'Reviews'}}>
+                    <Star />
+                    <span>Reviews</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
@@ -144,3 +153,5 @@ export default function AdminLayout({
     </SidebarProvider>
   );
 }
+
+    
