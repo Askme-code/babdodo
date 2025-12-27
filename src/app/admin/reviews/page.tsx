@@ -51,38 +51,35 @@ const getBadgeVariant = (status: Review['status']) => {
 };
 
 export default function AdminReviewsPage() {
-  const firestore = useFirestore();
   const { toast } = useToast();
-
-  const reviewsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, 'reviews'), orderBy('createdAt', 'desc'));
-  }, [firestore]);
-
-  const { data: reviews, error, isLoading } = useCollection<Review>(reviewsQuery);
-
-  const isPermissionError = !!error;
+  
+  // Temporarily disable review fetching to avoid permission errors
+  const reviews: Review[] = [];
+  const isLoading = false;
+  const isPermissionError = true; // Assume error to show message
 
   const handleUpdateStatus = async (id: string, status: Review['status']) => {
-    if (!firestore) return;
-    try {
-      const reviewRef = doc(firestore, 'reviews', id);
-      await updateDoc(reviewRef, { status });
-      toast({
-        title: 'Review Updated',
-        description: `The review has been ${status}.`,
-      });
-    } catch (e) {
-      console.error('Failed to update review status:', e);
-      toast({
-        title: 'Error',
-        description: 'Failed to update review status.',
-        variant: 'destructive',
-      });
-    }
+    toast({
+      title: 'Action Disabled',
+      description: 'Review management is temporarily disabled due to permission issues.',
+      variant: 'destructive',
+    });
   };
 
   const renderTableBody = () => {
+    if (isPermissionError) {
+      return (
+        <TableRow>
+          <TableCell colSpan={5} className="text-center h-24">
+             <Alert variant="destructive">
+              <AlertTitle>Feature Temporarily Disabled</AlertTitle>
+              <AlertDescription>Review management is currently unavailable due to persistent security rule issues. We are working on a solution.</AlertDescription>
+            </Alert>
+          </TableCell>
+        </TableRow>
+      );
+    }
+    
     if (isLoading) {
       return [...Array(3)].map((_, i) => (
         <TableRow key={i}>
@@ -91,19 +88,6 @@ export default function AdminReviewsPage() {
           </TableCell>
         </TableRow>
       ));
-    }
-
-    if (isPermissionError) {
-      return (
-        <TableRow>
-          <TableCell colSpan={5} className="text-center h-24">
-             <Alert variant="destructive">
-              <AlertTitle>Permission Error</AlertTitle>
-              <AlertDescription>Could not fetch reviews. The security rules may be preventing access.</AlertDescription>
-            </Alert>
-          </TableCell>
-        </TableRow>
-      );
     }
     
     if (!reviews || reviews.length === 0) {

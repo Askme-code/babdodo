@@ -142,7 +142,7 @@ export default function Home() {
         </div>
       </section>
       
-      <Testimonials />
+      {/* <Testimonials /> */}
 
       <section className="py-12 md:py-20 bg-secondary">
         <div className="container grid md:grid-cols-2 gap-12 items-center">
@@ -223,5 +223,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
