@@ -1,3 +1,4 @@
+
 rules_version = '2';
 
 service cloud.firestore {
@@ -10,8 +11,10 @@ service cloud.firestore {
 
     /* ---------- ADMIN ROLE ---------- */
     match /roles_admin/{userId} {
+      // Admins can see who else is an admin
       allow read: if isAdmin();
-      allow write: if false;
+      // Only the user themselves can trigger the cloud function to create their own admin doc
+      allow write: if request.auth.uid == userId;
     }
 
     /* ---------- PUBLIC CONTENT ---------- */
@@ -35,10 +38,9 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    /* ---------- REVIEWS (FIXED) ---------- */
+    /* ---------- REVIEWS ---------- */
     match /reviews/{reviewId} {
-
-      // Create review (public)
+      // Anyone can submit a review (always pending)
       allow create: if
         request.resource.data.status == 'pending'
         && request.resource.data.rating >= 1
@@ -46,14 +48,18 @@ service cloud.firestore {
         && request.resource.data.authorName is string
         && request.resource.data.comment is string;
 
-      // Admin moderation
+      // Admins can approve / reject / delete
       allow update, delete: if isAdmin();
 
-      // Per-document read protection
+      // Read rules:
+      // - Public users see ONLY approved reviews
+      // - Admins see all reviews
       allow get: if resource.data.status == 'approved' || isAdmin();
-
-      // REQUIRED for getDocs(collection("reviews"))
-      allow list: if true;
+      
+      // List rules:
+      // - Admins can list all reviews (for the dashboard)
+      // - Public can list ONLY approved reviews (for the homepage carousel)
+      allow list: if isAdmin() || (request.query.where.status == 'approved');
     }
   }
 }
