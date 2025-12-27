@@ -34,27 +34,27 @@ const Hero = () => {
   const heroSlides = [
     {
       src: '/image/sunset background.jpg',
-      caption: 'Breathtaking Safari Sunsets',
+      caption: 'BBreathtaking Safari Sunsets',
       alt: 'African sunset on a safari',
     },
     {
       src: '/image/airport.jpg',
-      caption: 'Seamless Airport Transfers',
+      caption: 'SSeamless Airport Transfers',
       alt: 'Zanzibar Airport',
     },
     {
       src: '/image/sunset cru.jpg',
-      caption: 'Unforgettable Sunset Cruises',
+      caption: 'UUnforgettable Sunset Cruises',
       alt: 'Sunset dhow cruise',
     },
     {
       src: '/image/local boats.jpg',
-      caption: 'Authentic Local Experiences',
+      caption: 'AAuthentic Local Experiences',
       alt: 'Traditional dhow boats',
     },
     {
       src: '/image/kilimanjaro.jpg',
-      caption: 'Majestic Mount Kilimanjaro',
+      caption: 'MMajestic Mount Kilimanjaro',
       alt: 'Mount Kilimanjaro',
     },
   ];

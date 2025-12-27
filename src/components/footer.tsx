@@ -4,6 +4,8 @@ import Logo from '@/components/logo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const developerPhoneNumber = "255"; // Placeholder for WhatsApp number
+  const developerEmail = "kimumilangali@gmail.com";
 
   return (
     <footer className="bg-secondary text-secondary-foreground">
@@ -49,7 +51,16 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-8 border-t border-border pt-8 text-center text-sm">
-          <p>&copy; {currentYear} Babdodo Tours & Safaris. All rights reserved.</p>
+          <p className="mb-2">&copy; {currentYear} Babdodo Tours & Safaris. All rights reserved.</p>
+          <div className="flex justify-center items-center gap-4 text-muted-foreground">
+             <a href={`mailto:${developerEmail}`} className="hover:text-primary transition-colors">
+              Developed by Milangali Kimu
+            </a>
+            <span className="mx-1">|</span>
+             <a href={`https://wa.me/${developerPhoneNumber}`} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+              Contact Developer
+            </a>
+          </div>
         </div>
       </div>
     </footer>
