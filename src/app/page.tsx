@@ -33,7 +33,7 @@ const Hero = () => {
   ];
 
   return (
-     <section className="relative h-[70vh] md:h-[85vh] w-full">
+    <section className="relative h-[70vh] md:h-[85vh] w-full">
       <Carousel
         opts={{ loop: true }}
         plugins={[
@@ -56,30 +56,28 @@ const Hero = () => {
                   data-ai-hint="safari sunset"
                 />
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
-                 <div className="container relative h-full flex flex-col items-center justify-center text-center text-white p-4">
-                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg animate-in fade-in slide-in-from-bottom-12 duration-1000">
-                     {img.caption}
-                   </h1>
-                 </div>
               </div>
             </CarouselItem>
           ))}
         </CarouselContent>
       </Carousel>
-        <div className="absolute bottom-0 left-0 right-0 z-10 p-4">
-            <div className="container flex flex-col items-center justify-center text-center text-white">
-                 <p className="text-lg md:text-xl max-w-3xl drop-shadow-md mb-8">
-                    Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Tours & Safaris.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <Button size="lg" asChild>
-                        <Link href="/safaris">Explore Safaris</Link>
-                    </Button>
-                    <Button size="lg" variant="secondary" asChild>
-                        <Link href="/tours">Discover Tours</Link>
-                    </Button>
-                </div>
+      <div className="absolute inset-0 flex items-center justify-center z-10 p-4">
+        <div className="container flex flex-col items-center justify-center text-center text-white">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg animate-in fade-in slide-in-from-bottom-12 duration-1000">
+                Unforgettable Adventures Await
+            </h1>
+            <p className="text-lg md:text-xl max-w-3xl drop-shadow-md mt-4 mb-8">
+                Discover the untamed beauty of Tanzania and the serene beaches of Zanzibar with Babdodo Tours & Safaris.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" asChild>
+                    <Link href="/safaris">Explore Safaris</Link>
+                </Button>
+                <Button size="lg" variant="secondary" asChild>
+                    <Link href="/tours">Discover Tours</Link>
+                </Button>
             </div>
+        </div>
       </div>
     </section>
   );
@@ -284,18 +282,6 @@ export default function Home() {
             <Button asChild>
               <Link href="/gallery">View Full Gallery</Link>
             </Button>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 md:py-24 bg-card">
-        <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">What Our Guests Say</h2>
-          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
-            Real stories from travelers who have explored with us.
-          </p>
-          <div className="mt-12">
-             <Testimonials />
           </div>
         </div>
       </section>

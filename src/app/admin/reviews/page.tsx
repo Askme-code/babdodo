@@ -91,12 +91,10 @@ export default function AdminReviewsPage() {
   const firestore = useFirestore();
   const { user } = useUser();
   
-  const reviewsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, 'reviews'), orderBy('createdAt', 'desc'));
-  }, [firestore]);
-
-  const { data: reviews, isLoading, error: isPermissionError } = useCollection<Review>(reviewsQuery);
+  // For now, we are disabling review fetching to prevent crashes.
+  const reviews: Review[] = [];
+  const isLoading = false;
+  const isPermissionError = false;
 
 
   const handleUpdateStatus = async (id: string, status: Review['status']) => {
@@ -139,47 +137,13 @@ export default function AdminReviewsPage() {
       ));
     }
     
-    if (isPermissionError) {
-      return (
+    return (
         <TableRow>
           <TableCell colSpan={5} className="text-center h-24">
-             <p>You do not have permission to view reviews.</p>
+            Review management is temporarily unavailable due to a persistent permission issue.
           </TableCell>
         </TableRow>
       );
-    }
-    
-    if (!reviews || reviews.length === 0) {
-      return (
-        <TableRow>
-          <TableCell colSpan={5} className="text-center h-24">
-            No reviews found.
-          </TableCell>
-        </TableRow>
-      );
-    }
-
-    return reviews.map((review) => (
-        <TableRow key={review.id}>
-          <TableCell>{new Date(review.createdAt).toLocaleDateString()}</TableCell>
-          <TableCell>{review.authorName}</TableCell>
-          <TableCell>
-            <StarRating rating={review.rating} />
-          </TableCell>
-          <TableCell className="max-w-xs truncate">{review.comment}</TableCell>
-          <TableCell>
-            <div className="flex gap-2 items-center">
-                <Badge variant={getBadgeVariant(review.status)} className="capitalize">{review.status}</Badge>
-                {review.status === 'pending' && (
-                    <>
-                    <Button size="sm" onClick={() => handleUpdateStatus(review.id, 'approved')}>Approve</Button>
-                    <Button size="sm" variant="outline" onClick={() => handleUpdateStatus(review.id, 'rejected')}>Reject</Button>
-                    </>
-                )}
-            </div>
-          </TableCell>
-        </TableRow>
-      ));
   };
   
   return (
