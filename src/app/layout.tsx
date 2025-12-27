@@ -8,6 +8,9 @@ import Footer from '@/components/footer';
 import WhatsAppButton from '@/components/whatsapp-button';
 import { FirebaseClientProvider } from '@/firebase';
 import { JsonLd } from '@/components/JsonLd';
+import { playfair_display, pt_sans } from '@/app/fonts';
+import { cn } from '@/lib/utils';
+
 
 export const metadata: Metadata = {
   title: {
@@ -45,13 +48,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={cn(playfair_display.variable, pt_sans.variable)}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-5805028999017949" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
         <JsonLd data={{
             "@context": "https://schema.org",
             "@type": "TravelAgency",
