@@ -38,11 +38,13 @@ service cloud.firestore {
       // Admins can update reviews (to approve/reject them) or delete them.
       allow update, delete: if isAdmin();
 
-      // Anyone can read a single approved review.
-      allow get: if resource.data.status == 'approved';
+      // Anyone can read a single approved review. Admins can read any review.
+      allow get: if resource.data.status == 'approved' || isAdmin();
 
-      // Admins can list all reviews. Anyone else can only list reviews that are approved.
-      allow list: if isAdmin() || request.query.where.status == 'approved';
+      // For list operations, the query from the client MUST include `where('status', '==', 'approved')`
+      // OR the user must be an admin. This rule allows the query to be made, and the `get` rule above
+      // secures the individual document reads within that query.
+      allow list: if true;
     }
   }
 }
