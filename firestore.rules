@@ -29,22 +29,20 @@ service cloud.firestore {
     }
 
     match /reviews/{reviewId} {
-      // Anyone can submit a review, but they can't specify an ID or status other than 'pending'.
+      // Anyone can submit a review.
       allow create: if request.resource.data.status == 'pending' 
                       && request.resource.data.rating >= 1 && request.resource.data.rating <= 5
                       && request.resource.data.authorName is string
                       && request.resource.data.comment is string;
       
-      // Admins can update reviews (to approve/reject them) or delete them.
-      allow update, delete: if isAdmin();
+      // Admins can do anything.
+      allow read, update, delete: if isAdmin();
+      
+      // Non-admins can only read approved reviews.
+      allow get: if resource.data.status == 'approved';
 
-      // Anyone can read a single approved review. Admins can read any review.
-      allow get: if resource.data.status == 'approved' || isAdmin();
-
-      // For list operations, the query from the client MUST include `where('status', '==', 'approved')`
-      // OR the user must be an admin. This rule allows the query to be made, and the `get` rule above
-      // secures the individual document reads within that query.
-      allow list: if true;
+      // Non-admins can only list reviews if they are querying for approved ones.
+      allow list: if request.query.where.status == 'approved';
     }
   }
 }
