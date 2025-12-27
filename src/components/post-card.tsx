@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { User, Calendar } from 'lucide-react';
@@ -13,6 +14,15 @@ interface PostCardProps {
 const PostCard = ({ post }: PostCardProps) => {
   const imageUrl = post.featuredImage || "https://picsum.photos/seed/default-post/400/300";
   
+  // Safely format the date, whether it's a string or a Firestore Timestamp object.
+  const displayDate = post.date
+    ? new Date(
+        typeof post.date === 'string' 
+          ? post.date 
+          : (post.date as any).toDate()
+      ).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : 'No date';
+
   return (
     <Card className="flex flex-col overflow-hidden h-full transition-transform transform hover:-translate-y-2 hover:shadow-xl group">
       <CardHeader className="p-0">
@@ -43,7 +53,7 @@ const PostCard = ({ post }: PostCardProps) => {
           </div>
           <div className="flex items-center">
             <Calendar className="w-3.5 h-3.5 mr-1.5" />
-            <span>{post.date}</span>
+            <span>{displayDate}</span>
           </div>
         </div>
       </CardContent>
