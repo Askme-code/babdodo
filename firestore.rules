@@ -1,12 +1,34 @@
-
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow read and write access for any authenticated user.
-    // This is for development purposes to get the application running.
-    // In production, you should implement more granular rules.
-    match /{document=**} {
-      allow read, write: if request.auth != null;
+    
+    // Function to check if a user is an administrator
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    // Admins can read and write to their own role document
+    match /roles_admin/{userId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+
+    // Public read access for viewing content
+    match /tours/{tourId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+    match /safaris/{safariId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+    match /transfers/{transferId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
+    }
+    match /news_updates/{postId} {
+      allow get, list: if true;
+      allow write: if isAdmin();
     }
   }
 }

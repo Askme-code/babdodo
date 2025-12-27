@@ -17,7 +17,7 @@ const Hero = () => {
   const heroImage = "https://images.unsplash.com/photo-1689479665129-bf064a64feaa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzYWZhcmklMjBlbGVwaGFudHN8ZW58MHx8fHwxNzY2MzkyNzc2fDA&ixlib=rb-4.1.0&q=80&w=1080";
   return (
     <section className="relative h-[70vh] md:h-[85vh] w-full">
-      <Image
+      <MediaRenderer
         src={heroImage}
         alt={'Safari landscape with elephants in Tanzania'}
         fill
@@ -83,6 +83,7 @@ export default function Home() {
             {featuredSafaris?.map(safari => (
               <ServiceCard key={safari.id} service={safari} />
             ))}
+             {(!featuredSafaris || featuredSafaris.length === 0) && <p className="text-center text-muted-foreground col-span-full">No safaris to display yet.</p>}
           </div>
           <div className="text-center mt-12">
             <Button asChild>
@@ -102,6 +103,7 @@ export default function Home() {
             {featuredTours?.map(tour => (
               <ServiceCard key={tour.id} service={tour} />
             ))}
+             {(!featuredTours || featuredTours.length === 0) && <p className="text-center text-muted-foreground col-span-full">No tours to display yet.</p>}
           </div>
            <div className="text-center mt-12">
             <Button asChild>
@@ -164,6 +166,7 @@ export default function Home() {
             {latestPosts?.map(post => (
               <PostCard key={post.id} post={post} />
             ))}
+             {(!latestPosts || latestPosts.length === 0) && <p className="text-center text-muted-foreground col-span-full">No blog posts to display yet.</p>}
           </div>
            <div className="text-center mt-12">
             <Button asChild>

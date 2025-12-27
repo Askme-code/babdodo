@@ -6,6 +6,17 @@ import { Firestore } from 'firebase/firestore';
 import { Auth, User, onAuthStateChanged } from 'firebase/auth';
 import { FirebaseErrorListener } from '@/components/FirebaseErrorListener'
 
+// Defined useMemoFirebase directly to resolve module not found error.
+function useMemoFirebase<T>(factory: () => T, deps: DependencyList | undefined): T {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoized = useMemo(factory, deps);
+  if (memoized) {
+    (memoized as any).__memo = true;
+  }
+  return memoized;
+}
+
+
 interface FirebaseProviderProps {
   children: ReactNode;
   firebaseApp: FirebaseApp;
@@ -154,16 +165,8 @@ export const useFirebaseApp = (): FirebaseApp => {
   return firebaseApp;
 };
 
-type MemoFirebase <T> = T & {__memo?: boolean};
+export { useMemoFirebase };
 
-export function useMemoFirebase<T>(factory: () => T, deps: DependencyList): T | (MemoFirebase<T>) {
-  const memoized = useMemo(factory, deps);
-  
-  if(typeof memoized !== 'object' || memoized === null) return memoized;
-  (memoized as MemoFirebase<T>).__memo = true;
-  
-  return memoized;
-}
 
 /**
  * Hook specifically for accessing the authenticated user's state.

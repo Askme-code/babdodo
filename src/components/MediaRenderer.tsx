@@ -12,6 +12,7 @@ interface MediaRendererProps {
   height?: number;
   priority?: boolean;
   'data-ai-hint'?: string;
+  fill?: boolean;
 }
 
 const getYouTubeId = (url: string): string | null => {
@@ -24,7 +25,7 @@ const getYouTubeId = (url: string): string | null => {
 const getInstagramId = (url: string): { type: 'p' | 'reel', id: string } | null => {
     if (!url) return null;
     const regExp = /https?:\/\/(?:www\.)?instagram\.com\/(p|reel)\/([a-zA-Z0-9_-]+)/;
-    const match = url.match(RegExp);
+    const match = url.match(regExp);
     if (match && match[1] && match[2]) {
         return {
             type: match[1] as 'p' | 'reel',
@@ -63,6 +64,13 @@ class MediaErrorBoundary extends React.Component<{ children: React.ReactNode }, 
 
 
 const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
+  if (!src) {
+     return (
+        <div className="w-full h-48 flex items-center justify-center bg-muted rounded-lg">
+          <p className="text-muted-foreground text-sm">No media source</p>
+        </div>
+      );
+  }
   const youtubeId = getYouTubeId(src);
   const instagramInfo = getInstagramId(src);
 
@@ -101,8 +109,8 @@ const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
       <Image
         src={src}
         alt={alt}
-        width={600}
-        height={400}
+        width={props.fill ? undefined : (props.width || 600)}
+        height={props.fill ? undefined : (props.height || 400)}
         {...props}
       />
     </MediaErrorBoundary>
