@@ -14,20 +14,52 @@ import MediaRenderer from '@/components/MediaRenderer';
 import ReviewForm from '@/components/review-form';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Testimonials from '@/components/testimonials';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
+import Autoplay from "embla-carousel-autoplay"
 
+
+const heroImages = [
+    { src: "/image/sunset background.jpg", alt: "Safari landscape with elephants in Tanzania", hint: "safari elephants" },
+    { src: "/image/kilimanjaro.jpg", alt: "Mount Kilimanjaro with clouds", hint: "kilimanjaro mountain" },
+    { src: "/image/beach 1.jpg", alt: "Pristine beach in Zanzibar", hint: "zanzibar beach" },
+    { src: "/image/ngorongoro.jpg", alt: "Wildebeest in Ngorongoro Crater", hint: "ngorongoro crater" },
+]
 
 const Hero = () => {
-  const heroImage = "/image/sunset background.jpg";
   return (
     <section className="relative h-[70vh] md:h-[85vh] w-full">
-      <MediaRenderer
-        src={heroImage}
-        alt={'Safari landscape with elephants in Tanzania'}
-        fill
-        className="object-cover"
-        priority
-        data-ai-hint="safari elephants"
-      />
+       <Carousel 
+        className="w-full h-full"
+        plugins={[
+            Autoplay({
+              delay: 5000,
+              stopOnInteraction: false,
+            }),
+          ]}
+        opts={{
+            loop: true,
+        }}
+       >
+        <CarouselContent>
+          {heroImages.map((image, index) => (
+            <CarouselItem key={index}>
+                 <MediaRenderer
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                    data-ai-hint={image.hint}
+                />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
       <div className="relative container h-full flex flex-col items-center justify-center text-center text-white p-4">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg">
