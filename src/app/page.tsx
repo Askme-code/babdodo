@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -20,6 +19,8 @@ import {
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
 import { Handshake, MapPin, PlaneTakeoff } from 'lucide-react';
+import Testimonials from '@/components/testimonials';
+import Counter from '@/components/counter';
 
 
 const Hero = () => {
@@ -86,10 +87,11 @@ const Hero = () => {
 
 const Stats = () => {
   const stats = [
-    { icon: Handshake, label: "Happy Clients", value: "1,000+" },
-    { icon: MapPin, label: "Destinations", value: "100+" },
-    { icon: PlaneTakeoff, label: "Tours & Excursions", value: "10,000+" },
-  ]
+    { icon: Handshake, label: "Happy Clients", value: 1000, suffix: '+' },
+    { icon: MapPin, label: "Destinations", value: 100, suffix: '+' },
+    { icon: PlaneTakeoff, label: "Tours & Excursions", value: 10000, suffix: '+' },
+  ];
+
   return (
     <section className="py-12 md:py-20 bg-background">
       <div className="container">
@@ -99,7 +101,10 @@ const Stats = () => {
                <div className="p-4 border-2 border-primary rounded-full mb-4 bg-primary/10">
                  <stat.icon className="w-10 h-10 text-primary" />
                </div>
-               <p className="text-4xl font-bold">{stat.value}</p>
+                <div className="text-4xl font-bold">
+                  <Counter to={stat.value} />
+                  {stat.suffix}
+                </div>
                <h3 className="text-sm uppercase tracking-widest text-muted-foreground mt-2">{stat.label}</h3>
           </div>
           ))}
@@ -150,7 +155,6 @@ export default function Home() {
   return (
     <div>
       <Hero />
-      <Stats />
       
       <section className="py-12 md:py-20 bg-card">
         <div className="container">
@@ -255,6 +259,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Stats />
+
       <section className="py-12 md:py-20 bg-background">
         <div className="container">
           <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">From Our Gallery</h2>
@@ -282,6 +288,17 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="py-16 md:py-24 bg-card">
+        <div className="container">
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">What Our Guests Say</h2>
+          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
+            Real stories from travelers who have explored with us.
+          </p>
+          <div className="mt-12">
+             <Testimonials />
+          </div>
+        </div>
+      </section>
 
       <section className="py-12 md:py-20">
         <div className="container">
