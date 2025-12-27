@@ -11,9 +11,10 @@ service cloud.firestore {
 
     /* ---------- ADMIN ROLE ---------- */
     match /roles_admin/{userId} {
-      // Admins can see who else is an admin
+      // Admins can see who else is an admin.
       allow read: if isAdmin();
-      // Only the user themselves can trigger the cloud function to create their own admin doc
+      // A user can create their own admin role document (e.g., via the "Make me Admin" button).
+      // This is a one-time action. Further modifications should be restricted.
       allow write: if request.auth.uid == userId;
     }
 
@@ -40,25 +41,27 @@ service cloud.firestore {
 
     /* ---------- REVIEWS ---------- */
     match /reviews/{reviewId} {
-      // Anyone can submit a review (always pending)
+      // Anyone can submit a review, but it must be valid and start as 'pending'.
       allow create: if
         request.resource.data.status == 'pending'
         && request.resource.data.rating >= 1
         && request.resource.data.rating <= 5
         && request.resource.data.authorName is string
-        && request.resource.data.comment is string;
+        && request.resource.data.authorName.size() > 0
+        && request.resource.data.comment is string
+        && request.resource.data.comment.size() > 0;
 
-      // Admins can approve / reject / delete
+      // Only admins can approve, reject, or delete reviews.
       allow update, delete: if isAdmin();
 
-      // Read rules:
-      // - Public users see ONLY approved reviews
-      // - Admins see all reviews
+      // Read Rules:
+      // - Admins can read any review document.
+      // - The public can only read documents that have been approved.
       allow get: if resource.data.status == 'approved' || isAdmin();
       
-      // List rules:
-      // - Admins can list all reviews (for the dashboard)
-      // - Public can list ONLY approved reviews (for the homepage carousel)
+      // List Rules:
+      // - Admins can list all reviews (for the dashboard).
+      // - The public can list ONLY approved reviews (for the homepage carousel).
       allow list: if isAdmin() || (request.query.where.status == 'approved');
     }
   }
