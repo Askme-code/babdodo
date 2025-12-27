@@ -129,11 +129,28 @@ const CrudForm = ({
   closeDialog: () => void;
 }) => {
   const schema = isPostType ? postSchema : serviceSchema;
+
+  const getInitialDate = () => {
+    if (item?.date) {
+        // Check if it's a Firestore Timestamp object
+        if (typeof item.date === 'object' && 'toDate' in item.date) {
+            return (item.date as any).toDate().toISOString().split('T')[0];
+        }
+        // Handle string date
+        const d = new Date(item.date);
+        if (!isNaN(d.getTime())) {
+            return d.toISOString().split('T')[0];
+        }
+    }
+    // Default to today
+    return new Date().toISOString().split('T')[0];
+  };
+
   const { register, handleSubmit, formState: { errors, isSubmitting }, control, setValue } = useForm({
     resolver: zodResolver(schema),
     defaultValues: item ? {
       ...item,
-      date: item.date ? new Date(item.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      date: getInitialDate(),
     } : {
       date: new Date().toISOString().split('T')[0]
     },
