@@ -19,6 +19,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel"
 import Autoplay from "embla-carousel-autoplay"
+import { Handshake, MapPin, PlaneTakeoff } from 'lucide-react';
 
 
 const Hero = () => {
@@ -33,7 +34,7 @@ const Hero = () => {
         data-ai-hint="safari sunset"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
-      <div className="absolute top-0 inset-0 flex flex-col items-center justify-center text-center text-white p-4">
+      <div className="container relative h-full flex flex-col items-center justify-center text-center text-white p-4">
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-headline font-bold drop-shadow-lg">
           Your Adventure Awaits
         </h1>
@@ -52,6 +53,31 @@ const Hero = () => {
     </section>
   );
 };
+
+const Stats = () => {
+  const stats = [
+    { icon: Handshake, label: "Happy Clients", value: "1,000+" },
+    { icon: MapPin, label: "Destinations", value: "100+" },
+    { icon: PlaneTakeoff, label: "Tours & Excursions", value: "10,000+" },
+  ]
+  return (
+    <section className="py-12 md:py-20 bg-background">
+      <div className="container">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          {stats.map((stat) => (
+             <div key={stat.label} className="flex flex-col items-center">
+               <div className="p-4 border-2 border-primary rounded-full mb-4 bg-primary/10">
+                 <stat.icon className="w-10 h-10 text-primary" />
+               </div>
+               <p className="text-4xl font-bold">{stat.value}</p>
+               <h3 className="text-sm uppercase tracking-widest text-muted-foreground mt-2">{stat.label}</h3>
+          </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export default function Home() {
   const firestore = useFirestore();
@@ -85,6 +111,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      <Stats />
       
       <section className="py-12 md:py-20 bg-card">
         <div className="container">
