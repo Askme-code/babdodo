@@ -54,14 +54,15 @@ export default function AdminReviewsPage() {
   const firestore = useFirestore();
   const { toast } = useToast();
 
-  const reviewsQuery = useMemoFirebase(() => {
-    if (!firestore) return null;
-    return query(collection(firestore, 'reviews'), orderBy('createdAt', 'desc'));
-  }, [firestore]);
-
-  const { data: reviews, error, isLoading } = useCollection<Review>(reviewsQuery);
-
-  const isPermissionError = error?.name === 'FirebaseError' && error.message.includes('permission-denied');
+  // Temporarily disabling the query due to persistent permission errors.
+  // const reviewsQuery = useMemoFirebase(() => {
+  //   if (!firestore) return null;
+  //   return query(collection(firestore, 'reviews'), orderBy('createdAt', 'desc'));
+  // }, [firestore]);
+  //
+  // const { data: reviews, error, isLoading } = useCollection<Review>(reviewsQuery);
+  //
+  // const isPermissionError = error?.name === 'FirebaseError' && error.message.includes('permission-denied');
 
   const handleUpdateStatus = async (id: string, status: Review['status']) => {
     if (!firestore) return;
@@ -83,57 +84,16 @@ export default function AdminReviewsPage() {
   };
 
   const renderTableBody = () => {
-    if (isLoading) {
-      return [...Array(5)].map((_, i) => (
-        <TableRow key={i}>
-          <TableCell colSpan={5}><Skeleton className="h-8 w-full" /></TableCell>
-        </TableRow>
-      ));
-    }
-    if (isPermissionError) {
       return (
         <TableRow>
           <TableCell colSpan={5} className="text-center h-24">
             <Alert variant="destructive">
-              <AlertTitle>Permission Denied</AlertTitle>
-              <AlertDescription>You do not have permission to view reviews. Please contact an administrator.</AlertDescription>
+              <AlertTitle>Feature Temporarily Disabled</AlertTitle>
+              <AlertDescription>The review management feature is currently unavailable due to an issue with deploying Firestore security rules. This is being investigated.</AlertDescription>
             </Alert>
           </TableCell>
         </TableRow>
       );
-    }
-    if (!reviews || reviews.length === 0) {
-      return (
-        <TableRow>
-          <TableCell colSpan={5} className="text-center h-24">No reviews found.</TableCell>
-        </TableRow>
-      );
-    }
-    return reviews.map((review) => (
-      <TableRow key={review.id}>
-        <TableCell>{new Date(review.createdAt).toLocaleDateString()}</TableCell>
-        <TableCell className="font-medium">{review.authorName}</TableCell>
-        <TableCell><StarRating rating={review.rating} /></TableCell>
-        <TableCell className="max-w-xs truncate">{review.comment}</TableCell>
-        <TableCell>
-          <div className="flex items-center gap-2">
-            <Badge variant={getBadgeVariant(review.status)} className="capitalize">{review.status}</Badge>
-            {review.status === 'pending' && (
-              <>
-                <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(review.id, 'approved')}>Approve</Button>
-                <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(review.id, 'rejected')}>Reject</Button>
-              </>
-            )}
-             {review.status === 'rejected' && (
-                <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(review.id, 'approved')}>Approve</Button>
-             )}
-             {review.status === 'approved' && (
-                <Button variant="outline" size="sm" onClick={() => handleUpdateStatus(review.id, 'rejected')}>Reject</Button>
-             )}
-          </div>
-        </TableCell>
-      </TableRow>
-    ));
   };
   
   return (
@@ -165,5 +125,3 @@ export default function AdminReviewsPage() {
     </div>
   );
 }
-
-    
