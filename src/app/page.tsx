@@ -8,7 +8,13 @@ import {
   CarouselItem,
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import ServiceCard from '@/components/service-card';
 import PostCard from '@/components/post-card';
 import { Button } from '@/components/ui/button';
@@ -132,7 +138,7 @@ const Stats = () => {
       <div className="container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {stats.map((stat) => (
-            <div key={stat.label} className="flex flex-col items-center">
+            <div key={stat.label} className="flex flex-col items-center animate-in fade-in-0 slide-in-from-bottom-10 duration-700">
               <div className="p-4 border-2 border-primary rounded-full mb-4 bg-primary/10">
                 <stat.icon className="w-10 h-10 text-primary" />
               </div>
@@ -153,6 +159,7 @@ const Stats = () => {
 
 export default function Home() {
   const firestore = useFirestore();
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
 
   const featuredToursQuery = useMemoFirebase(() => {
     if (!firestore) return null;
@@ -207,10 +214,10 @@ export default function Home() {
 
       <section className="py-12 md:py-20 bg-card">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold animate-in fade-in-0 slide-in-from-bottom-10 duration-500">
             Featured Safaris
           </h2>
-          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-100">
             Embark on a journey through Tanzania's most iconic national parks.
             Witness breathtaking landscapes and majestic wildlife.
           </p>
@@ -224,7 +231,7 @@ export default function Home() {
               </p>
             )}
           </div>
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-200">
             <Button asChild>
               <Link href="/safaris">View All Safaris</Link>
             </Button>
@@ -234,10 +241,10 @@ export default function Home() {
 
       <section className="py-12 md:py-20">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold animate-in fade-in-0 slide-in-from-bottom-10 duration-500">
             Popular Zanzibar Tours
           </h2>
-          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-100">
             Experience the magic of the Spice Island, from historic Stone Town
             to pristine coral reefs.
           </p>
@@ -251,7 +258,7 @@ export default function Home() {
               </p>
             )}
           </div>
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-200">
             <Button asChild>
               <Link href="/tours">View All Tours</Link>
             </Button>
@@ -261,10 +268,10 @@ export default function Home() {
 
       <section className="py-12 md:py-20 bg-card">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold animate-in fade-in-0 slide-in-from-bottom-10 duration-500">
             Convenient Transfers
           </h2>
-          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-100">
             Travel with ease and comfort. We offer reliable transfers to and
             from airports, hotels, and more.
           </p>
@@ -278,7 +285,7 @@ export default function Home() {
               </p>
             )}
           </div>
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-200">
             <Button asChild>
               <Link href="/transfers">View All Transfers</Link>
             </Button>
@@ -288,7 +295,7 @@ export default function Home() {
 
       <section className="py-12 md:py-20 bg-secondary">
         <div className="container grid md:grid-cols-2 gap-12 items-center">
-          <div className="order-2 md:order-1">
+          <div className="order-2 md:order-1 animate-in fade-in-0 slide-in-from-left-20 duration-700">
             <h2 className="text-3xl md:text-4xl font-headline font-bold">
               Why Choose Babdodo?
             </h2>
@@ -328,7 +335,7 @@ export default function Home() {
               <Link href="/about">Learn More About Us</Link>
             </Button>
           </div>
-          <div className="order-1 md:order-2">
+          <div className="order-1 md:order-2 animate-in fade-in-0 slide-in-from-right-20 duration-700">
             <Image
               src={aboutImage}
               alt={'Maasai people in traditional clothing'}
@@ -345,16 +352,16 @@ export default function Home() {
 
       <section className="py-12 md:py-20 bg-background">
         <div className="container">
-          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold">
+          <h2 className="text-3xl md:text-4xl font-headline text-center font-bold animate-in fade-in-0 slide-in-from-bottom-10 duration-500">
             From Our Gallery
           </h2>
-          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-4 text-center text-muted-foreground max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-100">
             A glimpse into the unforgettable moments captured during our
             adventures.
           </p>
           <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-4">
             {galleryImages.map((image, index) => (
-              <div key={index} className="overflow-hidden rounded-lg group">
+              <div key={index} className="overflow-hidden rounded-lg group animate-in fade-in-0 zoom-in-95 duration-500">
                 <Image
                   src={image.src}
                   alt={image.alt}
@@ -365,7 +372,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 animate-in fade-in-0 slide-in-from-bottom-10 duration-500 delay-200">
             <Button asChild>
               <Link href="/gallery">View Full Gallery</Link>
             </Button>
@@ -376,7 +383,7 @@ export default function Home() {
       <section className="py-12 md:py-20">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
+            <div className="animate-in fade-in-0 slide-in-from-left-20 duration-700">
               <h2 className="text-3xl md:text-4xl font-headline font-bold">
                 Leave a Review
               </h2>
@@ -384,11 +391,19 @@ export default function Home() {
                 Had a great experience with us? We'd love to hear about it! Your
                 feedback helps us and other travelers.
               </p>
-              <div className="mt-6 bg-card p-8 rounded-lg shadow-lg">
-                <ReviewForm />
-              </div>
+              <Dialog open={isReviewFormOpen} onOpenChange={setIsReviewFormOpen}>
+                <DialogTrigger asChild>
+                  <Button size="lg" className="mt-6">Write a Review</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Share Your Experience</DialogTitle>
+                  </DialogHeader>
+                  <ReviewForm onSuccess={() => setIsReviewFormOpen(false)} />
+                </DialogContent>
+              </Dialog>
             </div>
-            <div className="mt-12 md:mt-0">
+            <div className="mt-12 md:mt-0 animate-in fade-in-0 slide-in-from-right-20 duration-700">
               <h2 className="text-3xl md:text-4xl font-headline font-bold">
                 Latest From Our Blog
               </h2>
@@ -418,5 +433,3 @@ export default function Home() {
     </div>
   );
 }
-
-    

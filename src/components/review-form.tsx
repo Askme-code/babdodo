@@ -55,7 +55,7 @@ const StarRatingInput = ({ value, onChange }: { value: number; onChange: (value:
 };
 
 
-export default function ReviewForm() {
+export default function ReviewForm({ onSuccess }: { onSuccess?: () => void }) {
   const { toast } = useToast();
   const { register, handleSubmit, control, formState: { errors, isSubmitting }, reset } = useForm<ReviewFormData>({
     resolver: zodResolver(reviewSchema),
@@ -78,6 +78,7 @@ export default function ReviewForm() {
           description: 'Thank you for your feedback. Your review is pending approval.',
         });
         reset();
+        onSuccess?.();
       } else {
         throw new Error('Failed to submit review.');
       }
@@ -121,5 +122,3 @@ export default function ReviewForm() {
     </form>
   );
 }
-
-    
