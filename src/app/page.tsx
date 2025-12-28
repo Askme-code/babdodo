@@ -72,9 +72,9 @@ const Hero = () => {
         plugins={[Autoplay({ delay: 5000 })]}
         className="absolute inset-0 h-full w-full"
       >
-        <CarouselContent>
+        <CarouselContent className="h-full">
           {heroSlides.map((slide, index) => (
-            <CarouselItem key={index}>
+            <CarouselItem key={index} className="h-full">
               <div className="relative h-full w-full">
                 <MediaRenderer
                   src={slide.src}

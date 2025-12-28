@@ -72,39 +72,38 @@ const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
       );
   }
   
-  if (src.startsWith('http')) {
-      const youtubeId = getYouTubeId(src);
-      const instagramInfo = getInstagramId(src);
+  const isExternal = src.startsWith('http');
+  const youtubeId = isExternal ? getYouTubeId(src) : null;
+  const instagramInfo = isExternal ? getInstagramId(src) : null;
 
-      if (youtubeId) {
-        return (
-          <div className="aspect-video w-full overflow-hidden rounded-lg">
+  if (youtubeId) {
+    return (
+      <div className="aspect-video w-full overflow-hidden rounded-lg">
+        <iframe
+          src={`https://www.youtube.com/embed/${youtubeId}`}
+          title={alt}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="w-full h-full"
+        ></iframe>
+      </div>
+    );
+  }
+
+  if (instagramInfo) {
+    return (
+        <div className="w-full overflow-hidden rounded-lg" style={{aspectRatio: '1/1'}}>
             <iframe
-              src={`https://www.youtube.com/embed/${youtubeId}`}
-              title={alt}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
+                src={`https://www.instagram.com/${instagramInfo.type}/${instagramInfo.id}/embed`}
+                title={alt}
+                frameBorder="0"
+                allowFullScreen
+                scrolling="no"
+                className="w-full h-full"
             ></iframe>
-          </div>
-        );
-      }
-
-      if (instagramInfo) {
-        return (
-            <div className="w-full overflow-hidden rounded-lg" style={{aspectRatio: '1/1'}}>
-                <iframe
-                    src={`https://www.instagram.com/${instagramInfo.type}/${instagramInfo.id}/embed`}
-                    title={alt}
-                    frameBorder="0"
-                    allowFullScreen
-                    scrolling="no"
-                    className="w-full h-full"
-                ></iframe>
-            </div>
-        );
-      }
+        </div>
+    );
   }
 
   return (
@@ -112,9 +111,13 @@ const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
       <Image
         src={src}
         alt={alt}
-        width={props.fill ? undefined : (props.width || 600)}
-        height={props.fill ? undefined : (props.height || 400)}
-        {...props}
+        fill={props.fill}
+        sizes={props.fill ? "100vw" : undefined}
+        width={!props.fill ? props.width || 600 : undefined}
+        height={!props.fill ? props.height || 400 : undefined}
+        className={`object-cover ${props.className ?? ""}`}
+        priority={props.priority}
+        data-ai-hint={props['data-ai-hint']}
       />
     </MediaErrorBoundary>
   );
