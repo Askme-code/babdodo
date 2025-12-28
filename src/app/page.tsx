@@ -110,7 +110,7 @@ const Hero = () => {
                 </div>
             </div>
              <div className="hidden md:flex justify-center animate-in fade-in-0 slide-in-from-right-20 duration-700">
-                <Card className="w-full max-w-md">
+                <Card className="w-full max-w-lg">
                     <CardHeader>
                         <CardTitle className="text-2xl font-headline">Get a Free Quote</CardTitle>
                         <CardDescription>Expert planning. Zero spam.</CardDescription>

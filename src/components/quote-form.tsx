@@ -43,55 +43,57 @@ export default function QuoteForm() {
 
   return (
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1">
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" name="name" placeholder="Your Name" />
-            <ValidationError prefix="Name" field="name" errors={state.errors} className="text-xs font-medium text-destructive" />
-        </div>
-        
-        <div className="space-y-1">
-             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" type="email" name="email" placeholder="you@example.com" />
-            <ValidationError prefix="Email" field="email" errors={state.errors} className="text-xs font-medium text-destructive" />
-        </div>
-
-        <div className="space-y-1">
-            <Label htmlFor="whatsapp">WhatsApp Number</Label>
-            <Input id="whatsapp" name="whatsapp" placeholder="+1 (555) 123-4567" />
-            <ValidationError prefix="WhatsApp" field="whatsapp" errors={state.errors} className="text-xs font-medium text-destructive" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" name="name" placeholder="Your Name" />
+              <ValidationError prefix="Name" field="name" errors={state.errors} className="text-xs font-medium text-destructive" />
+          </div>
+          <div className="space-y-1">
+              <Label htmlFor="email">Email Address</Label>
+              <Input id="email" type="email" name="email" placeholder="you@example.com" />
+              <ValidationError prefix="Email" field="email" errors={state.errors} className="text-xs font-medium text-destructive" />
+          </div>
         </div>
 
-         <div className="space-y-1">
-            <Label htmlFor="date">Select Date</Label>
-             <Popover>
-                <PopoverTrigger asChild>
-                <Button
-                    variant={"outline"}
-                    className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                    )}
-                >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0">
-                <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                />
-                 <input type="hidden" name="date" value={date ? format(date, 'yyyy-MM-dd') : ''} />
-                </PopoverContent>
-            </Popover>
-            <ValidationError prefix="Date" field="date" errors={state.errors} className="text-xs font-medium text-destructive" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1">
+              <Label htmlFor="whatsapp">WhatsApp Number</Label>
+              <Input id="whatsapp" name="whatsapp" placeholder="+1 (555) 123-4567" />
+              <ValidationError prefix="WhatsApp" field="whatsapp" errors={state.errors} className="text-xs font-medium text-destructive" />
+          </div>
+          <div className="space-y-1">
+              <Label htmlFor="date">Select Date</Label>
+              <Popover>
+                  <PopoverTrigger asChild>
+                  <Button
+                      variant={"outline"}
+                      className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                      )}
+                  >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                  <Calendar
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      initialFocus
+                  />
+                  <input type="hidden" name="date" value={date ? format(date, 'yyyy-MM-dd') : ''} />
+                  </PopoverContent>
+              </Popover>
+              <ValidationError prefix="Date" field="date" errors={state.errors} className="text-xs font-medium text-destructive" />
+          </div>
         </div>
 
         <div className="space-y-1">
             <Label htmlFor="message">Write your message</Label>
-            <Textarea id="message" name="message" placeholder="I'm interested in a 5-day safari..." className="min-h-[100px]" />
+            <Textarea id="message" name="message" placeholder="I'm interested in a 5-day safari..." className="min-h-[80px]" />
             <ValidationError prefix="Message" field="message" errors={state.errors} className="text-xs font-medium text-destructive" />
         </div>
         
