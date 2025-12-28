@@ -39,19 +39,19 @@ import QuoteForm from '@/components/quote-form';
 const Hero = () => {
   const heroSlides = [
     {
-      src: '/image/sunset background.jpg',
-      caption: 'Breathtaking Safari Sunsets',
-      alt: 'African sunset on a safari',
+      src: '/image/top.jpg',
+      caption: 'Unforgettable Adventures',
+      alt: 'A beautiful beach scene in Zanzibar',
     },
     {
-      src: '/image/airport.jpg',
-      caption: 'Seamless Airport Transfers',
-      alt: 'Zanzibar Airport',
+      src: '/image/fun.jpg',
+      caption: 'Experience the Thrill',
+      alt: 'Tourists having fun on a boat',
     },
     {
-      src: '/image/sunset cru.jpg',
-      caption: 'Unforgettable Sunset Cruises',
-      alt: 'Sunset dhow cruise',
+      src: '/image/beaches.jpg',
+      caption: 'Relax on Pristine Beaches',
+      alt: 'White sand beach and turquoise water',
     },
     {
       src: '/image/local boats.jpg',
