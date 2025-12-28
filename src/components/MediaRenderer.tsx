@@ -71,37 +71,40 @@ const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
         </div>
       );
   }
-  const youtubeId = getYouTubeId(src);
-  const instagramInfo = getInstagramId(src);
+  
+  if (src.startsWith('http')) {
+      const youtubeId = getYouTubeId(src);
+      const instagramInfo = getInstagramId(src);
 
-  if (youtubeId) {
-    return (
-      <div className="aspect-video w-full overflow-hidden rounded-lg">
-        <iframe
-          src={`https://www.youtube.com/embed/${youtubeId}`}
-          title={alt}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="w-full h-full"
-        ></iframe>
-      </div>
-    );
-  }
-
-  if (instagramInfo) {
-    return (
-        <div className="w-full overflow-hidden rounded-lg" style={{aspectRatio: '1/1'}}>
+      if (youtubeId) {
+        return (
+          <div className="aspect-video w-full overflow-hidden rounded-lg">
             <iframe
-                src={`https://www.instagram.com/${instagramInfo.type}/${instagramInfo.id}/embed`}
-                title={alt}
-                frameBorder="0"
-                allowFullScreen
-                scrolling="no"
-                className="w-full h-full"
+              src={`https://www.youtube.com/embed/${youtubeId}`}
+              title={alt}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
             ></iframe>
-        </div>
-    );
+          </div>
+        );
+      }
+
+      if (instagramInfo) {
+        return (
+            <div className="w-full overflow-hidden rounded-lg" style={{aspectRatio: '1/1'}}>
+                <iframe
+                    src={`https://www.instagram.com/${instagramInfo.type}/${instagramInfo.id}/embed`}
+                    title={alt}
+                    frameBorder="0"
+                    allowFullScreen
+                    scrolling="no"
+                    className="w-full h-full"
+                ></iframe>
+            </div>
+        );
+      }
   }
 
   return (
