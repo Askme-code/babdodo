@@ -33,21 +33,21 @@ const transportTypes = [
     id: "transport-alphard",
     name: "Standard Car",
     capacity: "1 - 6 Travelers",
-    imageUrl: "/image/zanzibar local ride.jpg",
+    imageUrl: "https://images.pexels.com/photos/20870233/pexels-photo-20870233/free-photo-of-a-white-toyota-alphard-in-a-parking-lot.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     imageHint: "sedan car"
   },
   {
     id: "transport-hiace",
     name: "Van / Minibus",
     capacity: "7 - 14 Travelers",
-    imageUrl: "/image/zanzibar local rides vespa.jpg",
+    imageUrl: "https://images.pexels.com/photos/14578508/pexels-photo-14578508.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     imageHint: "minibus"
   },
   {
     id: "transport-coaster",
     name: "Coaster Bus",
     capacity: "15 - 28 Travelers",
-    imageUrl: "/image/hotels.jpg",
+    imageUrl: "https://res.cloudinary.com/dty9dcbs7/image/upload/v1716380630/babdodo/coaster_bus_pwimun.jpg",
     imageHint: "coaster bus"
   },
 ]
