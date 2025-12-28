@@ -34,7 +34,6 @@ import {
 import { Handshake, MapPin, PlaneTakeoff } from 'lucide-react';
 import Counter from '@/components/counter';
 import { useEffect, useState } from 'react';
-import { useTypewriter } from '@/hooks/use-typewriter';
 import QuoteForm from '@/components/quote-form';
 
 const Hero = () => {
@@ -66,19 +65,11 @@ const Hero = () => {
     },
   ];
 
-  const [activeIndex, setActiveIndex] = useState(0);
-  const typewriterText = useTypewriter(heroSlides[activeIndex].caption, 100);
-
   return (
     <section className="relative h-auto w-full overflow-hidden md:h-[85vh]">
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 5000 })]}
-        setApi={(api) => {
-          api?.on('select', () => {
-            setActiveIndex(api.selectedScrollSnap());
-          });
-        }}
         className="absolute inset-0 h-full w-full"
       >
         <CarouselContent>
@@ -103,7 +94,7 @@ const Hero = () => {
         <div className="container grid md:grid-cols-2 gap-8 items-center">
             <div className="flex flex-col items-center md:items-start text-center md:text-left text-white">
                 <h1 className="text-4xl font-bold text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
-                    {typewriterText}
+                    Unforgettable Adventures
                 </h1>
                 <p className="mt-4 mb-8 max-w-xl text-lg text-white/90 drop-shadow-md md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
                     Discover the untamed beauty of Tanzania and the serene beaches of
