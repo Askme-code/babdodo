@@ -1,4 +1,3 @@
-
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -66,7 +65,7 @@ const Hero = () => {
   ];
 
   return (
-    <section className="relative h-auto w-full overflow-hidden md:h-[85vh]">
+    <section className="relative h-[75vh] md:h-[85vh] w-full overflow-hidden">
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 5000 })]}
@@ -90,7 +89,7 @@ const Hero = () => {
         </CarouselContent>
       </Carousel>
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
-      <div className="relative z-10 flex items-center p-4 min-h-[70vh] md:min-h-[85vh]">
+      <div className="relative z-10 flex items-center p-4 min-h-full">
         <div className="container grid md:grid-cols-2 gap-8 items-center">
             <div className="flex flex-col items-center md:items-start text-center md:text-left text-white">
                 <h1 className="text-4xl font-bold text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
@@ -110,7 +109,7 @@ const Hero = () => {
                 </div>
             </div>
              <div className="hidden md:flex justify-center animate-in fade-in-0 slide-in-from-right-20 duration-700">
-                <Card className="w-full max-w-lg">
+                <Card className="w-full max-w-md">
                     <CardHeader>
                         <CardTitle className="text-2xl font-headline">Get a Free Quote</CardTitle>
                         <CardDescription>Expert planning. Zero spam.</CardDescription>
