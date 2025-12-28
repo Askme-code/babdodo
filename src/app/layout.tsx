@@ -51,7 +51,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={cn(playfair_display.variable, pt_sans.variable)}>
       <head>
         <meta name="google-adsense-account" content="ca-pub-5805028999017949" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/image/logo.jpg" sizes="any" />
         <JsonLd data={{
             "@context": "https://schema.org",
             "@type": "TravelAgency",
