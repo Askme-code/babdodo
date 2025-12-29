@@ -78,16 +78,18 @@ const Hero = () => {
         <CarouselContent className="h-full">
           {heroSlides.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
-              <div className="relative h-full w-full">
-                <Image
-                  src={slide.src}
-                  alt={slide.alt}
-                  fill
-                  className="object-cover"
-                  priority={index === 0}
-                  sizes="100vw"
-                />
-              </div>
+               <Card className="h-full w-full rounded-none border-none">
+                <CardContent className="relative h-full w-full p-0">
+                    <Image
+                      src={slide.src}
+                      alt={slide.alt}
+                      fill
+                      sizes="100vw"
+                      className="object-cover"
+                      priority={index === 0}
+                    />
+                </CardContent>
+              </Card>
             </CarouselItem>
           ))}
         </CarouselContent>
