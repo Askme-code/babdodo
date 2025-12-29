@@ -40,78 +40,29 @@ import QuoteForm from '@/components/quote-form';
 import * as React from 'react';
 
 const Hero = () => {
-  const heroSlides = [
-    {
-      src: '/image/popular/mnemba island.jpg',
-      caption: 'Unforgettable Sunsets',
-      alt: 'Mnemba Island, Zanzibar',
-    },
-    {
-      src: '/image/popular/jozani forest monkey.jpg',
-      caption: 'Incredible Wildlife',
-      alt: 'Jozani Forest Monkey',
-    },
-    {
-      src: '/image/popular/stone town heritage buildings.jpg',
-      caption: 'Rich History & Culture',
-      alt: 'Stone Town Heritage Buildings',
-    },
-    {
-      src: '/image/popular/nakupenda sand bank.jpg',
-      caption: 'Pristine Beaches',
-      alt: 'Nakupenda Sand Bank',
-    },
-  ];
-
   return (
-    <section className="relative h-[75vh] md:h-[85vh] w-full overflow-hidden">
-      <Carousel
-        opts={{ loop: true }}
-        plugins={[Autoplay({ delay: 5000 })]}
-        className="h-full w-full"
-      >
-        <CarouselContent className="h-full">
-          {heroSlides.map((slide, index) => (
-            <CarouselItem key={index} className="h-full">
-               <Card className="h-full w-full rounded-none border-none">
-                <CardContent className="relative h-full w-full p-0">
-                    <Image
-                      src={slide.src}
-                      alt={slide.alt}
-                      fill
-                      sizes="100vw"
-                      className="object-cover"
-                      priority={index === 0}
-                    />
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-      </Carousel>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
-      <div className="relative z-10 flex items-center p-4 min-h-full">
-        <div className="container flex flex-col items-center md:items-start text-center md:text-left text-white">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-headline font-bold text-white drop-shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            Unforgettable Adventures
-          </h1>
-          <p className="mt-4 mb-8 max-w-xl text-lg text-white/90 drop-shadow-md md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-            Discover the untamed beauty of Tanzania and the serene beaches of
-            Zanzibar with Babdodo Tours & Safaris.
-          </p>
-          <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
-            <Button size="lg" asChild>
-              <Link href="/safaris">Explore Safaris</Link>
-            </Button>
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/tours">Discover Tours</Link>
-            </Button>
-          </div>
+    <section className="relative bg-gradient-to-br from-background via-secondary/50 to-background py-24 md:py-32 lg:py-40">
+      <div className="container relative z-10 flex flex-col items-center text-center">
+        <h1 className="text-4xl md:text-5xl lg:text-7xl font-headline font-bold text-primary drop-shadow-sm animate-in fade-in slide-in-from-bottom-8 duration-1000">
+          Unforgettable Adventures
+        </h1>
+        <p className="mt-4 mb-8 max-w-xl text-lg text-foreground/80 drop-shadow-sm md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+          Discover the untamed beauty of Tanzania and the serene beaches of
+          Zanzibar with Babdodo Tours & Safaris.
+        </p>
+        <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
+          <Button size="lg" asChild>
+            <Link href="/safaris">Explore Safaris</Link>
+          </Button>
+          <Button size="lg" variant="secondary" asChild>
+            <Link href="/tours">Discover Tours</Link>
+          </Button>
         </div>
       </div>
     </section>
   );
 };
+
 
 const PopularTours = () => {
     const tours = [
@@ -494,5 +445,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
