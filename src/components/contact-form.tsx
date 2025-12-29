@@ -9,10 +9,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useEffect } from "react";
 
-export default function ContactForm() {
+const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+
+function ContactFormComponent() {
   const { toast } = useToast();
-  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
-  const [state, handleSubmit] = useForm(formspreeId || "contactForm");
+  const [state, handleSubmit] = useForm(formspreeId!);
 
   useEffect(() => {
     if (state.succeeded) {
@@ -32,10 +33,6 @@ export default function ContactForm() {
         }
     }
   }, [state.succeeded, state.errors, toast]);
-
-  if (!formspreeId) {
-    return <p className="text-destructive text-sm">The contact form is currently unavailable. Please contact us directly via email or phone.</p>;
-  }
 
   return (
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -63,9 +60,16 @@ export default function ContactForm() {
             <ValidationError prefix="Message" field="message" errors={state.errors} className="text-sm font-medium text-destructive" />
         </div>
         
-        <Button type="submit" className="w-full" disabled={state.submitting || !formspreeId}>
+        <Button type="submit" className="w-full" disabled={state.submitting}>
           {state.submitting ? "Sending..." : "Send Message"}
         </Button>
       </form>
   );
+}
+
+export default function ContactForm() {
+  if (!formspreeId) {
+    return <p className="text-destructive text-sm">The contact form is currently unavailable. Please contact us directly via email or phone.</p>;
+  }
+  return <ContactFormComponent />;
 }
