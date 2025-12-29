@@ -66,7 +66,7 @@ const TransfersPage = () => {
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
         <Image
-            src="/image/airport.jpg"
+            src="/image/air_port.jpg"
             alt="Zanzibar Airport"
             fill
             className="object-cover"
