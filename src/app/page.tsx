@@ -79,13 +79,13 @@ const Hero = () => {
           {heroSlides.map((slide, index) => (
             <CarouselItem key={index} className="h-full">
               <div className="relative h-full w-full">
-                <MediaRenderer
+                <Image
                   src={slide.src}
                   alt={slide.alt}
                   fill
                   className="object-cover"
                   priority={index === 0}
-                  data-ai-hint="safari sunset"
+                  sizes="100vw"
                 />
               </div>
             </CarouselItem>
@@ -497,5 +497,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
