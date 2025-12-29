@@ -26,6 +26,22 @@ const imageList = [
   { src: '/image/sunset cru.jpg', alt: 'Sunset dhow cruise' },
   { src: '/image/zanzibar local ride.jpg', alt: 'Local transportation in Zanzibar' },
   { src: '/image/zanzibar local rides vespa.jpg', alt: 'Vespa ride in Zanzibar' },
+  { src: '/image/popular/jozan forest.jpg', alt: 'Jozani Forest' },
+  { src: '/image/popular/jozani forest monkey.jpg', alt: 'Jozani Forest Monkey' },
+  { src: '/image/popular/maalum cave.jpg', alt: 'Maalum Cave' },
+  { src: '/image/popular/mnemba island.jpg', alt: 'Mnemba Island' },
+  { src: '/image/popular/mnemba tour.jpg', alt: 'Mnemba Tour' },
+  { src: '/image/popular/mtende beach with customers.jpg', alt: 'Mtende Beach with Customers' },
+  { src: '/image/popular/mtende beach.jpg', alt: 'Mtende Beach' },
+  { src: '/image/popular/nakupenda sand bank enjoyments.jpg', alt: 'Nakupenda Sand Bank Enjoyments' },
+  { src: '/image/popular/nakupenda sand bank.jpg', alt: 'Nakupenda Sand Bank' },
+  { src: '/image/popular/prison island tortoise.jpg', alt: 'Prison Island Tortoise' },
+  { src: '/image/popular/safari blue with happy customer.png', alt: 'Safari Blue with Happy Customer' },
+  { src: '/image/popular/safari blue.jpg', alt: 'Safari Blue' },
+  { src: '/image/popular/salaam cave aquarium.jpg', alt: 'Salaam Cave Aquarium' },
+  { src: '/image/popular/salaam cave.jpg', alt: 'Salaam Cave' },
+  { src: '/image/popular/stone town heritage buildings.jpg', alt: 'Stone Town Heritage Buildings' },
+  { src: '/image/popular/stone town tour.jpg', alt: 'Stone Town Tour' },
 ];
 
 const GalleryPage = () => {
