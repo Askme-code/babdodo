@@ -73,7 +73,7 @@ const Hero = () => {
       <Carousel
         opts={{ loop: true }}
         plugins={[Autoplay({ delay: 5000 })]}
-        className="absolute inset-0 h-full w-full"
+        className="h-full w-full"
       >
         <CarouselContent className="h-full">
           {heroSlides.map((slide, index) => (
