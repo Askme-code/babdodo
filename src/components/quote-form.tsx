@@ -18,7 +18,7 @@ import { format } from "date-fns";
 export default function QuoteForm() {
   const { toast } = useToast();
   const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
-  const [state, handleSubmit] = useForm(formspreeId || "");
+  const [state, handleSubmit] = useForm(formspreeId || "quoteForm");
   const [date, setDate] = React.useState<Date>()
 
   useEffect(() => {
@@ -42,6 +42,9 @@ export default function QuoteForm() {
     }
   }, [state.succeeded, state.errors, toast]);
 
+  if (!formspreeId) {
+    return <p className="text-destructive text-sm">Quote form is currently unavailable. Please contact us directly.</p>;
+  }
 
   return (
       <form onSubmit={handleSubmit} className="space-y-4">

@@ -12,7 +12,7 @@ import { useEffect } from "react";
 export default function ContactForm() {
   const { toast } = useToast();
   const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
-  const [state, handleSubmit] = useForm(formspreeId || "");
+  const [state, handleSubmit] = useForm(formspreeId || "contactForm");
 
   useEffect(() => {
     if (state.succeeded) {
@@ -33,6 +33,9 @@ export default function ContactForm() {
     }
   }, [state.succeeded, state.errors, toast]);
 
+  if (!formspreeId) {
+    return <p className="text-destructive text-sm">The contact form is currently unavailable. Please contact us directly via email or phone.</p>;
+  }
 
   return (
       <form onSubmit={handleSubmit} className="space-y-6">
