@@ -31,10 +31,11 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { Handshake, MapPin, PlaneTakeoff } from 'lucide-react';
+import { Handshake, MapPin, PlaneTakeoff, ArrowRight } from 'lucide-react';
 import Counter from '@/components/counter';
 import { useEffect, useState } from 'react';
 import QuoteForm from '@/components/quote-form';
+import * as React from 'react';
 
 const Hero = () => {
   const heroSlides = [
@@ -126,6 +127,59 @@ const Hero = () => {
   );
 };
 
+const PopularTours = () => {
+    const tours = [
+        { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
+        { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozan forest.jpg' },
+        { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
+        { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
+        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
+    ];
+
+    return (
+        <section className="py-16 md:py-24 bg-background">
+            <div className="container">
+                <div className="text-center max-w-3xl mx-auto">
+                    <h2 className="text-3xl md:text-4xl font-headline font-bold">Popular Tours and Excursions in Zanzibar</h2>
+                    <p className="mt-4 text-muted-foreground">
+                        Discover the best experiences the Spice Island has to offer. These are the trips our guests love the most!
+                    </p>
+                </div>
+                <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {tours.map((tour, index) => (
+                        <Link href="/tours" key={index} className="group block">
+                            <Card className="overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2">
+                                <CardContent className="p-0">
+                                    <div className="relative h-64 w-full">
+                                        <Image
+                                            src={tour.image}
+                                            alt={tour.name}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                                        <div className="absolute bottom-0 left-0 p-4">
+                                            <h3 className="text-xl font-bold text-white font-headline">{tour.name}</h3>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </Link>
+                    ))}
+                </div>
+                 <div className="text-center mt-12">
+                    <Button asChild size="lg" variant="outline">
+                        <Link href="/tours">
+                            View All Tours <ArrowRight className="ml-2 h-5 w-5" />
+                        </Link>
+                    </Button>
+                </div>
+            </div>
+        </section>
+    );
+}
+
 const Stats = () => {
   const stats = [
     { icon: Handshake, label: 'Happy Clients', value: 1000, suffix: '+' },
@@ -216,6 +270,7 @@ export default function Home() {
   return (
     <div>
       <Hero />
+      <PopularTours />
       <div className="py-12 bg-background md:hidden">
         <div className="container">
           <Card className="w-full">
