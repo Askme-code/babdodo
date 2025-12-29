@@ -94,34 +94,21 @@ const Hero = () => {
       </Carousel>
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
       <div className="relative z-10 flex items-center p-4 min-h-full">
-        <div className="container grid md:grid-cols-2 gap-8 items-center">
-            <div className="flex flex-col items-center md:items-start text-center md:text-left text-white">
-                <h1 className="text-4xl font-bold text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
-                    Unforgettable Adventures
-                </h1>
-                <p className="mt-4 mb-8 max-w-xl text-lg text-white/90 drop-shadow-md md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-                    Discover the untamed beauty of Tanzania and the serene beaches of
-                    Zanzibar with Babdodo Tours & Safaris.
-                </p>
-                <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
-                    <Button size="lg" asChild>
-                    <Link href="/safaris">Explore Safaris</Link>
-                    </Button>
-                    <Button size="lg" variant="secondary" asChild>
-                    <Link href="/tours">Discover Tours</Link>
-                    </Button>
-                </div>
-            </div>
-             <div className="hidden md:flex justify-center animate-in fade-in-0 slide-in-from-right-20 duration-700">
-                <Card className="w-full max-w-md">
-                    <CardHeader>
-                        <CardTitle className="text-2xl font-headline">Get a Free Quote</CardTitle>
-                        <CardDescription>Expert planning. Zero spam.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <QuoteForm />
-                    </CardContent>
-                </Card>
+        <div className="container flex flex-col items-center md:items-start text-center md:text-left text-white">
+            <h1 className="text-4xl font-bold text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
+                Unforgettable Adventures
+            </h1>
+            <p className="mt-4 mb-8 max-w-xl text-lg text-white/90 drop-shadow-md md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+                Discover the untamed beauty of Tanzania and the serene beaches of
+                Zanzibar with Babdodo Tours & Safaris.
+            </p>
+            <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
+                <Button size="lg" asChild>
+                <Link href="/safaris">Explore Safaris</Link>
+                </Button>
+                <Button size="lg" variant="secondary" asChild>
+                <Link href="/tours">Discover Tours</Link>
+                </Button>
             </div>
         </div>
       </div>
@@ -287,19 +274,6 @@ export default function Home() {
     <div>
       <Hero />
       <PopularTours />
-      <div className="py-12 bg-background md:hidden">
-        <div className="container">
-          <Card className="w-full">
-              <CardHeader>
-                  <CardTitle className="text-2xl font-headline">Get a Free Quote</CardTitle>
-                  <CardDescription>Expert planning. Zero spam.</CardDescription>
-              </CardHeader>
-              <CardContent>
-                  <QuoteForm />
-              </CardContent>
-          </Card>
-        </div>
-      </div>
 
 
       <section className="py-12 md:py-20 bg-card">
