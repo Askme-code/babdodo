@@ -17,7 +17,7 @@ const AboutPage = () => {
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
         <Image
-            src="/image/forozani zanzibar.jpg"
+            src="/image/forozani-zanzibar.jpg"
             alt="Forozani Zanzibar"
             fill
             className="object-cover"

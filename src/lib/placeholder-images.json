@@ -3,13 +3,13 @@
     {
       "id": "hero-safari",
       "description": "A safari jeep with elephants in the background in a savanna.",
-      "imageUrl": "/image/sunset background.jpg",
+      "imageUrl": "/image/sunset-background.jpg",
       "imageHint": "safari elephants"
     },
     {
       "id": "zanzibar-beach",
       "description": "A beautiful white sand beach in Zanzibar with turquoise water.",
-      "imageUrl": "/image/beach 1.jpg",
+      "imageUrl": "/image/beach-1.jpg",
       "imageHint": "zanzibar beach"
     },
     {
@@ -21,7 +21,7 @@
     {
       "id": "stone-town",
       "description": "A narrow street in Stone Town, Zanzibar, with historic buildings.",
-      "imageUrl": "/image/forozani zanzibar.jpg",
+      "imageUrl": "/image/forozani-zanzibar.jpg",
       "imageHint": "stone town"
     },
     {
@@ -39,13 +39,13 @@
     {
       "id": "dhow-sunset",
       "description": "A traditional dhow boat sailing at sunset in Zanzibar.",
-      "imageUrl": "/image/sunset cru.jpg",
+      "imageUrl": "/image/sunset-cru.jpg",
       "imageHint": "dhow sunset"
     },
     {
       "id": "blog-wildlife",
       "description": "A close-up of a monkey in jozani forest.",
-      "imageUrl": "/image/monkey from jozan.jpg",
+      "imageUrl": "/image/monkey-from-jozan.jpg",
       "imageHint": "monkey jozani"
     },
     {
@@ -57,7 +57,7 @@
     {
       "id": "blog-guide",
       "description": "A travel guide with a map and compass.",
-      "imageUrl": "/image/local boats.jpg",
+      "imageUrl": "/image/local-boats.jpg",
       "imageHint": "travel guide"
     },
     {
@@ -69,7 +69,7 @@
     {
       "id": "contact-us",
       "description": "A stylized image of a vintage telephone and a letter.",
-      "imageUrl": "/image/local boats.jpg",
+      "imageUrl": "/image/local-boats.jpg",
       "imageHint": "contact vintage"
     },
     {
@@ -87,7 +87,7 @@
     {
       "id": "gallery-3",
       "description": "A stunning waterfall in the Tanzanian highlands.",
-      "imageUrl": "/image/mount kilimanjaro.jpg",
+      "imageUrl": "/image/mount-kilimanjaro.jpg",
       "imageHint": "tanzania waterfall"
     },
     {
@@ -99,7 +99,7 @@
     {
       "id": "transport-hiace",
       "description": "A white Toyota Hiace van.",
-      "imageUrl": "/image/zanzibar local rides vespa.jpg",
+      "imageUrl": "/image/zanzibar-local-rides-vespa.jpg",
       "imageHint": "toyota hiace"
     },
     {
@@ -111,7 +111,7 @@
     {
       "id": "transport-alphard",
       "description": "A white Toyota Alphard minivan.",
-      "imageUrl": "/image/zanzibar local ride.jpg",
+      "imageUrl": "/image/zanzibar-local-ride.jpg",
       "imageHint": "toyota alphard"
     }
   ]

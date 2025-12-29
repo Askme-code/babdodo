@@ -52,12 +52,12 @@ const Hero = () => {
       alt: 'Zanzibar airport terminal',
     },
     {
-      src: '/image/beach 1.jpg',
+      src: '/image/beach-1.jpg',
       caption: 'Pristine Beaches',
       alt: 'A pristine beach in Zanzibar with turquoise water',
     },
     {
-      src: '/image/beach life.jpg',
+      src: '/image/beach-life.jpg',
       caption: 'Relax and Unwind',
       alt: 'Relaxing beach life in Zanzibar',
     },
@@ -120,12 +120,12 @@ const Hero = () => {
 
 const PopularTours = () => {
     const tours = [
-        { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
-        { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozan forest.jpg' },
-        { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
-        { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
-        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
+        { name: 'Safari Blue', image: '/image/popular/safari-blue.jpg' },
+        { name: 'Mnemba Island', image: '/image/popular/mnemba-island.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozan-forest.jpg' },
+        { name: 'Stone Town', image: '/image/popular/stone-town-tour.jpg' },
+        { name: 'Prison Island', image: '/image/popular/prison-island-tortoise.jpg' },
+        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda-sand-bank.jpg' },
     ];
 
     return (
@@ -265,11 +265,11 @@ export default function Home() {
   const aboutImage = '/image/masai.jpg';
   const galleryImages = [
     { src: '/image/ngorongoro.jpg', alt: 'Wildlife in Ngorongoro Crater' },
-    { src: '/image/beach 1.jpg', alt: 'Pristine beach in Zanzibar' },
+    { src: '/image/beach-1.jpg', alt: 'Pristine beach in Zanzibar' },
     { src: '/image/masai.jpg', alt: 'Maasai people in traditional attire' },
-    { src: '/image/sunset cru.jpg', alt: 'Sunset dhow cruise' },
+    { src: '/image/sunset-cru.jpg', alt: 'Sunset dhow cruise' },
     { src: '/image/kilimanjaro.jpg', alt: 'Mount Kilimanjaro' },
-    { src: '/image/star fish.jpg', alt: 'Starfish on a sandbank' },
+    { src: '/image/star-fish.jpg', alt: 'Starfish on a sandbank' },
   ];
 
   return (

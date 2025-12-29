@@ -27,7 +27,7 @@ const BlogPage = () => {
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
         <Image
-            src="/image/monkey from jozan.jpg"
+            src="/image/monkey-from-jozan.jpg"
             alt="Jozani Forest Monkey"
             fill
             className="object-cover"

@@ -18,7 +18,7 @@ const ContactPage = () => {
     <div className="bg-background">
        <section className="relative h-[40vh] w-full bg-secondary">
         <Image
-            src="/image/local boats.jpg"
+            src="/image/local-boats.jpg"
             alt="Local boats on a Zanzibar beach"
             fill
             className="object-cover"
