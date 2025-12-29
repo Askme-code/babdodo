@@ -3,10 +3,36 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow all reads and writes to all collections for development.
-    // WARNING: This is insecure and should not be used in production.
+  
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    // Allow admin full access to all collections
     match /{document=**} {
-      allow read, write: if true;
+      allow read, write: if isAdmin();
+    }
+    
+    // Allow public write access for reviews
+    match /reviews/{reviewId} {
+      allow create: if true;
+      allow read: if true;
+      // Updates and deletes only by admin
+      allow update, delete: if isAdmin();
+    }
+    
+    // Allow public read on all service and content collections
+    match /tours/{tourId} {
+      allow read: if true;
+    }
+    match /safaris/{safariId} {
+      allow read: if true;
+    }
+    match /transfers/{transferId} {
+      allow read: if true;
+    }
+    match /news_updates/{newsUpdateId} {
+      allow read: if true;
     }
   }
 }
