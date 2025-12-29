@@ -9,7 +9,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
 import {
   Dialog,
   DialogContent,
@@ -33,7 +32,7 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card';
-import { Handshake, MapPin, PlaneTakeoff, ArrowRight } from 'lucide-react';
+import { Handshake, MapPin, PlaneTakeoff, ArrowRight, Globe, ShieldCheck, Heart } from 'lucide-react';
 import Counter from '@/components/counter';
 import { useEffect, useState } from 'react';
 import QuoteForm from '@/components/quote-form';
@@ -41,24 +40,51 @@ import * as React from 'react';
 
 const Hero = () => {
   return (
-    <section className="relative bg-gradient-to-br from-background via-secondary/50 to-background py-24 md:py-32 lg:py-40">
-      <div className="container relative z-10 flex flex-col items-center text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-7xl font-headline font-bold text-primary drop-shadow-sm animate-in fade-in slide-in-from-bottom-8 duration-1000">
-          Unforgettable Adventures
+    <section className="relative h-[80vh] w-full flex items-center justify-center text-white">
+      <Image
+        src="https://picsum.photos/seed/hero-boat/1800/1200"
+        alt="Woman in a boat on a beautiful lake"
+        fill
+        className="object-cover"
+        data-ai-hint="woman boat lake"
+        priority
+      />
+      <div className="absolute inset-0 bg-black/50" />
+      <div className="container relative z-10 text-center">
+        <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg">
+          Explore Exotic <span className="text-primary">Destinations</span> with Us
         </h1>
-        <p className="mt-4 mb-8 max-w-xl text-lg text-foreground/80 drop-shadow-sm md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-          Discover the untamed beauty of Tanzania and the serene beaches of
-          Zanzibar with Babdodo Tours & Safaris.
+        <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md">
+          Discover the world's most beautiful places
         </p>
-        <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
-          <Button size="lg" asChild>
-            <Link href="/safaris">Explore Safaris</Link>
-          </Button>
-          <Button size="lg" variant="secondary" asChild>
-            <Link href="/tours">Discover Tours</Link>
-          </Button>
+        <div className="mt-8 flex justify-center gap-4">
+            <Button variant="outline" size="lg" asChild className="border-white text-white hover:bg-white hover:text-black">
+               <Link href="/about">Learn More About Us</Link>
+            </Button>
+            <Button size="lg" asChild>
+                <Link href="/tours">Start Your Journey</Link>
+            </Button>
         </div>
       </div>
+       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-4xl px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white">
+            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 text-center">
+              <Heart className="mx-auto mb-2 h-6 w-6 text-primary" />
+              <h3 className="font-semibold">Excellence</h3>
+              <p className="text-xs text-white/80">Striving for exceptional quality in every aspect of our service.</p>
+            </div>
+            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 text-center">
+              <Globe className="mx-auto mb-2 h-6 w-6 text-primary" />
+              <h3 className="font-semibold">Sustainability</h3>
+              <p className="text-xs text-white/80">Promoting responsible tourism for a healthier planet.</p>
+            </div>
+            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 text-center">
+              <ShieldCheck className="mx-auto mb-2 h-6 w-6 text-primary" />
+              <h3 className="font-semibold">Authenticity</h3>
+              <p className="text-xs text-white/80">Providing genuine experiences that connect you with local culture.</p>
+            </div>
+          </div>
+        </div>
     </section>
   );
 };
