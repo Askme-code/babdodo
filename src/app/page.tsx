@@ -95,21 +95,21 @@ const Hero = () => {
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/30" />
       <div className="relative z-10 flex items-center p-4 min-h-full">
         <div className="container flex flex-col items-center md:items-start text-center md:text-left text-white">
-            <h1 className="text-4xl font-bold text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
-                Unforgettable Adventures
-            </h1>
-            <p className="mt-4 mb-8 max-w-xl text-lg text-white/90 drop-shadow-md md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
-                Discover the untamed beauty of Tanzania and the serene beaches of
-                Zanzibar with Babdodo Tours & Safaris.
-            </p>
-            <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
-                <Button size="lg" asChild>
-                <Link href="/safaris">Explore Safaris</Link>
-                </Button>
-                <Button size="lg" variant="secondary" asChild>
-                <Link href="/tours">Discover Tours</Link>
-                </Button>
-            </div>
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-headline font-bold text-white drop-shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            Unforgettable Adventures
+          </h1>
+          <p className="mt-4 mb-8 max-w-xl text-lg text-white/90 drop-shadow-md md:text-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-500">
+            Discover the untamed beauty of Tanzania and the serene beaches of
+            Zanzibar with Babdodo Tours & Safaris.
+          </p>
+          <div className="flex animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 flex-col gap-4 sm:flex-row">
+            <Button size="lg" asChild>
+              <Link href="/safaris">Explore Safaris</Link>
+            </Button>
+            <Button size="lg" variant="secondary" asChild>
+              <Link href="/tours">Discover Tours</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>
@@ -497,3 +497,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
