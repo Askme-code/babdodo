@@ -42,24 +42,24 @@ import * as React from 'react';
 const Hero = () => {
   const heroSlides = [
     {
-      src: '/image/sunset_background.jpg',
+      src: '/image/popular/mnemba island.jpg',
       caption: 'Unforgettable Sunsets',
-      alt: 'African sunset on a safari',
+      alt: 'Mnemba Island, Zanzibar',
     },
     {
-      src: '/image/beach_1.jpg',
-      caption: 'Pristine Beaches',
-      alt: 'A pristine beach in Zanzibar with turquoise water',
-    },
-    {
-      src: '/image/ngorongoro.jpg',
+      src: '/image/popular/jozani forest monkey.jpg',
       caption: 'Incredible Wildlife',
-      alt: 'Wildlife in Ngorongoro Crater',
+      alt: 'Jozani Forest Monkey',
     },
     {
-      src: '/image/local_boats.jpg',
-      caption: 'Authentic Experiences',
-      alt: 'Traditional dhow boats on the water',
+      src: '/image/popular/stone town heritage buildings.jpg',
+      caption: 'Rich History & Culture',
+      alt: 'Stone Town Heritage Buildings',
+    },
+    {
+      src: '/image/popular/nakupenda sand bank.jpg',
+      caption: 'Pristine Beaches',
+      alt: 'Nakupenda Sand Bank',
     },
   ];
 
@@ -117,7 +117,7 @@ const PopularTours = () => {
     const tours = [
         { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
         { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozan forest.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozani forest.jpg' },
         { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
         { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
         { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
@@ -494,3 +494,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
