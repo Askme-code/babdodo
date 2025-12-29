@@ -42,24 +42,24 @@ import * as React from 'react';
 const Hero = () => {
   const heroSlides = [
     {
-      src: '/image/top.jpg',
-      caption: 'Unforgettable Adventures',
-      alt: 'A beautiful beach scene in Zanzibar',
+      src: '/image/hotels.jpg',
+      caption: 'Luxurious Stays',
+      alt: 'A beautiful hotel resort',
     },
     {
-      src: '/image/fun.jpg',
-      caption: 'Experience the Thrill',
-      alt: 'Tourists having fun on a boat',
+      src: '/image/airport.jpg',
+      caption: 'Seamless Transfers',
+      alt: 'Zanzibar airport terminal',
     },
     {
-      src: '/image/beaches.jpg',
-      caption: 'Relax on Pristine Beaches',
-      alt: 'White sand beach and turquoise water',
+      src: '/image/beach 1.jpg',
+      caption: 'Pristine Beaches',
+      alt: 'A pristine beach in Zanzibar with turquoise water',
     },
     {
-      src: '/image/local boats.jpg',
-      caption: 'Authentic Local Experiences',
-      alt: 'Traditional dhow boats',
+      src: '/image/beach life.jpg',
+      caption: 'Relax and Unwind',
+      alt: 'Relaxing beach life in Zanzibar',
     },
     {
       src: '/image/kilimanjaro.jpg',
