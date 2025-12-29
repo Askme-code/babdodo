@@ -112,10 +112,10 @@ const MediaRenderer = ({ src, alt, ...props }: MediaRendererProps) => {
         src={src}
         alt={alt}
         fill={props.fill}
+        width={props.fill ? undefined : props.width || 600}
+        height={props.fill ? undefined : props.height || 400}
         sizes={props.fill ? "100vw" : undefined}
-        width={!props.fill ? props.width || 600 : undefined}
-        height={!props.fill ? props.height || 400 : undefined}
-        className={`object-cover ${props.className ?? ""}`}
+        className={props.className}
         priority={props.priority}
         data-ai-hint={props['data-ai-hint']}
       />
