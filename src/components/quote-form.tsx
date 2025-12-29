@@ -17,7 +17,8 @@ import { format } from "date-fns";
 
 export default function QuoteForm() {
   const { toast } = useToast();
-  const [state, handleSubmit] = useForm("mzdpqkql"); // Assumes same form ID, can be changed
+  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID || "";
+  const [state, handleSubmit] = useForm(formspreeId);
   const [date, setDate] = React.useState<Date>()
 
   useEffect(() => {
@@ -97,7 +98,7 @@ export default function QuoteForm() {
             <ValidationError prefix="Message" field="message" errors={state.errors} className="text-xs font-medium text-destructive" />
         </div>
         
-        <Button type="submit" className="w-full" disabled={state.submitting}>
+        <Button type="submit" className="w-full" disabled={state.submitting || !formspreeId}>
           {state.submitting ? "Sending..." : "Send"}
         </Button>
       </form>

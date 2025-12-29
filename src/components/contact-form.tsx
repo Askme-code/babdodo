@@ -11,7 +11,8 @@ import { useEffect } from "react";
 
 export default function ContactForm() {
   const { toast } = useToast();
-  const [state, handleSubmit] = useForm("mzdpqkql");
+  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID || "";
+  const [state, handleSubmit] = useForm(formspreeId);
 
   useEffect(() => {
     if (state.succeeded) {
@@ -59,7 +60,7 @@ export default function ContactForm() {
             <ValidationError prefix="Message" field="message" errors={state.errors} className="text-sm font-medium text-destructive" />
         </div>
         
-        <Button type="submit" className="w-full" disabled={state.submitting}>
+        <Button type="submit" className="w-full" disabled={state.submitting || !formspreeId}>
           {state.submitting ? "Sending..." : "Send Message"}
         </Button>
       </form>
