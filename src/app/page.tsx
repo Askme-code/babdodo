@@ -42,9 +42,9 @@ import * as React from 'react';
 const Hero = () => {
   const heroSlides = [
     {
-      src: '/image/kilimanjaro.jpg',
-      caption: 'Majestic Mount Kilimanjaro',
-      alt: 'Mount Kilimanjaro',
+      src: '/image/sunset_background.jpg',
+      caption: 'Unforgettable Sunsets',
+      alt: 'African sunset on a safari',
     },
     {
       src: '/image/beach_1.jpg',
@@ -57,7 +57,7 @@ const Hero = () => {
       alt: 'Wildlife in Ngorongoro Crater',
     },
     {
-      src: '/image/local boats.jpg',
+      src: '/image/local_boats.jpg',
       caption: 'Authentic Experiences',
       alt: 'Traditional dhow boats on the water',
     },
@@ -117,7 +117,7 @@ const PopularTours = () => {
     const tours = [
         { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
         { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozani forest.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozan forest.jpg' },
         { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
         { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
         { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
