@@ -7,27 +7,18 @@ import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
 
 let firebaseApp: FirebaseApp;
-let auth: Auth;
-let firestore: Firestore;
 
 // This function ensures Firebase is initialized only once.
-if (getApps().length === 0) {
-  firebaseApp = initializeApp(firebaseConfig);
-} else {
-  firebaseApp = getApp();
-}
-
-auth = getAuth(firebaseApp);
-firestore = getFirestore(firebaseApp);
-
-// IMPORTANT: DO NOT MODIFY THIS FUNCTION
 export function initializeFirebase() {
-    // This function now just returns the already initialized services.
-    return { firebaseApp, auth, firestore };
+  if (getApps().length === 0) {
+    firebaseApp = initializeApp(firebaseConfig);
+  } else {
+    firebaseApp = getApp();
+  }
+  const auth = getAuth(firebaseApp);
+  const firestore = getFirestore(firebaseApp);
+  return { firebaseApp, auth, firestore };
 }
-
-// Export the initialized services.
-export { firebaseApp, auth, firestore };
 
 export * from './provider';
 export * from './client-provider';
