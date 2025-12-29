@@ -27,7 +27,7 @@
     {
       "id": "airport-transfer",
       "description": "A modern van waiting at an airport terminal.",
-      "imageUrl": "/image/airport.jpg",
+      "imageUrl": "/image/air_port.jpg",
       "imageHint": "modern van"
     },
     {
@@ -45,7 +45,7 @@
     {
       "id": "blog-wildlife",
       "description": "A close-up of a monkey in jozani forest.",
-      "imageUrl": "/image/monkey-from-jozan.jpg",
+      "imageUrl": "/image/monkey-from-jozani.jpg",
       "imageHint": "monkey jozani"
     },
     {

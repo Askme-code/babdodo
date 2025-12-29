@@ -47,17 +47,17 @@ const Hero = () => {
       alt: 'A beautiful hotel resort',
     },
     {
-      src: '/image/airport.jpg',
+      src: '/image/air_port.jpg',
       caption: 'Seamless Transfers',
       alt: 'Zanzibar airport terminal',
     },
     {
-      src: '/image/beach-1.jpg',
+      src: '/image/beach_1.jpg',
       caption: 'Pristine Beaches',
       alt: 'A pristine beach in Zanzibar with turquoise water',
     },
     {
-      src: '/image/beach-life.jpg',
+      src: '/image/beach_life.jpg',
       caption: 'Relax and Unwind',
       alt: 'Relaxing beach life in Zanzibar',
     },
@@ -122,7 +122,7 @@ const PopularTours = () => {
     const tours = [
         { name: 'Safari Blue', image: '/image/popular/safari-blue.jpg' },
         { name: 'Mnemba Island', image: '/image/popular/mnemba-island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozan-forest.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozani-forest.jpg' },
         { name: 'Stone Town', image: '/image/popular/stone-town-tour.jpg' },
         { name: 'Prison Island', image: '/image/popular/prison-island-tortoise.jpg' },
         { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda-sand-bank.jpg' },
