@@ -4,8 +4,15 @@ import Logo from '@/components/logo';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const developerPhoneNumber = "255"; // Placeholder for WhatsApp number
-  const developerEmail = "kimumilangali@gmail.com";
+  const developerPhoneNumber = process.env.NEXT_PUBLIC_DEVELOPER_WHATSAPP || "255";
+  const developerEmail = process.env.NEXT_PUBLIC_DEVELOPER_EMAIL || "kimumilangali@gmail.com";
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotourssafaris@gmail.com";
+  const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE_NUMBER || "+255 678 575 092";
+  const facebookUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL || "#";
+  const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "#";
+  const twitterUrl = process.env.NEXT_PUBLIC_TWITTER_URL || "#";
+  const youtubeUrl = process.env.NEXT_PUBLIC_YOUTUBE_URL || "#";
+
 
   return (
     <footer className="bg-secondary text-secondary-foreground">
@@ -17,10 +24,10 @@ const Footer = () => {
               Explore the wonders of Zanzibar and Tanzania with our expert guides.
             </p>
             <div className="flex space-x-4 mt-4">
-              <Link href="https://www.facebook.com/share/1AXL9h5oHT/" className="hover:text-primary transition-colors"><Facebook className="w-6 h-6" /></Link>
-              <Link href="https://www.instagram.com/babdodotoursandsafaris" className="hover:text-primary transition-colors"><Instagram className="w-6 h-6" /></Link>
-              <Link href="#" className="hover:text-primary transition-colors"><Twitter className="w-6 h-6" /></Link>
-              <Link href="#" className="hover:text-primary transition-colors"><Youtube className="w-6 h-6" /></Link>
+              <Link href={facebookUrl} className="hover:text-primary transition-colors"><Facebook className="w-6 h-6" /></Link>
+              <Link href={instagramUrl} className="hover:text-primary transition-colors"><Instagram className="w-6 h-6" /></Link>
+              <Link href={twitterUrl} className="hover:text-primary transition-colors"><Twitter className="w-6 h-6" /></Link>
+              <Link href={youtubeUrl} className="hover:text-primary transition-colors"><Youtube className="w-6 h-6" /></Link>
             </div>
           </div>
           <div>
@@ -44,8 +51,8 @@ const Footer = () => {
           <div>
             <h3 className="font-headline text-lg font-semibold">Contact Us</h3>
             <ul className="mt-4 space-y-2 text-sm">
-              <li>Email: babdodotourssafaris@gmail.com</li>
-              <li>Phone: +255 678 575 092</li>
+              <li>Email: {contactEmail}</li>
+              <li>Phone: {contactPhone}</li>
               <li>Zanzibar, Tanzania</li>
             </ul>
           </div>

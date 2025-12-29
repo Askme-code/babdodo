@@ -17,8 +17,8 @@ import { format } from "date-fns";
 
 export default function QuoteForm() {
   const { toast } = useToast();
-  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID || "";
-  const [state, handleSubmit] = useForm(formspreeId);
+  const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+  const [state, handleSubmit] = useForm(formspreeId || "");
   const [date, setDate] = React.useState<Date>()
 
   useEffect(() => {
@@ -28,10 +28,11 @@ export default function QuoteForm() {
         description: "Thank you for your interest. We will get back to you shortly.",
       });
       // Optionally reset the form fields
+      setDate(undefined);
     }
-    if (state.errors) {
-        const AllErrors = state.errors.getAllFieldErrors();
-        if (AllErrors.length > 0) {
+    if (state.errors && !state.succeeded) {
+        const allErrors = state.errors.getAllFieldErrors();
+        if (allErrors.length > 0) {
              toast({
                 title: "Submission Error",
                 description: "Please check the form for errors and try again.",

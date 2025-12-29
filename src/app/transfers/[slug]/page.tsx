@@ -62,7 +62,7 @@ export default function TransferPage({ params: paramsProp }: TransferPageProps) 
   }
 
   const mainImageUrl = transfer.image || "https://picsum.photos/seed/transfer-hero/1200/600";
-  const phoneNumber = "255678575092";
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "255678575092";
   const message = `Hello! I'm interested in booking the ${transfer.title} transfer.`;
 
   return (

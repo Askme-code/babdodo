@@ -18,7 +18,7 @@ const WhatsAppIcon = () => (
 );
 
 const WhatsAppButton = () => {
-  const phoneNumber = "255678575092"; // Replace with your number
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "255678575092";
   const message = "Hello! I'm interested in your tours and safaris.";
 
   return (

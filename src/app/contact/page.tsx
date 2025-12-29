@@ -10,6 +10,10 @@ export const metadata: Metadata = {
 };
 
 const ContactPage = () => {
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotourssafaris@gmail.com";
+  const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE_NUMBER || "+255 678 575 092";
+  const contactPhoneUrl = `tel:${(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "255678575092")}`;
+
   return (
     <div className="bg-background">
        <section className="relative h-[40vh] w-full bg-secondary">
@@ -47,7 +51,7 @@ const ContactPage = () => {
               </div>
               <div>
                 <h4 className="font-semibold">Email</h4>
-                <a href="mailto:babdodotourssafaris@gmail.com" className="text-primary hover:underline">babdodotourssafaris@gmail.com</a>
+                <a href={`mailto:${contactEmail}`} className="text-primary hover:underline">{contactEmail}</a>
                 <p className="text-sm text-muted-foreground">We reply within 24 hours</p>
               </div>
             </div>
@@ -57,7 +61,7 @@ const ContactPage = () => {
               </div>
               <div>
                 <h4 className="font-semibold">Phone / WhatsApp</h4>
-                <a href="tel:+255678575092" className="text-primary hover:underline">+255 678 575 092</a>
+                <a href={contactPhoneUrl} className="text-primary hover:underline">{contactPhone}</a>
                 <p className="text-sm text-muted-foreground">Mon - Sat, 9am - 6pm (EAT)</p>
               </div>
             </div>
