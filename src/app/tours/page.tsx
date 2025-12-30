@@ -27,8 +27,8 @@ const ToursPage = () => {
     <div className="bg-background">
       <section className="relative h-[40vh] w-full bg-secondary">
         <Image
-            src="/image/beach-1.jpg"
-            alt="Zanzibar beach"
+            src="/image/local-boats.jpg"
+            alt="Zanzibar local boats"
             fill
             className="object-cover"
         />
