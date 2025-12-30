@@ -66,25 +66,6 @@ const Hero = () => {
             </Button>
         </div>
       </div>
-       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-full max-w-4xl px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white">
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 text-center">
-              <Heart className="mx-auto mb-2 h-6 w-6 text-primary" />
-              <h3 className="font-semibold">Excellence</h3>
-              <p className="text-xs text-white/80">Striving for exceptional quality in every aspect of our service.</p>
-            </div>
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 text-center">
-              <Globe className="mx-auto mb-2 h-6 w-6 text-primary" />
-              <h3 className="font-semibold">Sustainability</h3>
-              <p className="text-xs text-white/80">Promoting responsible tourism for a healthier planet.</p>
-            </div>
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-4 text-center">
-              <ShieldCheck className="mx-auto mb-2 h-6 w-6 text-primary" />
-              <h3 className="font-semibold">Authenticity</h3>
-              <p className="text-xs text-white/80">Providing genuine experiences that connect you with local culture.</p>
-            </div>
-          </div>
-        </div>
     </section>
   );
 };
