@@ -104,7 +104,7 @@ const Hero = () => {
                             </Button>
                         </div>
                     </div>
-                    <div className="bg-primary/50 backdrop-blur-sm p-6 rounded-lg border border-yellow-400/50">
+                    <div className="hidden md:block bg-primary/50 backdrop-blur-sm p-6 rounded-lg border border-yellow-400/50">
                         <h2 className="text-2xl font-headline text-center text-white mb-4">Get a Free Quote</h2>
                         <QuoteForm />
                     </div>
@@ -117,12 +117,12 @@ const Hero = () => {
 
 const PopularTours = () => {
     const tours = [
-        { name: 'Safari Blue', image: '/image/popular/safari-blue.jpg' },
-        { name: 'Mnemba Island', image: '/image/popular/mnemba-island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozani-forest.jpg' },
-        { name: 'Stone Town', image: '/image/popular/stone-town-tour.jpg' },
-        { name: 'Prison Island', image: '/image/popular/prison-island-tortoise.jpg' },
-        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda-sand-bank.jpg' },
+        { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
+        { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozani forest.jpg' },
+        { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
+        { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
+        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
     ];
 
     return (
@@ -496,5 +496,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
