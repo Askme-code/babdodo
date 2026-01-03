@@ -33,7 +33,7 @@ const ContactPage = () => {
       </section>
 
       <section className="py-16 md:py-24">
-        <div className="container grid md:grid-cols-2 gap-16">
+        <div className="container grid md:grid-cols-2 gap-16 items-start">
           <div className="bg-card p-8 rounded-lg shadow-lg">
             <h2 className="text-3xl font-headline font-bold mb-6">Send us a Message</h2>
             <ContactForm />
@@ -94,3 +94,5 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
+    

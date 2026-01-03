@@ -48,7 +48,7 @@ const Hero = () => {
         { src: "/image/beach_1.jpg", alt: "Zanzibar Beach", hint: "zanzibar beach" },
     ];
     return (
-        <section className="relative w-full h-[80vh] bg-secondary text-white">
+        <section className="relative w-full h-[90vh] md:h-[80vh] bg-secondary text-white">
              <Carousel
                 className="absolute inset-0 w-full h-full"
                 plugins={[
@@ -79,7 +79,7 @@ const Hero = () => {
             <div className="absolute inset-0 bg-primary/70 z-10" />
             <div className="container relative z-20 flex h-full items-center">
                 <div className="grid md:grid-cols-2 gap-8 items-center w-full">
-                    <div className="text-left">
+                    <div className="text-center md:text-left">
                         <p className="font-semibold text-yellow-400 tracking-wider">YOUR EAST AFRICAN JOURNEY AWAITS</p>
                         <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg mt-2">
                             Uncover the <br /> Beauty of <br />
@@ -88,10 +88,10 @@ const Hero = () => {
                             <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-teal-400 -mb-2"></span>
                             </span>
                         </h1>
-                        <p className="mt-6 max-w-lg text-lg">
+                        <p className="mt-6 max-w-lg text-lg mx-auto md:mx-0">
                             Expertly guided tours for the perfect balance of Safari adventure and Zanzibar relaxation.
                         </p>
-                        <div className="mt-8 flex flex-wrap gap-4">
+                        <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-4">
                             <Button asChild size="lg" className="bg-teal-500 hover:bg-teal-600 text-white rounded-full px-8">
                                 <Link href="/tours">
                                     Explore Packages <ArrowRight className="ml-2" />
@@ -496,3 +496,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
