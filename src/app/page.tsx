@@ -37,37 +37,66 @@ import Counter from '@/components/counter';
 import { useEffect, useState } from 'react';
 import QuoteForm from '@/components/quote-form';
 import * as React from 'react';
+import Autoplay from "embla-carousel-autoplay";
+
 
 const Hero = () => {
-  return (
-    <section className="relative w-full bg-secondary text-white">
-      <Image
-        src="/image/sunset-background.jpg"
-        alt="Beach background"
-        fill
-        className="object-cover"
-        data-ai-hint="beach background"
-        priority
-      />
-      <div className="absolute inset-0 bg-primary/80" />
-      <div className="container relative z-10 grid md:grid-cols-2 gap-8 items-center py-16 md:py-24">
-        <div className="text-left">
-          <p className="font-semibold text-yellow-400 tracking-wider">YOUR EAST AFRICAN JOURNEY AWAITS</p>
-          <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg mt-2">
-            Uncover the <br /> Beauty of <br />
-            <span className="text-yellow-400 relative inline-block">
-              Tanzania
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-teal-400 -mb-2"></span>
-            </span>
-          </h1>
-        </div>
-        <div className="bg-primary/50 backdrop-blur-sm p-6 rounded-lg border border-yellow-400/50">
-          <h2 className="text-2xl font-headline text-center text-white mb-4">Get a Free Quote</h2>
-          <QuoteForm />
-        </div>
-      </div>
-    </section>
-  );
+    const heroImages = [
+        { src: "/image/sunset-background.jpg", alt: "Tanzanian Sunset", hint: "tanzania sunset" },
+        { src: "/image/ngorongoro.jpg", alt: "Ngorongoro Crater", hint: "ngorongoro crater" },
+        { src: "/image/kilimanjaro.jpg", alt: "Mount Kilimanjaro", hint: "mount kilimanjaro" },
+        { src: "/image/beach_1.jpg", alt: "Zanzibar Beach", hint: "zanzibar beach" },
+    ];
+    return (
+        <section className="relative w-full h-[80vh] bg-secondary text-white">
+             <Carousel
+                className="w-full h-full"
+                plugins={[
+                    Autoplay({
+                        delay: 5000,
+                        stopOnInteraction: false,
+                    }),
+                ]}
+                opts={{
+                    loop: true,
+                }}
+            >
+                <CarouselContent className="h-full">
+                    {heroImages.map((image, index) => (
+                        <CarouselItem key={index} className="h-full">
+                            <Image
+                                src={image.src}
+                                alt={image.alt}
+                                fill
+                                className="object-cover"
+                                data-ai-hint={image.hint}
+                                priority={index === 0}
+                            />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+            <div className="absolute inset-0 bg-primary/70" />
+            <div className="container relative z-10 flex h-full items-center">
+                <div className="grid md:grid-cols-2 gap-8 items-center w-full">
+                    <div className="text-left">
+                        <p className="font-semibold text-yellow-400 tracking-wider">YOUR EAST AFRICAN JOURNEY AWAITS</p>
+                        <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg mt-2">
+                            Uncover the <br /> Beauty of <br />
+                            <span className="text-yellow-400 relative inline-block">
+                            Tanzania
+                            <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-teal-400 -mb-2"></span>
+                            </span>
+                        </h1>
+                    </div>
+                    <div className="bg-primary/50 backdrop-blur-sm p-6 rounded-lg border border-yellow-400/50">
+                        <h2 className="text-2xl font-headline text-center text-white mb-4">Get a Free Quote</h2>
+                        <QuoteForm />
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
 };
 
 
@@ -452,5 +481,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
