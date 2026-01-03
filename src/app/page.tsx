@@ -50,7 +50,7 @@ const Hero = () => {
     return (
         <section className="relative w-full h-[80vh] bg-secondary text-white">
              <Carousel
-                className="w-full h-full"
+                className="absolute inset-0 w-full h-full"
                 plugins={[
                     Autoplay({
                         delay: 5000,
