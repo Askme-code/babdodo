@@ -48,7 +48,7 @@ const Hero = () => {
         { src: "/image/beach_1.jpg", alt: "Zanzibar Beach", hint: "zanzibar beach" },
     ];
     return (
-        <section className="relative w-full h-[90vh] md:h-screen bg-secondary text-white">
+        <section className="relative w-full h-screen bg-secondary text-white">
              <Carousel
                 className="absolute inset-0 w-full h-full"
                 plugins={[
@@ -104,7 +104,7 @@ const Hero = () => {
                             </Button>
                         </div>
                     </div>
-                    <div className="hidden md:block bg-background/80 backdrop-blur-sm p-6 rounded-lg border border-border">
+                    <div className="hidden md:block bg-background/80 backdrop-blur-sm p-6 rounded-lg border border-border [&_input]:text-black [&_input]:font-bold [&_textarea]:text-black [&_textarea]:font-bold">
                         <h2 className="text-2xl font-headline text-center text-foreground mb-4">Get a Free Quote</h2>
                         <QuoteForm />
                     </div>
@@ -117,12 +117,12 @@ const Hero = () => {
 
 const PopularTours = () => {
     const tours = [
-        { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
-        { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozani forest.jpg' },
-        { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
-        { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
-        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
+        { name: 'Safari Blue', image: '/image/popular/safari_blue.jpg' },
+        { name: 'Mnemba Island', image: '/image/popular/mnemba_island.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozani_forest.jpg' },
+        { name: 'Stone Town', image: '/image/popular/stone_town_tour.jpg' },
+        { name: 'Prison Island', image: '/image/popular/prison_island_tortoise.jpg' },
+        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda_sand_bank.jpg' },
     ];
 
     return (
@@ -270,7 +270,7 @@ export default function Home() {
   ];
 
   return (
-    <div>
+    <div className="pt-0">
       <Hero />
       <PopularTours />
 
