@@ -30,9 +30,9 @@ const navLinks = [
 ];
 
 const TopBar = () => {
-    const contactPhone1 = "+255 627 969840";
-    const contactPhone2 = "+255 623 968736";
-    const contactEmail = "info@twofriendstoursafari.com";
+    const contactPhone1 = process.env.NEXT_PUBLIC_CONTACT_PHONE_NUMBER || "+255 678 575 092";
+    const contactPhone2 = "+255 627 969840";
+    const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotourssafaris@gmail.com";
     const location = "Stone Town, Zanzibar";
 
     return (
@@ -96,7 +96,7 @@ const Header = () => {
                <SheetHeader className="sr-only">
                   <SheetTitle>Mobile Menu</SheetTitle>
                   <SheetDescription>
-                    Navigation links for Babdodo Tours & Safaris
+                    Navigation links for Babdodo Tours &amp; Safaris
                   </SheetDescription>
                 </SheetHeader>
               <div className="p-4">
@@ -138,5 +138,3 @@ const Header = () => {
 };
 
 export default Header;
-
-    

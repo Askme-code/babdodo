@@ -12,13 +12,11 @@ const Logo = () => {
         height={40}
         className="rounded-lg"
       />
-      <span className="text-xl font-semibold font-headline text-primary-dark group-hover:text-primary-dark/90 transition-colors">
-        Two Friends Tour Safaris
+      <span className="text-xl font-semibold font-headline text-primary group-hover:text-primary/90 transition-colors">
+        Babdodo Tours &amp; Safaris
       </span>
     </Link>
   );
 };
 
 export default Logo;
-
-    
