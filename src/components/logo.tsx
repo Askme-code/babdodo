@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -12,10 +13,12 @@ const Logo = () => {
         className="rounded-lg"
       />
       <span className="text-xl font-semibold font-headline text-primary-dark group-hover:text-primary-dark/90 transition-colors">
-        Babdodo Tours & Safaris
+        Two Friends Tour Safaris
       </span>
     </Link>
   );
 };
 
 export default Logo;
+
+    

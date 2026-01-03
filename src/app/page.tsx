@@ -40,30 +40,30 @@ import * as React from 'react';
 
 const Hero = () => {
   return (
-    <section className="relative h-[80vh] w-full flex items-center justify-center text-white">
+    <section className="relative w-full bg-secondary text-white">
       <Image
-        src="https://picsum.photos/seed/hero-boat/1800/1200"
-        alt="Woman in a boat on a beautiful lake"
+        src="/image/sunset-background.jpg"
+        alt="Beach background"
         fill
         className="object-cover"
-        data-ai-hint="woman boat lake"
+        data-ai-hint="beach background"
         priority
       />
-      <div className="absolute inset-0 bg-black/50" />
-      <div className="container relative z-10 text-center">
-        <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg">
-          Explore Exotic <span className="text-primary">Destinations</span> with Us
-        </h1>
-        <p className="mt-4 text-lg md:text-xl max-w-2xl mx-auto drop-shadow-md">
-          Discover the world's most beautiful places
-        </p>
-        <div className="mt-8 flex justify-center gap-4">
-            <Button variant="outline" size="lg" asChild className="border-white text-white hover:bg-white hover:text-black">
-               <Link href="/about">Learn More About Us</Link>
-            </Button>
-            <Button size="lg" asChild>
-                <Link href="/tours">Start Your Journey</Link>
-            </Button>
+      <div className="absolute inset-0 bg-primary/80" />
+      <div className="container relative z-10 grid md:grid-cols-2 gap-8 items-center py-16 md:py-24">
+        <div className="text-left">
+          <p className="font-semibold text-yellow-400 tracking-wider">YOUR EAST AFRICAN JOURNEY AWAITS</p>
+          <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg mt-2">
+            Uncover the <br /> Beauty of <br />
+            <span className="text-yellow-400 relative inline-block">
+              Tanzania
+              <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-teal-400 -mb-2"></span>
+            </span>
+          </h1>
+        </div>
+        <div className="bg-primary/50 backdrop-blur-sm p-6 rounded-lg border border-yellow-400/50">
+          <h2 className="text-2xl font-headline text-center text-white mb-4">Get a Free Quote</h2>
+          <QuoteForm />
         </div>
       </div>
     </section>
@@ -73,12 +73,12 @@ const Hero = () => {
 
 const PopularTours = () => {
     const tours = [
-        { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
-        { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozani forest.jpg' },
-        { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
-        { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
-        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
+        { name: 'Safari Blue', image: '/image/popular/safari-blue.jpg' },
+        { name: 'Mnemba Island', image: '/image/popular/mnemba-island.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozani-forest.jpg' },
+        { name: 'Stone Town', image: '/image/popular/stone-town-tour.jpg' },
+        { name: 'Prison Island', image: '/image/popular/prison-island-tortoise.jpg' },
+        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda-sand-bank.jpg' },
     ];
 
     return (
@@ -218,11 +218,11 @@ export default function Home() {
   const aboutImage = '/image/masai.jpg';
   const galleryImages = [
     { src: '/image/ngorongoro.jpg', alt: 'Wildlife in Ngorongoro Crater' },
-    { src: '/image/beach-1.jpg', alt: 'Pristine beach in Zanzibar' },
+    { src: '/image/beach_1.jpg', alt: 'Pristine beach in Zanzibar' },
     { src: '/image/masai.jpg', alt: 'Maasai people in traditional attire' },
     { src: '/image/sunset-cru.jpg', alt: 'Sunset dhow cruise' },
     { src: '/image/kilimanjaro.jpg', alt: 'Mount Kilimanjaro' },
-    { src: '/image/star-fish.jpg', alt: 'Starfish on a sandbank' },
+    { src: '/image/star_fish.jpg', alt: 'Starfish on a sandbank' },
   ];
 
   return (
@@ -452,3 +452,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
