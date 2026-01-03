@@ -76,8 +76,8 @@ const Hero = () => {
                     ))}
                 </CarouselContent>
             </Carousel>
-            <div className="absolute inset-0 bg-primary/70" />
-            <div className="container relative z-10 flex h-full items-center">
+            <div className="absolute inset-0 bg-primary/70 z-10" />
+            <div className="container relative z-20 flex h-full items-center">
                 <div className="grid md:grid-cols-2 gap-8 items-center w-full">
                     <div className="text-left">
                         <p className="font-semibold text-yellow-400 tracking-wider">YOUR EAST AFRICAN JOURNEY AWAITS</p>
@@ -88,6 +88,21 @@ const Hero = () => {
                             <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-teal-400 -mb-2"></span>
                             </span>
                         </h1>
+                        <p className="mt-6 max-w-lg text-lg">
+                            Expertly guided tours for the perfect balance of Safari adventure and Zanzibar relaxation.
+                        </p>
+                        <div className="mt-8 flex flex-wrap gap-4">
+                            <Button asChild size="lg" className="bg-teal-500 hover:bg-teal-600 text-white rounded-full px-8">
+                                <Link href="/tours">
+                                    Explore Packages <ArrowRight className="ml-2" />
+                                </Link>
+                            </Button>
+                            <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-primary rounded-full px-8">
+                                <Link href="/contact">
+                                    Plan Your Trip
+                                </Link>
+                            </Button>
+                        </div>
                     </div>
                     <div className="bg-primary/50 backdrop-blur-sm p-6 rounded-lg border border-yellow-400/50">
                         <h2 className="text-2xl font-headline text-center text-white mb-4">Get a Free Quote</h2>
