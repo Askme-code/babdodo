@@ -48,7 +48,7 @@ const Hero = () => {
         { src: "/image/beach_1.jpg", alt: "Zanzibar Beach", hint: "zanzibar beach" },
     ];
     return (
-        <section className="relative w-full h-[90vh] md:h-[80vh] bg-secondary text-white">
+        <section className="relative w-full h-[90vh] md:h-screen bg-secondary text-white">
              <Carousel
                 className="absolute inset-0 w-full h-full"
                 plugins={[
@@ -104,8 +104,8 @@ const Hero = () => {
                             </Button>
                         </div>
                     </div>
-                    <div className="hidden md:block bg-primary/50 backdrop-blur-sm p-6 rounded-lg border border-yellow-400/50">
-                        <h2 className="text-2xl font-headline text-center text-white mb-4">Get a Free Quote</h2>
+                    <div className="hidden md:block bg-background/80 backdrop-blur-sm p-6 rounded-lg border border-border">
+                        <h2 className="text-2xl font-headline text-center text-foreground mb-4">Get a Free Quote</h2>
                         <QuoteForm />
                     </div>
                 </div>
