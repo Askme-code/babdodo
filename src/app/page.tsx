@@ -38,6 +38,7 @@ import { useEffect, useState } from 'react';
 import QuoteForm from '@/components/quote-form';
 import * as React from 'react';
 import Autoplay from "embla-carousel-autoplay";
+import Testimonials from '@/components/testimonials';
 
 
 const Hero = () => {
@@ -117,12 +118,12 @@ const Hero = () => {
 
 const PopularTours = () => {
     const tours = [
-        { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
-        { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozani forest.jpg' },
-        { name: 'Stone Town', image: '/image/popular/stone town tour.jpg' },
-        { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
-        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda sand bank.jpg' },
+        { name: 'Safari Blue', image: '/image/popular/safari-blue.jpg' },
+        { name: 'Mnemba Island', image: '/image/popular/mnemba-island.jpg' },
+        { name: 'Jozani Forest', image: '/image/popular/jozani-forest.jpg' },
+        { name: 'Stone Town', image: '/image/popular/stone-town-tour.jpg' },
+        { name: 'Prison Island', image: '/image/popular/prison-island-tortoise.jpg' },
+        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda-sand-bank.jpg' },
     ];
 
     return (
@@ -412,6 +413,8 @@ export default function Home() {
       </section>
 
       <Stats />
+
+      <Testimonials />
 
       <section className="py-12 md:py-20 bg-background">
         <div className="container">

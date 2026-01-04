@@ -12,6 +12,7 @@ import {
   Card,
   CardContent,
 } from '@/components/ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Star, Quote } from 'lucide-react';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { collection, query, where, orderBy, limit } from 'firebase/firestore';
@@ -23,7 +24,7 @@ const StarRating = ({ rating }: { rating: number }) => (
     {[...Array(5)].map((_, i) => (
       <Star
         key={i}
-        className={`w-4 h-4 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground'}`}
+        className={`w-5 h-5 ${i < rating ? 'text-yellow-400 fill-yellow-400' : 'text-muted-foreground/30'}`}
       />
     ))}
   </div>
@@ -31,13 +32,22 @@ const StarRating = ({ rating }: { rating: number }) => (
 
 const TestimonialCard = ({ review }: { review: Review }) => (
   <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-    <div className="p-1 h-full">
-      <Card className="flex flex-col h-full">
-        <CardContent className="flex flex-col items-center text-center p-6 flex-grow">
-          <Quote className="w-8 h-8 text-primary mb-4" />
-          <p className="text-foreground/80 italic mb-4 flex-grow">"{review.comment}"</p>
+    <div className="p-4 h-full">
+      <Card className="flex flex-col h-full p-6 rounded-xl shadow-md hover:shadow-xl transition-shadow">
+        <CardContent className="relative flex flex-col p-0 flex-grow">
+          <Quote className="w-12 h-12 text-primary/10 absolute -top-4 -right-4" />
+          <div className="flex items-center gap-4 mb-4">
+             <Avatar>
+                <AvatarImage src={`https://picsum.photos/seed/${review.authorName}/100/100`} alt={review.authorName} />
+                <AvatarFallback>{review.authorName.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div>
+                <p className="font-semibold font-headline text-lg">{review.authorName}</p>
+                 {/* <p className="text-sm text-muted-foreground">New York, USA</p> */}
+            </div>
+          </div>
           <StarRating rating={review.rating} />
-          <p className="font-bold mt-2 text-foreground">{review.authorName}</p>
+          <p className="text-foreground/80 italic mt-4 flex-grow">"{review.comment}"</p>
         </CardContent>
       </Card>
     </div>
@@ -59,38 +69,47 @@ const Testimonials = () => {
 
   const { data: reviews, isLoading, error } = useCollection<Review>(reviewsQuery);
 
-  if (isLoading) {
-    return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            <Skeleton className="h-48 w-full" />
-            <Skeleton className="h-48 w-full" />
-            <Skeleton className="h-48 w-full" />
-        </div>
-    );
-  }
-  
-  // Do not render if there's a permission error, to avoid crashing the page.
-  if (error || !reviews || reviews.length === 0) {
+  if (error || (!isLoading && (!reviews || reviews.length === 0))) {
     // Silently fail and don't render the component if there's an error or no reviews.
     return null;
   }
 
   return (
-    <Carousel
-      opts={{
-        align: 'start',
-        loop: true,
-      }}
-      className="w-full max-w-5xl mx-auto"
-    >
-      <CarouselContent>
-        {reviews.map((review) => (
-          <TestimonialCard key={review.id} review={review} />
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <section className="py-16 md:py-24 bg-card">
+        <div className="container">
+            <div className="text-center max-w-3xl mx-auto">
+                <p className="font-semibold text-primary uppercase tracking-wider">Trusted by Travellers</p>
+                <h2 className="text-3xl md:text-4xl font-headline font-bold mt-2">What Our Guests Say</h2>
+                <p className="mt-4 text-muted-foreground">
+                    Hear directly from the people who experienced the magic of Africa with Babdodo Tours & Safaris.
+                </p>
+            </div>
+            
+            {isLoading ? (
+                 <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <Skeleton className="h-64 w-full rounded-xl" />
+                    <Skeleton className="h-64 w-full rounded-xl" />
+                    <Skeleton className="h-64 w-full rounded-xl hidden lg:block" />
+                </div>
+            ) : (
+                <Carousel
+                opts={{
+                    align: 'start',
+                    loop: true,
+                }}
+                className="w-full mt-8"
+                >
+                <CarouselContent className="-ml-8">
+                    {reviews?.map((review) => (
+                    <TestimonialCard key={review.id} review={review} />
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex -left-4" />
+                <CarouselNext className="hidden md:flex -right-4" />
+                </Carousel>
+            )}
+        </div>
+    </section>
   );
 };
 
