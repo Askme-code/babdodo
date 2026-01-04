@@ -1,20 +1,47 @@
 
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    match /reviews/{docId} {
-      allow read: if true;
-      allow write: if true;
+    
+    // Helper function to check for admin role
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
-    match /quotes/{docId} {
+    // Publicly readable, but only writeable by anyone (for submitting reviews)
+    match /reviews/{reviewId} {
       allow read: if true;
-      allow write: if true;
+      allow create: if true;
+      allow update, delete: if isAdmin();
     }
 
+    // Allow admins to manage all other collections
+    match /tours/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /safaris/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /transfers/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /news_updates/{docId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Admins can manage other admin roles
+    match /roles_admin/{userId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Fallback for any other public read access if needed
+    // This allows public read on collections not explicitly protected above.
     match /{document=**} {
       allow read: if true;
+      allow write: if false; // Deny all other writes by default
     }
   }
 }
+
+    
