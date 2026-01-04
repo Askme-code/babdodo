@@ -58,7 +58,7 @@ export default function RootLayout({
             "name": "Babdodo Tours & Safaris",
             "description": "Explore the wonders of Zanzibar and Tanzania with Babdodo Tours & Safaris. We offer unforgettable tours, safaris, and transfers.",
             "telephone": "+255678575092",
-            "email": "babdodotourssafaris@gmail.com",
+            "email": "babdodotoursandsafari@gmail.com",
             "address": {
               "@type": "PostalAddress",
               "addressLocality": "Zanzibar",

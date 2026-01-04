@@ -6,7 +6,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const developerPhoneNumber = process.env.NEXT_PUBLIC_DEVELOPER_WHATSAPP || "255";
   const developerEmail = process.env.NEXT_PUBLIC_DEVELOPER_EMAIL || "kimumilangali@gmail.com";
-  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotourssafaris@gmail.com";
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotoursandsafari@gmail.com";
   const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE_NUMBER || "+255 678 575 092";
   const facebookUrl = process.env.NEXT_PUBLIC_FACEBOOK_URL || "#";
   const instagramUrl = process.env.NEXT_PUBLIC_INSTAGRAM_URL || "#";

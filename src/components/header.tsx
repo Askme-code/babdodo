@@ -32,7 +32,7 @@ const navLinks = [
 const TopBar = () => {
     const contactPhone1 = process.env.NEXT_PUBLIC_CONTACT_PHONE_NUMBER || "+255 678 575 092";
     const contactPhone2 = "+255 627 969840";
-    const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotourssafaris@gmail.com";
+    const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotoursandsafari@gmail.com";
     const location = "Stone Town, Zanzibar";
 
     return (

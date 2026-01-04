@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const ContactPage = () => {
-  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotourssafaris@gmail.com";
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotoursandsafari@gmail.com";
   const contactPhone = process.env.NEXT_PUBLIC_CONTACT_PHONE_NUMBER || "+255 678 575 092";
   const contactPhoneUrl = `tel:${(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "255678575092")}`;
 
@@ -94,5 +94,3 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
-
-    
