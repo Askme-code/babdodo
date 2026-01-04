@@ -105,7 +105,7 @@ const Hero = () => {
                             </Button>
                         </div>
                     </div>
-                    <div className="hidden md:block bg-background/80 backdrop-blur-sm p-6 rounded-lg border border-border [&_input]:text-black [&_input]:font-bold [&_textarea]:text-black [&_textarea]:font-bold">
+                    <div className="hidden md:block bg-background/20 backdrop-blur-sm p-6 rounded-lg border border-border/50">
                         <h2 className="text-2xl font-headline text-center text-foreground mb-4">Get a Free Quote</h2>
                         <QuoteForm />
                     </div>
@@ -121,9 +121,9 @@ const PopularTours = () => {
         { name: 'Safari Blue', image: '/image/popular/safari-blue.jpg' },
         { name: 'Mnemba Island', image: '/image/popular/mnemba-island.jpg' },
         { name: 'Jozani Forest', image: '/image/popular/jozani-forest.jpg' },
-        { name: 'Stone Town', image: '/image/popular/stone-town-tour.jpg' },
+        { name: 'Stone Town Tour', image: '/image/popular/stone-town-tour.jpg' },
         { name: 'Prison Island', image: '/image/popular/prison-island-tortoise.jpg' },
-        { name: 'Nakupenda Sand Bank', image: '/image/popular/nakupenda-sand-bank.jpg' },
+        { name: 'Nakupenda Sandbank', image: '/image/popular/nakupenda-sand-bank.jpg' },
     ];
 
     return (
@@ -218,6 +218,29 @@ const Stats = () => {
     </section>
   );
 };
+
+const CtaSection = () => {
+    const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "255678575092";
+    const message = "Hello! I'd like to book a tour. Can you help me?";
+
+    return (
+        <section className="py-12 md:py-20 bg-background">
+            <div className="container">
+                <div className="bg-primary text-primary-foreground rounded-xl p-8 md:p-16 text-center shadow-lg">
+                    <h2 className="text-3xl md:text-4xl font-headline font-bold text-yellow-400">Ready for Your African Adventure?</h2>
+                    <p className="mt-4 max-w-2xl mx-auto">
+                        Don&apos;t just read about it, experience the magic yourself. Contact us today to start planning.
+                    </p>
+                    <Button asChild size="lg" className="mt-8 bg-yellow-500 hover:bg-yellow-600 text-primary-foreground font-bold rounded-full px-8">
+                        <Link href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`} target="_blank" rel="noopener noreferrer">
+                           BOOK YOUR TOUR VIA WHATSAPP
+                        </Link>
+                    </Button>
+                </div>
+            </div>
+        </section>
+    )
+}
 
 export default function Home() {
   const firestore = useFirestore();
@@ -496,6 +519,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+      
+      <CtaSection />
     </div>
   );
 }
