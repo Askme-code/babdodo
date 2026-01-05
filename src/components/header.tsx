@@ -31,7 +31,6 @@ const navLinks = [
 
 const TopBar = () => {
     const contactPhone1 = process.env.NEXT_PUBLIC_CONTACT_PHONE_NUMBER || "+255 678 575 092";
-    const contactPhone2 = "+255 627 969840";
     const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "babdodotoursandsafari@gmail.com";
     const location = "Stone Town, Zanzibar";
 
@@ -42,10 +41,6 @@ const TopBar = () => {
                     <a href={`tel:${contactPhone1}`} className="flex items-center gap-1 hover:text-yellow-300">
                         <Phone className="w-3 h-3" />
                         <span>{contactPhone1}</span>
-                    </a>
-                    <span className="hidden sm:inline">/</span>
-                     <a href={`tel:${contactPhone2}`} className="hidden sm:flex items-center gap-1 hover:text-yellow-300">
-                        <span>{contactPhone2}</span>
                     </a>
                     <a href={`mailto:${contactEmail}`} className="flex items-center gap-1 hover:text-yellow-300">
                         <Mail className="w-3 h-3" />
