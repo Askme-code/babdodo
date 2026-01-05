@@ -49,6 +49,12 @@ function ContactFormComponent() {
         </div>
 
         <div className="space-y-2">
+            <Label htmlFor="whatsapp">WhatsApp Number</Label>
+            <Input id="whatsapp" name="whatsapp" placeholder="+1 555 123 4567" />
+            <ValidationError prefix="WhatsApp" field="whatsapp" errors={state.errors} className="text-sm font-medium text-destructive" />
+        </div>
+
+        <div className="space-y-2">
             <Label htmlFor="subject">Subject</Label>
             <Input id="subject" name="subject" placeholder="Inquiry about Serengeti Safari" />
             <ValidationError prefix="Subject" field="subject" errors={state.errors} className="text-sm font-medium text-destructive" />
