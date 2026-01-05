@@ -118,12 +118,12 @@ const Hero = () => {
 
 const PopularTours = () => {
     const tours = [
-        { name: 'Safari Blue', image: '/image/popular/safari blue.jpg' },
-        { name: 'Mnemba Island', image: '/image/popular/mnemba island.jpg' },
-        { name: 'Jozani Forest', image: '/image/popular/jozani forest monkey.jpg' },
-        { name: 'Stone Town Tour', image: '/image/popular/stone town tour.jpg' },
-        { name: 'Prison Island', image: '/image/popular/prison island tortoise.jpg' },
-        { name: 'Nakupenda Sandbank', image: '/image/popular/nakupenda sand bank.jpg' },
+        { name: 'Safari Blue', image: '/image/local boats.jpg' },
+        { name: 'Mnemba Island', image: '/image/beach_1.jpg' },
+        { name: 'Jozani Forest', image: '/image/monkey from jozan.jpg' },
+        { name: 'Stone Town Tour', image: '/image/forozani zanzibar.jpg' },
+        { name: 'Prison Island', image: '/image/star fish.jpg' },
+        { name: 'Nakupenda Sandbank', image: '/image/beach_life.jpg' },
     ];
 
     return (
