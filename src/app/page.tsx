@@ -106,7 +106,7 @@ const Hero = () => {
                         </div>
                     </div>
                     <div className="hidden md:block bg-card/20 backdrop-blur-sm p-8 rounded-lg border border-border/50 shadow-xl">
-                        <h2 className="text-2xl font-headline text-center font-bold mb-4">Get a Free Quote</h2>
+                        <h2 className="text-2xl font-headline text-center font-bold mb-4 text-white">Get a Free Quote</h2>
                         <QuoteForm />
                     </div>
                 </div>
