@@ -10,6 +10,7 @@ import { FirebaseClientProvider } from '@/firebase';
 import { JsonLd } from '@/components/JsonLd';
 import { playfair_display, pt_sans } from '@/app/fonts';
 import { cn } from '@/lib/utils';
+import Chatbot from '@/components/chatbot';
 
 
 export const metadata: Metadata = {
@@ -90,6 +91,7 @@ export default function RootLayout({
             <Footer />
           </div>
           <WhatsAppButton />
+          <Chatbot />
           <Toaster />
         </FirebaseClientProvider>
         <Script id="gtranslate-settings">
