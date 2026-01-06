@@ -5,12 +5,11 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
-import WhatsAppButton from '@/components/whatsapp-button';
+import HelpFAB from '@/components/HelpFAB';
 import { FirebaseClientProvider } from '@/firebase';
 import { JsonLd } from '@/components/JsonLd';
 import { playfair_display, pt_sans } from '@/app/fonts';
 import { cn } from '@/lib/utils';
-import Chatbot from '@/components/chatbot';
 
 
 export const metadata: Metadata = {
@@ -90,8 +89,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
           </div>
-          <WhatsAppButton />
-          <Chatbot />
+          <HelpFAB />
           <Toaster />
         </FirebaseClientProvider>
         <Script id="gtranslate-settings">
