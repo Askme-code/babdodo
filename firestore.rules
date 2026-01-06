@@ -13,24 +13,28 @@ service cloud.firestore {
     match /reviews/{reviewId} {
       // Anyone can create a review
       allow create: if true;
-      // Anyone can read approved reviews (this rule is not currently used but is good practice)
+      // Anyone can read approved reviews or if they are an admin
       allow read: if resource.data.status == 'approved' || isAdmin();
       // Only admins can update (approve/reject) or delete reviews
       allow update, delete: if isAdmin();
     }
 
-    // Allow admins to manage all other data collections
+    // Public read access for content, admin write access
     match /tours/{docId} {
-      allow read, write: if isAdmin();
+      allow read: if true;
+      allow write: if isAdmin();
     }
     match /safaris/{docId} {
-      allow read, write: if isAdmin();
+      allow read: if true;
+      allow write: if isAdmin();
     }
     match /transfers/{docId} {
-      allow read, write: if isAdmin();
+      allow read: if true;
+      allow write: if isAdmin();
     }
     match /news_updates/{docId} {
-      allow read, write: if isAdmin();
+      allow read: if true;
+      allow write: if isAdmin();
     }
     
     // Admins can manage other admin roles
