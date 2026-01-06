@@ -9,14 +9,17 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
-    // Publicly readable, but only writeable by anyone (for submitting reviews)
+    // Rules for the reviews collection
     match /reviews/{reviewId} {
-      allow read: if true;
+      // Anyone can create a review
       allow create: if true;
+      // Anyone can read approved reviews (this rule is not currently used but is good practice)
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      // Only admins can update (approve/reject) or delete reviews
       allow update, delete: if isAdmin();
     }
 
-    // Allow admins to manage all other collections
+    // Allow admins to manage all other data collections
     match /tours/{docId} {
       allow read, write: if isAdmin();
     }
@@ -34,14 +37,5 @@ service cloud.firestore {
     match /roles_admin/{userId} {
       allow read, write: if isAdmin();
     }
-
-    // Fallback for any other public read access if needed
-    // This allows public read on collections not explicitly protected above.
-    match /{document=**} {
-      allow read: if true;
-      allow write: if false; // Deny all other writes by default
-    }
   }
 }
-
-    
