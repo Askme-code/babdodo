@@ -39,6 +39,7 @@ import QuoteForm from '@/components/quote-form';
 import * as React from 'react';
 import Autoplay from "embla-carousel-autoplay";
 import Testimonials from '@/components/testimonials';
+import ReviewWidgets from '@/components/review-widgets';
 
 
 const Hero = () => {
@@ -434,6 +435,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <ReviewWidgets />
 
       <Stats />
 
