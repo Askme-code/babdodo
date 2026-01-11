@@ -1,8 +1,8 @@
+
 'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const GoogleIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 48 48">
@@ -20,6 +20,9 @@ const TripAdvisorIcon = () => (
     </svg>
 );
 
+const googleReviewUrl = "https://www.google.com/search?q=Babdodo+Tours+%26+Safaris&stick=H4sIAAAAAAAAAONgU1I1qDC0ME1OMUy1ME4zNzJNSjS3AgoZJCWlphqYmaSaJ6VYJpsvYhV3SkxKyU_JVwjJLy0qVlBTCE5MSyzKLAYAhVh0Y0MAAAA#lrd=0x185d153359d95f87:0xd5713437df4c75f4,1";
+const tripAdvisorReviewUrl = "https://www.tripadvisor.com/Attraction_Review-g482884-d23976332-Reviews-Babdodo_Tours_Safaris-Zanzibar_Island_Zanzibar_Archipelago.html";
+
 
 export default function ReviewWidgets() {
     return (
@@ -32,54 +35,20 @@ export default function ReviewWidgets() {
                     </p>
                 </div>
 
-                <Tabs defaultValue="tripadvisor" className="w-full max-w-4xl mx-auto mt-12">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="tripadvisor">
+                <div className="mt-12 flex flex-col sm:flex-row justify-center items-center gap-4">
+                     <Button asChild variant="outline" size="lg" className="w-full sm:w-auto border-2 hover:bg-muted">
+                        <Link href={tripAdvisorReviewUrl} target="_blank" rel="noopener noreferrer">
                             <TripAdvisorIcon />
-                            <span className="ml-2">TripAdvisor</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="google">
+                            <span className="ml-2">View on TripAdvisor</span>
+                        </Link>
+                     </Button>
+                      <Button asChild variant="outline" size="lg" className="w-full sm:w-auto border-2 hover:bg-muted">
+                        <Link href={googleReviewUrl} target="_blank" rel="noopener noreferrer">
                             <GoogleIcon />
-                            <span className="ml-2">Google</span>
-                        </TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="tripadvisor">
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>TripAdvisor Reviews</CardTitle>
-                                <CardDescription>Our latest reviews from TripAdvisor.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="min-h-[200px] flex items-center justify-center text-center">
-                                <div className="p-6 border-2 border-dashed rounded-lg">
-                                    <h3 className="font-semibold text-lg">Embed TripAdvisor Widget Here</h3>
-                                    <p className="text-sm text-muted-foreground mt-2">
-                                        1. Go to your TripAdvisor Widget Center. <br/>
-                                        2. Choose your widget and copy the code. <br/>
-                                        3. Paste the code inside this div to display your reviews.
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value="google">
-                        <Card>
-                             <CardHeader>
-                                <CardTitle>Google Reviews</CardTitle>
-                                <CardDescription>Our latest reviews from our Google Business Profile.</CardDescription>
-                            </CardHeader>
-                            <CardContent className="min-h-[200px] flex items-center justify-center text-center">
-                                <div className="p-6 border-2 border-dashed rounded-lg">
-                                    <h3 className="font-semibold text-lg">Embed Google Reviews Widget Here</h3>
-                                    <p className="text-sm text-muted-foreground mt-2">
-                                        1. Find a third-party Google Reviews widget provider. <br/>
-                                        2. Connect your Google Business Profile and copy the embed code. <br/>
-                                        3. Paste the code inside this div to display your reviews.
-                                    </p>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                </Tabs>
+                            <span className="ml-2">View on Google</span>
+                        </Link>
+                     </Button>
+                </div>
             </div>
         </section>
     );
