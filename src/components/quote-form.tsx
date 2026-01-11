@@ -48,12 +48,12 @@ function QuoteFormComponent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
               <Label htmlFor="name">Name</Label>
-              <Input id="name" name="name" placeholder="Your Name" />
+              <Input id="name" name="name" placeholder="Your Name" className="text-foreground" />
               <ValidationError prefix="Name" field="name" errors={state.errors} className="text-xs font-medium text-destructive" />
           </div>
           <div className="space-y-1">
               <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" name="email" placeholder="you@example.com" />
+              <Input id="email" type="email" name="email" placeholder="you@example.com" className="text-foreground" />
               <ValidationError prefix="Email" field="email" errors={state.errors} className="text-xs font-medium text-destructive" />
           </div>
         </div>
@@ -61,7 +61,7 @@ function QuoteFormComponent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
               <Label htmlFor="whatsapp">WhatsApp Number</Label>
-              <Input id="whatsapp" name="whatsapp" placeholder="+1 (555) 123-4567" />
+              <Input id="whatsapp" name="whatsapp" placeholder="+1 (555) 123-4567" className="text-foreground" />
               <ValidationError prefix="WhatsApp" field="whatsapp" errors={state.errors} className="text-xs font-medium text-destructive" />
           </div>
           <div className="space-y-1">
@@ -71,7 +71,7 @@ function QuoteFormComponent() {
                   <Button
                       variant={"outline"}
                       className={cn(
-                      "w-full justify-start text-left font-normal",
+                      "w-full justify-start text-left font-normal text-foreground",
                       !date && "text-muted-foreground"
                       )}
                   >
@@ -95,7 +95,7 @@ function QuoteFormComponent() {
 
         <div className="space-y-1">
             <Label htmlFor="message">Write your message</Label>
-            <Textarea id="message" name="message" placeholder="I'm interested in a 5-day safari..." className="min-h-[80px]" />
+            <Textarea id="message" name="message" placeholder="I'm interested in a 5-day safari..." className="min-h-[80px] text-foreground" />
             <ValidationError prefix="Message" field="message" errors={state.errors} className="text-xs font-medium text-destructive" />
         </div>
         
