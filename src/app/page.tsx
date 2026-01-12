@@ -84,7 +84,7 @@ const Hero = () => {
                     <div className="text-center md:text-left">
                         <p className="font-semibold text-yellow-400 tracking-wider">YOUR EAST AFRICAN JOURNEY AWAITS</p>
                         <h1 className="text-4xl md:text-6xl font-headline font-bold drop-shadow-lg mt-2">
-                            Uncover the <br /> Beauty of <br />
+                            Uncover the <br className="md:hidden" /> Beauty of <br />
                             <span className="text-yellow-400 relative inline-block">
                             Tanzania
                             <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 to-teal-400 -mb-2"></span>
@@ -93,13 +93,13 @@ const Hero = () => {
                         <p className="mt-6 max-w-lg text-lg mx-auto md:mx-0">
                             Expertly guided tours for the perfect balance of Safari adventure and Zanzibar relaxation.
                         </p>
-                        <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-4">
-                            <Button asChild size="lg" className="bg-teal-500 hover:bg-teal-600 text-white rounded-full px-8">
+                        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                            <Button asChild size="lg" className="bg-teal-500 hover:bg-teal-600 text-white rounded-full px-8 w-full sm:w-auto">
                                 <Link href="/tours">
                                     Explore Packages <ArrowRight className="ml-2" />
                                 </Link>
                             </Button>
-                            <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-primary rounded-full px-8">
+                            <Button asChild size="lg" variant="outline" className="bg-transparent border-2 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-primary rounded-full px-8 w-full sm:w-auto">
                                 <Link href="/contact">
                                     Plan Your Trip
                                 </Link>

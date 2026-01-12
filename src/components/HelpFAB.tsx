@@ -3,12 +3,12 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, X, Bot } from 'lucide-react';
+import { MessageCircle, X, Bot, HelpCircle } from 'lucide-react';
 import Chatbot from '@/components/chatbot';
 import WhatsAppButton from '@/components/whatsapp-button';
 
 const HelpIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-white">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
         <path d="M12 17h.01" />
         <circle cx="12" cy="12" r="10" />
@@ -55,11 +55,11 @@ export default function HelpFAB() {
                 )}
                 <Button
                     onClick={toggleFab}
-                    className="rounded-full h-16 w-auto px-4 shadow-lg bg-primary hover:bg-primary/90 flex items-center gap-2"
+                    className="rounded-full h-14 w-auto px-6 shadow-lg bg-primary hover:bg-primary/90 flex items-center gap-2"
                     aria-expanded={isFabOpen}
                 >
-                    {isFabOpen || isChatbotOpen ? <X className="h-8 w-8" /> : <HelpIcon />}
-                    <span className="font-semibold text-lg">{isFabOpen || isChatbotOpen ? '' : 'Need Help?'}</span>
+                    {isFabOpen || isChatbotOpen ? <X className="h-6 w-6" /> : <HelpIcon />}
+                    <span className="font-semibold text-base">{isFabOpen || isChatbotOpen ? '' : 'Need Help?'}</span>
                 </Button>
             </div>
             
