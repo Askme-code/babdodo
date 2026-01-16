@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Clock, Users, Star, Check, X } from 'lucide-react';
+import { Clock, Users, Star, Check, X, DollarSign } from 'lucide-react';
 import type { Service } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import MediaRenderer from './MediaRenderer';
@@ -84,6 +84,27 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
           <DialogHeader className="p-0 text-left">
             <DialogTitle className="text-3xl font-headline font-bold text-primary">{service.title}</DialogTitle>
           </DialogHeader>
+
+          <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2 border-b pb-4">
+            {(service.pricePerPerson != null) && (
+              <div className="flex items-center">
+                <DollarSign className="h-5 w-5 mr-2 text-primary" />
+                <div>
+                  <span className="text-2xl font-bold text-primary">${service.pricePerPerson}</span>
+                  <span className="ml-1 text-muted-foreground">/ person</span>
+                </div>
+              </div>
+            )}
+            {(service.priceGroup != null) && (
+              <div className="flex items-center">
+                <DollarSign className="h-5 w-5 mr-2 text-primary" />
+                 <div>
+                  <span className="text-2xl font-bold text-primary">${service.priceGroup}</span>
+                  <span className="ml-1 text-muted-foreground">/ group</span>
+                </div>
+              </div>
+            )}
+          </div>
           
           {service.highlights && service.highlights.length > 0 && (
             <div>

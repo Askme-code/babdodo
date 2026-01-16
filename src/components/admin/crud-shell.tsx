@@ -49,7 +49,12 @@ const serviceSchema = z.object({
   title: z.string().min(3, 'Title is required'),
   description: z.string().min(10, 'Description is required'),
   longDescription: z.string().optional(),
-  price: z.preprocess((val) => {
+  pricePerPerson: z.preprocess((val) => {
+    if (typeof val === 'string' && val.trim() === '') return undefined;
+    const num = Number(val);
+    return isNaN(num) ? val : num;
+  }, z.number({ invalid_type_error: 'Price must be a number.' }).positive('Price must be a positive number.').optional()),
+  priceGroup: z.preprocess((val) => {
     if (typeof val === 'string' && val.trim() === '') return undefined;
     const num = Number(val);
     return isNaN(num) ? val : num;
@@ -159,6 +164,7 @@ const CrudForm = ({
     resolver: zodResolver(schema),
     defaultValues: item ? {
       ...item,
+      pricePerPerson: (item as any).price || item.pricePerPerson, // Handle migration from old 'price' field
       date: getInitialDate(),
       highlights: Array.isArray((item as any).highlights) ? (item as any).highlights.join('\n') : '',
       included: Array.isArray(item.included) ? item.included.join('\n') : '',
@@ -233,11 +239,16 @@ const CrudForm = ({
             </div>
           </div>
           
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="price">Price</Label>
-              <Input id="price" type="number" {...register('price')} />
-              {errors.price && <p className="text-destructive text-sm mt-1">{`${errors.price.message}`}</p>}
+                <Label htmlFor="pricePerPerson">Price per Person ($)</Label>
+                <Input id="pricePerPerson" type="number" step="0.01" {...register('pricePerPerson')} />
+                {errors.pricePerPerson && <p className="text-destructive text-sm mt-1">{`${errors.pricePerPerson.message}`}</p>}
+            </div>
+            <div>
+                <Label htmlFor="priceGroup">Price for Group ($)</Label>
+                <Input id="priceGroup" type="number" step="0.01" {...register('priceGroup')} />
+                {errors.priceGroup && <p className="text-destructive text-sm mt-1">{`${errors.priceGroup.message}`}</p>}
             </div>
             <div>
               <Label htmlFor="duration">Duration</Label>
@@ -363,7 +374,7 @@ export default function CrudShell({
     return items.map((item) => (
       <TableRow key={item.id}>
         <TableCell className="font-medium">{item.title}</TableCell>
-        {!isPostType && <TableCell>${item.price}</TableCell>}
+        {!isPostType && <TableCell>${item.pricePerPerson || 0}</TableCell>}
         <TableCell>
           <div className="flex gap-2">
             <Button
@@ -440,7 +451,7 @@ export default function CrudShell({
           <TableHeader>
             <TableRow>
               <TableHead>Title</TableHead>
-              {!isPostType && <TableHead>Price</TableHead>}
+              {!isPostType && <TableHead>Price (PP)</TableHead>}
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>

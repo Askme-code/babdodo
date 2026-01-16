@@ -117,11 +117,24 @@ export default function TransferPage({ params: paramsProp }: TransferPageProps) 
             <div className="sticky top-24 bg-card rounded-lg shadow-lg p-6">
                 <h3 className="font-headline text-2xl">Transfer Details</h3>
                 <div className="space-y-4 mt-4 text-foreground/80">
-                    <div className="flex items-center">
-                        <DollarSign className="h-5 w-5 mr-3 text-primary" />
-                        <span className="font-bold text-2xl text-primary">${transfer.price}</span>
-                        <span className="ml-1">/ vehicle</span>
-                    </div>
+                    {transfer.pricePerPerson != null && (
+                        <div className="flex items-center">
+                            <DollarSign className="h-5 w-5 mr-3 text-primary" />
+                            <div>
+                                <span className="font-bold text-2xl text-primary">${transfer.pricePerPerson}</span>
+                                <span className="ml-1">/ person</span>
+                            </div>
+                        </div>
+                    )}
+                    {transfer.priceGroup != null && (
+                         <div className="flex items-center">
+                            <DollarSign className="h-5 w-5 mr-3 text-primary" />
+                            <div>
+                                <span className="font-bold text-2xl text-primary">${transfer.priceGroup}</span>
+                                <span className="ml-1">/ vehicle</span>
+                            </div>
+                        </div>
+                    )}
                      <div className="flex items-center">
                         <MapPin className="h-5 w-5 mr-3 text-primary" />
                         <span>{transfer.location}</span>

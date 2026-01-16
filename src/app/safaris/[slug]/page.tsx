@@ -145,11 +145,24 @@ export default function SafariPage({ params: paramsProp }: SafariPageProps) {
             <div className="sticky top-24 bg-card rounded-lg shadow-lg p-6">
                 <h3 className="font-headline text-2xl">Safari Details</h3>
                 <div className="space-y-4 mt-4 text-foreground/80">
-                    <div className="flex items-center">
-                        <DollarSign className="h-5 w-5 mr-3 text-primary" />
-                        <span className="font-bold text-2xl text-primary">${safari.price}</span>
-                        <span className="ml-1">/ person</span>
-                    </div>
+                    {safari.pricePerPerson != null && (
+                        <div className="flex items-center">
+                            <DollarSign className="h-5 w-5 mr-3 text-primary" />
+                            <div>
+                                <span className="font-bold text-2xl text-primary">${safari.pricePerPerson}</span>
+                                <span className="ml-1">/ person</span>
+                            </div>
+                        </div>
+                    )}
+                    {safari.priceGroup != null && (
+                         <div className="flex items-center">
+                            <DollarSign className="h-5 w-5 mr-3 text-primary" />
+                            <div>
+                                <span className="font-bold text-2xl text-primary">${safari.priceGroup}</span>
+                                <span className="ml-1">/ group</span>
+                            </div>
+                        </div>
+                    )}
                     <div className="flex items-center">
                         <Clock className="h-5 w-5 mr-3 text-primary" />
                         <span>{safari.duration}</span>

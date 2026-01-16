@@ -7,7 +7,8 @@ export interface Service {
   title: string;
   description: string;
   longDescription?: string;
-  price: number;
+  pricePerPerson?: number;
+  priceGroup?: number;
   duration?: string;
   location?: string;
   image?: string; // URL string

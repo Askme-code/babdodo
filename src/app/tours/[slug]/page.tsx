@@ -145,11 +145,24 @@ export default function TourPage({ params: paramsProp }: TourPageProps) {
             <div className="sticky top-24 bg-card rounded-lg shadow-lg p-6">
                 <h3 className="font-headline text-2xl">Tour Details</h3>
                 <div className="space-y-4 mt-4 text-foreground/80">
-                    <div className="flex items-center">
-                        <DollarSign className="h-5 w-5 mr-3 text-primary" />
-                        <span className="font-bold text-2xl text-primary">${tour.price}</span>
-                        <span className="ml-1">/ person</span>
-                    </div>
+                    {tour.pricePerPerson != null && (
+                        <div className="flex items-center">
+                            <DollarSign className="h-5 w-5 mr-3 text-primary" />
+                            <div>
+                                <span className="font-bold text-2xl text-primary">${tour.pricePerPerson}</span>
+                                <span className="ml-1">/ person</span>
+                            </div>
+                        </div>
+                    )}
+                    {tour.priceGroup != null && (
+                         <div className="flex items-center">
+                            <DollarSign className="h-5 w-5 mr-3 text-primary" />
+                            <div>
+                                <span className="font-bold text-2xl text-primary">${tour.priceGroup}</span>
+                                <span className="ml-1">/ group</span>
+                            </div>
+                        </div>
+                    )}
                     <div className="flex items-center">
                         <Clock className="h-5 w-5 mr-3 text-primary" />
                         <span>{tour.duration}</span>
