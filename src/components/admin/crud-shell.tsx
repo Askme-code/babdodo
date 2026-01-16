@@ -61,7 +61,7 @@ const serviceSchema = z.object({
   }, z.number({ invalid_type_error: 'Price must be a number.' }).positive('Price must be a positive number.').optional()),
   duration: z.string().optional(),
   location: z.string().optional(),
-  image: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  image: z.string().optional().or(z.literal('')),
   highlights: z.string().optional(),
   included: z.string().optional(),
   excluded: z.string().optional(),
@@ -78,7 +78,7 @@ const postSchema = z.object({
   content: z.string().min(20, 'Content is required'),
   author: z.string().optional(),
   date: z.string().optional(),
-  featuredImage: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  featuredImage: z.string().optional().or(z.literal('')),
 });
 
 interface CrudShellProps {
@@ -184,7 +184,7 @@ const CrudForm = ({
 
        <div>
         <Label htmlFor={isPostType ? 'featuredImage' : 'image'}>{isPostType ? 'Featured Image URL' : 'Main Image URL'}</Label>
-        <Input id={isPostType ? 'featuredImage' : 'image'} {...register(isPostType ? 'featuredImage' : 'image')} placeholder="https://example.com/image.jpg" />
+        <Input id={isPostType ? 'featuredImage' : 'image'} {...register(isPostType ? 'featuredImage' : 'image')} placeholder="https://example.com/image.jpg or /image/local.jpg" />
         {errors.image && <p className="text-destructive text-sm mt-1">{`${errors.image.message}`}</p>}
         {errors.featuredImage && <p className="text-destructive text-sm mt-1">{`${errors.featuredImage.message}`}</p>}
        </div>

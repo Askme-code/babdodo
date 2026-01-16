@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Clock, Users, Star, Check, X, DollarSign } from 'lucide-react';
 import type { Service } from '@/lib/types';
@@ -18,8 +19,8 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
     <Dialog>
       <Card className="flex flex-col overflow-hidden h-full transition-transform transform hover:-translate-y-1 hover:shadow-xl group bg-card border rounded-lg">
         <Link href={serviceUrl} className="block" aria-label={`View details for ${service.title}`}>
-          <CardHeader className="p-0 relative">
-            <div className="overflow-hidden aspect-video rounded-t-lg">
+          <CardHeader className="p-0">
+            <div className="overflow-hidden aspect-video rounded-t-lg relative">
               <MediaRenderer
                 src={imageUrl}
                 alt={service.title}
@@ -81,7 +82,7 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
           />
         </div>
         <div className="p-6 space-y-6">
-          <DialogHeader className="p-0 text-left">
+          <DialogHeader>
             <DialogTitle className="text-3xl font-headline font-bold text-primary">{service.title}</DialogTitle>
           </DialogHeader>
 
