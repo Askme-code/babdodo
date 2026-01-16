@@ -4,7 +4,7 @@ import type { Service } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import MediaRenderer from './MediaRenderer';
 import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 
 interface ServiceCardProps {
   service: Service;
@@ -81,7 +81,9 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
           />
         </div>
         <div className="p-6 space-y-6">
-          <h2 className="text-3xl font-headline font-bold text-primary">{service.title}</h2>
+          <DialogHeader className="p-0 text-left">
+            <DialogTitle className="text-3xl font-headline font-bold text-primary">{service.title}</DialogTitle>
+          </DialogHeader>
           
           {service.highlights && service.highlights.length > 0 && (
             <div>
