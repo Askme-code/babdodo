@@ -59,6 +59,11 @@ const serviceSchema = z.object({
   image: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   included: z.string().optional(),
   excluded: z.string().optional(),
+  maxPeople: z.preprocess((val) => {
+    if (typeof val === 'string' && val.trim() === '') return undefined;
+    const num = Number(val);
+    return isNaN(num) ? val : num;
+  }, z.number({ invalid_type_error: 'Max People must be a number.' }).int('Must be a whole number.').positive('Must be a positive number.').optional()),
 });
 
 const postSchema = z.object({
@@ -222,7 +227,7 @@ const CrudForm = ({
             </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <Label htmlFor="price">Price</Label>
               <Input id="price" type="number" {...register('price')} />
@@ -231,6 +236,11 @@ const CrudForm = ({
             <div>
               <Label htmlFor="duration">Duration</Label>
               <Input id="duration" {...register('duration')} />
+            </div>
+             <div>
+              <Label htmlFor="maxPeople">Max People</Label>
+              <Input id="maxPeople" type="number" {...register('maxPeople')} />
+              {errors.maxPeople && <p className="text-destructive text-sm mt-1">{`${errors.maxPeople.message}`}</p>}
             </div>
           </div>
           <div>

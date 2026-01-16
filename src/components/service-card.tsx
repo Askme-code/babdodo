@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Clock } from 'lucide-react';
+import { Clock, Users, Star } from 'lucide-react';
 
 import type { Service } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
@@ -37,29 +37,33 @@ const ServiceCard = ({ service }: ServiceCardProps) => {
             </CardTitle>
         </Link>
         
-        <CardDescription className="mt-3 text-sm text-foreground/80 line-clamp-4">
+        <CardDescription className="mt-3 text-sm text-foreground/80 line-clamp-2 flex-grow">
           {service.description}
         </CardDescription>
 
         <div className="flex-grow" />
 
-        {service.duration && (
-          <div className="flex items-center text-sm text-muted-foreground mt-4">
-              <Clock className="w-4 h-4 mr-1.5" />
-              <span>{service.duration}</span>
-          </div>
-        )}
-
-        {service.included && service.included.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-                {service.included.slice(0, 3).map((item, index) => (
-                    <Badge key={index} variant="secondary" className="bg-accent/80 text-accent-foreground hover:bg-accent">
-                        {item}
-                    </Badge>
-                ))}
-            </div>
-        )}
-
+        <div className="flex items-center gap-4 text-sm text-muted-foreground mt-4">
+            {service.duration && (
+              <div className="flex items-center">
+                  <Clock className="w-4 h-4 mr-1.5" />
+                  <span>{service.duration}</span>
+              </div>
+            )}
+            {service.maxPeople && (
+              <div className="flex items-center">
+                  <Users className="w-4 h-4 mr-1.5" />
+                  <span>Max {service.maxPeople}</span>
+              </div>
+            )}
+             {service.rating && (
+              <div className="flex items-center">
+                  <Star className="w-4 h-4 mr-1.5 text-yellow-500 fill-yellow-500" />
+                  <span>{service.rating}</span>
+              </div>
+            )}
+        </div>
+        
         <Button asChild className="w-full mt-6">
             <Link href={serviceUrl}>VIEW DETAILS &rarr;</Link>
         </Button>

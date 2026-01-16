@@ -16,6 +16,8 @@ export interface Service {
   excluded?:string[];
   type: 'tour' | 'safari' | 'transfer';
   featured?: boolean;
+  maxPeople?: number;
+  rating?: number;
   createdAt: string; 
   updatedAt: string;
 }
