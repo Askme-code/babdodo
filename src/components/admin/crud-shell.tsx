@@ -57,6 +57,8 @@ const serviceSchema = z.object({
   duration: z.string().optional(),
   location: z.string().optional(),
   image: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  included: z.string().optional(),
+  excluded: z.string().optional(),
 });
 
 const postSchema = z.object({
@@ -152,6 +154,8 @@ const CrudForm = ({
     defaultValues: item ? {
       ...item,
       date: getInitialDate(),
+      included: Array.isArray(item.included) ? item.included.join('\n') : '',
+      excluded: Array.isArray(item.excluded) ? item.excluded.join('\n') : '',
     } : {
       date: new Date().toISOString().split('T')[0]
     },
@@ -206,6 +210,18 @@ const CrudForm = ({
             <Label htmlFor="longDescription">Long Description (Overview)</Label>
             <Textarea id="longDescription" {...register('longDescription')} className="min-h-[150px]" />
           </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="included">Included (one item per line)</Label>
+              <Textarea id="included" {...register('included')} className="min-h-[120px]" />
+            </div>
+            <div>
+              <Label htmlFor="excluded">Excluded (one item per line)</Label>
+              <Textarea id="excluded" {...register('excluded')} className="min-h-[120px]" />
+            </div>
+          </div>
+          
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="price">Price</Label>
@@ -250,10 +266,21 @@ export default function CrudShell({
   const handleFormSubmit = async (data: Item) => {
     try {
       let success = false;
+
+      const processedData: Item = { ...data };
+      if (!isPostType) {
+        if (typeof data.included === 'string') {
+          processedData.included = data.included.split('\n').map(s => s.trim()).filter(Boolean);
+        }
+        if (typeof data.excluded === 'string') {
+          processedData.excluded = data.excluded.split('\n').map(s => s.trim()).filter(Boolean);
+        }
+      }
+
       if (editingItem?.id) {
-        success = await onUpdate(editingItem.id, data);
+        success = await onUpdate(editingItem.id, processedData);
       } else {
-        success = await onCreate(data);
+        success = await onCreate(processedData);
       }
 
       if (success) {
