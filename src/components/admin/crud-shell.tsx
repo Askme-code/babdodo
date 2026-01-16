@@ -57,6 +57,7 @@ const serviceSchema = z.object({
   duration: z.string().optional(),
   location: z.string().optional(),
   image: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  highlights: z.string().optional(),
   included: z.string().optional(),
   excluded: z.string().optional(),
   maxPeople: z.preprocess((val) => {
@@ -159,6 +160,7 @@ const CrudForm = ({
     defaultValues: item ? {
       ...item,
       date: getInitialDate(),
+      highlights: Array.isArray((item as any).highlights) ? (item as any).highlights.join('\n') : '',
       included: Array.isArray(item.included) ? item.included.join('\n') : '',
       excluded: Array.isArray(item.excluded) ? item.excluded.join('\n') : '',
     } : {
@@ -214,6 +216,10 @@ const CrudForm = ({
           <div>
             <Label htmlFor="longDescription">Long Description (Overview)</Label>
             <Textarea id="longDescription" {...register('longDescription')} className="min-h-[150px]" />
+          </div>
+           <div>
+            <Label htmlFor="highlights">Highlights (one item per line)</Label>
+            <Textarea id="highlights" {...register('highlights')} className="min-h-[100px]" />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -279,6 +285,9 @@ export default function CrudShell({
 
       const processedData: Item = { ...data };
       if (!isPostType) {
+        if (typeof (data as any).highlights === 'string') {
+          (processedData as any).highlights = (data as any).highlights.split('\n').map((s: string) => s.trim()).filter(Boolean);
+        }
         if (typeof data.included === 'string') {
           processedData.included = data.included.split('\n').map(s => s.trim()).filter(Boolean);
         }

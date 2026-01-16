@@ -12,6 +12,7 @@ export interface Service {
   location?: string;
   image?: string; // URL string
   gallery?: string[]; // Array of URL strings
+  highlights?: string[];
   included?: string[];
   excluded?:string[];
   type: 'tour' | 'safari' | 'transfer';
