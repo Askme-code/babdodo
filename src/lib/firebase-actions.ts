@@ -33,6 +33,16 @@ const getCollectionPathForType = (itemType: 'tour' | 'safari' | 'transfer' | 'po
     }
 }
 
+// Helper to remove undefined properties from an object
+const cleanData = (obj: any) => {
+    Object.keys(obj).forEach(key => {
+        if (obj[key] === undefined) {
+            delete obj[key];
+        }
+    });
+    return obj;
+}
+
 // Generic Create
 const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'review', item: (Partial<Service> | Partial<Post> | Partial<Review>)) => {
   try {
@@ -66,7 +76,8 @@ const createItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'r
         }
     }
     
-    const docRef = await addDoc(collectionRef, docData);
+    const finalData = cleanData(docData);
+    const docRef = await addDoc(collectionRef, finalData);
 
     // After creating the doc, update it with its own ID and a slug.
     const updateData: { id: string; slug?: string } = { id: docRef.id };
@@ -107,7 +118,8 @@ const updateItem = async (itemType: 'tour' | 'safari' | 'transfer' | 'post' | 'r
         docData.date = Timestamp.fromDate(new Date((item as Partial<Post>).date!));
     }
 
-    await updateDoc(docRef, docData);
+    const finalData = cleanData(docData);
+    await updateDoc(docRef, finalData);
     
     return true;
   } catch (e: any) {
